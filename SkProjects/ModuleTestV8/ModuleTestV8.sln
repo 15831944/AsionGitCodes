@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleTestV8", "ModuleTestV8.csproj", "{06DB3083-4AAC-4032-B2BA-494FADC48EAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCacheTester", "iCacheTester.csproj", "{3908E835-6D61-4433-9501-81D0662686E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResetTester", "ResetTester.csproj", "{6648EAEC-2DDE-497B-B07F-1E855C64E78A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06DB3083-4AAC-4032-B2BA-494FADC48EAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06DB3083-4AAC-4032-B2BA-494FADC48EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06DB3083-4AAC-4032-B2BA-494FADC48EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06DB3083-4AAC-4032-B2BA-494FADC48EAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3908E835-6D61-4433-9501-81D0662686E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3908E835-6D61-4433-9501-81D0662686E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3908E835-6D61-4433-9501-81D0662686E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3908E835-6D61-4433-9501-81D0662686E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6648EAEC-2DDE-497B-B07F-1E855C64E78A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6648EAEC-2DDE-497B-B07F-1E855C64E78A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6648EAEC-2DDE-497B-B07F-1E855C64E78A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6648EAEC-2DDE-497B-B07F-1E855C64E78A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
