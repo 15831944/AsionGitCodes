@@ -217,4 +217,4 @@ pip-log.txt
 #vc90 tempfiles
 mt.dep
 vc90.idb
-
+*.intermediate.manifest
