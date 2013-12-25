@@ -218,3 +218,4 @@ pip-log.txt
 mt.dep
 vc90.idb
 *.intermediate.manifest
+*.res
