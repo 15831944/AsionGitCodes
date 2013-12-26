@@ -939,7 +939,7 @@ namespace ModuleTestV8
                 EndProcess(p);
                 return false;
             }
-
+            //Reboot to ROM Code
             rep = p.gps.SetRegister(2000, 0x2000F050, 0x00000000);
             if (GPS_RESPONSE.ACK != rep)
             {
