@@ -35,9 +35,9 @@
             // 
             // gl1
             // 
-            this.gl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gl1.DrawFPS = false;
             this.gl1.Location = new System.Drawing.Point(12, 38);
             this.gl1.Name = "gl1";
@@ -45,6 +45,7 @@
             this.gl1.RenderTrigger = SharpGL.RenderTrigger.TimerBased;
             this.gl1.Size = new System.Drawing.Size(260, 212);
             this.gl1.TabIndex = 0;
+            this.gl1.OpenGLInitialized += new System.EventHandler(this.gl1_OpenGLInitialized);
             this.gl1.OpenGLDraw += new SharpGL.RenderEventHandler(this.gl1_OpenGLDraw);
             this.gl1.SizeChanged += new System.EventHandler(this.gl1_SizeChanged);
             this.gl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gl1_MouseDown);
