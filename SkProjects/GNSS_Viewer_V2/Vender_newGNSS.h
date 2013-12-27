@@ -51,7 +51,7 @@
 // .55 Add Ericsson customer branch.
 // .56 Fix first nmea no output issue.
 // .57 Add TIMING_MONITORING,TIMING_OUTPUT_ALIGN, SHOW_ELEV_AND_CNR_MASK_IN_GEN for customize version.
-// .58 Clean NMEA data after change to Binary Output Mode.
+// .58 Clean NMEA data after output mode change.
 
 //#define SOFTWARE_FUNCTION		(SW_FUN_DATALOG | SW_FUN_AGPS | SW_FUN_DR)
 #define SOFTWARE_FUNCTION		(SW_FUN_DATALOG | SW_FUN_AGPS)
