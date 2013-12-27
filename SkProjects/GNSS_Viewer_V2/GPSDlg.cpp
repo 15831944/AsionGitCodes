@@ -1701,7 +1701,7 @@ void CGPSDlg::ClearInformation(bool onlyQueryInfo)
 //	Sleep(1000);
 	if(!NMEA_INPUT)
 	{
-		m_CloseBtn.ShowWindow(SW_SHOW);
+		//m_CloseBtn.ShowWindow((this->m_isConnectOn) ? SW_SHOW : SW_HIDE);
 	}
 }
 
@@ -8283,7 +8283,8 @@ void CGPSDlg::RescaleDialog()
 		TRUE, 0, IDC_GA_BAR, {656, 252, 343, 75},
 
 		//Scatter
-		TRUE, 0, IDC_SCATTER, {668, 384, 220, 220},
+		//TRUE, 0, IDC_SCATTER, {668, 384, 220, 220},
+		TRUE, 0, IDC_SCATTER, {658, 354, 256, 250},
 		//TRUE, 0, IDC_SCATTER, {658, 354, 248, 248},
 
 		TRUE, 0, IDC_2DRMS_T, {915, 457, 78, 18},

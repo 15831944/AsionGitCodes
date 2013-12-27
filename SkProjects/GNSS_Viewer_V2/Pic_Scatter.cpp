@@ -178,8 +178,37 @@ void ScatterData::SetENU(double lon, double lat, double h)
 	_GET_ENU_POINT_CS.Unlock();
 }
 
+#define ScatterXScale		50
+#define ScatterYScale		50
+#define PointSize			2.5f
+
 CPic_Scatter::CPic_Scatter(void)
 {
+	int i=0, x=0, y=0;
+	//定義點圖的範圍大小
+	plot_x1 = 45; plot_y1 = 21;	//視窗左上角
+	plot_x2 = plot_x1+200; plot_y2 = plot_y1+200;
+
+	plot_cross_x = (plot_x1 + plot_x2) / 2;
+	plot_cross_y = (plot_y1 + plot_y2) / 2;
+
+	for(y=plot_y1; y<=plot_y2; y+=ScatterYScale)
+	{
+		VScatterScale[i].x = plot_x1 + 5;	
+		VScatterScale[i].y = y + 2;
+		i++;
+	}
+	
+	i=0;	
+	for(x=plot_x1;x<=plot_x2;x+=ScatterXScale)
+	{	
+		HScatterScale[i].x = x;
+		HScatterScale[i].y = plot_y2;
+		i++;
+	}	
+
+}
+/*
 	int i=0, x=0, y=0;
 	//定義點圖的範圍大小
 	plot_x1 = 45 ; plot_y1 = 21 ; 
@@ -202,10 +231,8 @@ CPic_Scatter::CPic_Scatter(void)
 		HScatterScale[i].x=x;
 		HScatterScale[i].y=plot_y2;
 		i++;
-	}	
-
-}
-
+	}
+*/
 CPic_Scatter::~CPic_Scatter(void)
 {
 }
@@ -246,12 +273,12 @@ void CPic_Scatter::Create_scatterplot(CDC *dc)
 	dc->Rectangle(plot_x1 , plot_y1 , plot_x2 , plot_y2);
 
 	int x, y;
-	for(y=plot_y1+40;y<plot_y2;y+=40)		
+	for(y=plot_y1+ScatterXScale;y<plot_y2;y+=ScatterYScale)		
 	{
 		dc->MoveTo(plot_x1,y);
 		dc->LineTo(plot_x2,y);
 	}		
-	for(x=plot_x1+40;x<plot_x2;x+=40)		
+	for(x=plot_x1+ScatterXScale;x<plot_x2;x+=ScatterYScale)		
 	{
 		dc->MoveTo(x,plot_y1);
 		dc->LineTo(x,plot_y2);
@@ -268,10 +295,10 @@ void CPic_Scatter::Create_scatterplot(CDC *dc)
 	fontSize = CSize(12, 20);
 
 	dc->SetTextColor(RGB(180, 180, 180));
-	dc->DrawText("N", CRect(120, 22, 120+fontSize.cx, 21+fontSize.cy), DT_TOP | DT_CENTER);
-	dc->DrawText("S", CRect(120, 160, 120+fontSize.cx, 160+fontSize.cy), DT_VCENTER | DT_CENTER);
-	dc->DrawText("W", CRect(47, 90, 60+fontSize.cx, 90+fontSize.cy), DT_VCENTER | DT_LEFT);
-	dc->DrawText("E", CRect(0, 90, 191+fontSize.cx, 90+fontSize.cy), DT_VCENTER | DT_RIGHT);
+	dc->DrawText("N", CRect(140, 22, 140+fontSize.cx, 21+fontSize.cy), DT_TOP | DT_CENTER);
+	dc->DrawText("S", CRect(140, 200, 140+fontSize.cx, 200+fontSize.cy), DT_VCENTER | DT_CENTER);
+	dc->DrawText("W", CRect(47, 110, 60+fontSize.cx, 110+fontSize.cy), DT_VCENTER | DT_LEFT);
+	dc->DrawText("E", CRect(0, 110, 231+fontSize.cx, 110+fontSize.cy), DT_VCENTER | DT_RIGHT);
 
 	dc->SetTextColor(RGB(50, 50, 50));
 	dc->SelectObject(&(s->barFont));
@@ -286,8 +313,9 @@ void CPic_Scatter::Create_scatterplot(CDC *dc)
 	if(coor==0)
 	{
 		CPen pen;
-		pen.CreatePen(PS_SOLID, 1, RGB(200,50,0));
-		dc->SelectObject(&pen);
+		double penRedColor = 200.0;
+		double penBlueColor = 0.0;
+		double add = 200.0 / g_scatterData.enu_x.size();
 
 		g_scatterData._GET_ENU_POINT_CS.Lock();
 
@@ -301,11 +329,15 @@ void CPic_Scatter::Create_scatterplot(CDC *dc)
 			y = *enu_y_it * 1000.0F;				
 			x = (x * 50 / g_scatterData.m_enuScale) + plot_cross_x;    
 			y = plot_cross_y - (y * 50 / g_scatterData.m_enuScale);	
-
+			pen.CreatePen(PS_SOLID, 1, RGB((int)penRedColor, 50, (int)penBlueColor));
+			dc->SelectObject(&pen);
 			if(x > plot_x1 && x < plot_x2 && y > plot_y1 && y < plot_y2)
 			{
-				dc->Ellipse((int)(x - 2.5F),(int)(y - 2.5F),(int)(x + 2.5F), (int)(y + 2.5F));
-			}		
+				dc->Ellipse((int)(x - PointSize),(int)(y - PointSize),(int)(x + PointSize), (int)(y + PointSize));
+			}
+			pen.DeleteObject();
+			//penRedColor -= add;
+			//penBlueColor += add;
 		}		
 		g_scatterData._GET_ENU_POINT_CS.Unlock();
 
@@ -366,8 +398,8 @@ void CPic_Scatter::Create_scatterplot(CDC *dc)
 			if(x > plot_x1 && x < plot_x2 && 
 				y > plot_y1 && y < plot_y2)
 			{
-				dc->Ellipse((int)(x - 2.5), (int)(y - 2.5),
-					(int)(x + 2.5), (int)(y + 2.5));
+				dc->Ellipse((int)(x - PointSize), (int)(y - PointSize),
+					(int)(x + PointSize), (int)(y + PointSize));
 			}
 		}
 		g_scatterData._GET_LLA_POINT_CS.Unlock();
@@ -382,8 +414,8 @@ void CPic_Scatter::Create_scatterplot(CDC *dc)
 		int scale = scaleTable[index];
 
 		//dc->TextOut(plot_x1+170,plot_y1+220,"Longitude");
-		dc->DrawText("Longitude", CRect(plot_x1 + 110, plot_y1 + 180, 
-			plot_x1 + 170, plot_y1 + 200), DT_VCENTER | DT_CENTER);
+		dc->DrawText("Longitude", CRect(plot_x1 + 145, plot_y1 + 200, 
+			plot_x1 + 145 + 60, plot_y1 + 200 + 20), DT_VCENTER | DT_CENTER);
 		//dc->TextOut(plot_x1-60,plot_y1-20,"Latitude");	
 		dc->DrawText("Latitude", CRect(plot_x1 - 50, plot_y1 - 20,
 			plot_x1 + 10, plot_y1 + 0), DT_VCENTER | DT_CENTER);
@@ -393,6 +425,7 @@ void CPic_Scatter::Create_scatterplot(CDC *dc)
 		llaRulerFont.CreatePointFont(70, _T("Arial"));
 		dc->SelectObject(&llaRulerFont);
 		fontSize = CSize(10, 18);
+		const int CoorXRulerOffst = 16;
 
 		if(!g_scatterData.m_isGetMapPos)
 		{
@@ -553,11 +586,11 @@ void CPic_Scatter::Create_scatterplot(CDC *dc)
 					{
 						a = 0;	
 					}
-					
+
 					hs.Format("%d %d'%d''",  g_scatterData.inimaplondeg, min, a);
 					//dc->TextOut(x-15, y+8, hs);
-					dc->DrawText(hs, CRect(x - 15, y +8, 
-						x +15, y + 28), DT_VCENTER | DT_CENTER);
+					dc->DrawText(hs, CRect(x - 26, y + CoorXRulerOffst, 
+						x + 10, y + CoorXRulerOffst + 16), DT_VCENTER | DT_CENTER);
 
 					x=VScatterScale[i].x;
 					y=VScatterScale[i].y;
@@ -580,9 +613,10 @@ void CPic_Scatter::Create_scatterplot(CDC *dc)
 						a=0;
 					}
 
-					hs.Format("%d %d'%d''",  g_scatterData.inimaplondeg, min, a);
-
-					dc->TextOut(x-39, y-5, hs);
+					hs.Format("%d %d'%d''",  g_scatterData.inimaplatdeg, min, a);
+					//dc->TextOut(x-39, y-5, hs);
+					dc->DrawText(hs, CRect(x - 48, y - 6, 
+						x - 1, y - 6 + 16), DT_VCENTER | DT_CENTER);				
 				}
 				else
 				{     
@@ -606,8 +640,10 @@ void CPic_Scatter::Create_scatterplot(CDC *dc)
 					sec =  g_scatterData.inimaplonsec;
 
 					hs.Format("%d %d' %d''", deg, a, sec);
+					//dc->TextOut(x-17,y + CoorXRulerOffst,hs);
+					dc->DrawText(hs, CRect(x - 32, y + CoorXRulerOffst, 
+						x + 16, y + CoorXRulerOffst + 16), DT_VCENTER | DT_CENTER);
 
-					dc->TextOut(x-15,y+8,hs);
 					x=VScatterScale[i].x;
 					y=VScatterScale[i].y;			
 					deg= g_scatterData.inimaplatdeg;
@@ -629,8 +665,9 @@ void CPic_Scatter::Create_scatterplot(CDC *dc)
 
 					sec= g_scatterData.inimaplatsec;
 					hs.Format("%d %d'%d''", deg, a, sec);
-
-					dc->TextOut(x-30,y-5,hs);
+					//dc->TextOut(x-30,y-5,hs);
+					dc->DrawText(hs, CRect(x - 48, y - 6, 
+						x - 1, y - 6 + 16), DT_VCENTER | DT_CENTER);				
 				}
 			}
 		}
@@ -665,13 +702,16 @@ void CPic_Scatter::Show_ScatterChart(CDC *dc)
 	{
 		mapindex = CGPSDlg::gpsDlg->GetMapScaleSel();
 	}
-
+if(index==1)
+{
+	int a = 0;
+}
 	CPen pen;
-	pen.CreatePen(PS_SOLID,1,RGB(200, 50, 0));
+	pen.CreatePen(PS_SOLID,1,RGB(50, 50, 255));
 	CPen* oldPen = dc->SelectObject(&pen);
 
 	CBrush clear;		
-	clear.CreateSolidBrush(RGB(255, 255, 255));
+	clear.CreateSolidBrush(RGB(50, 50, 255));
 	CBrush*oldBrush = dc->SelectObject(&clear);	        
 
 	CFont font;
@@ -743,14 +783,14 @@ void CPic_Scatter::Show_ScatterChart(CDC *dc)
 		if(coor==0)
 		{
 			if(plot_x>plot_x1 && plot_x<plot_x2 && plot_y>plot_y1 && plot_y<plot_y2)			   	
-				dc->Ellipse((int)(plot_x-2.5),(int)(plot_y-2.5),(int)(plot_x+2.5),(int)(plot_y+2.5));
+				dc->Ellipse((int)(plot_x-PointSize),(int)(plot_y-PointSize),(int)(plot_x+PointSize),(int)(plot_y+PointSize));
 
 		}
 		else
 		{
 			if(map_x>plot_x1 && map_x<plot_x2 && map_y>plot_y1 && map_y<plot_y2)
 			{
-				dc->Ellipse((int)(map_x-2.5),(int)(map_y-2.5),(int)(map_x+2.5),(int)(map_y+2.5));
+				dc->Ellipse((int)(map_x-PointSize),(int)(map_y-PointSize),(int)(map_x+PointSize),(int)(map_y+PointSize));
 			}
 		}
 	}
