@@ -876,7 +876,13 @@ public:
 	};
 	void SetMsgType(MsgMode m) 
 	{ 
-		m_msgType = m; 
+		if(m_msgType != m)
+		{
+			DeleteNmeaMemery();	
+			ClearInformation();
+	
+			m_msgType = m; 
+		}
 	};
 	U08 GetRestartMode() { return m_restartMode; }
 	void SetInputMode(U08 i) { m_inputMode = i; }
