@@ -46,7 +46,7 @@ namespace TestSharpGl_01
             gl.Viewport(0, 0, this.gl1.Width, this.gl1.Height); //當視窗長寬改變時，畫面也跟著變
             gl.MatrixMode(OpenGL.GL_PROJECTION);    // 選擇投影矩陣
             gl.LoadIdentity();                      // 重置投影矩陣
-            gl.Perspective(45.0, gl1.Width / gl1.Height, 0.1, 1.0);
+            gl.Perspective(45.0, gl1.Width / gl1.Height, 0.1, 100.0);
             //gl.Ortho(-10, 10, -10, 10, -10, 10);    //正交投影
             gl.MatrixMode(OpenGL.GL_MODELVIEW);       // 選擇模型觀察矩陣
             gl.LoadIdentity();
@@ -145,18 +145,15 @@ namespace TestSharpGl_01
         private void Form1_Load(object sender, EventArgs e)
         {
             textureMode.SelectedIndex = filter;
+            blend.Checked = true;
         }
 
- 
-        private void gl1_OpenGLInitialized(object sender, EventArgs e)
+        private void LoadGLTexture()
         {
-            gl = this.gl1.OpenGL;
-            BitmapData bp = null;
-
-            var stream = File.OpenRead(@"Textures\Texture038.bmp");
+            var stream = File.OpenRead(@"Textures\Texture045.bmp");
             textureImage = (Bitmap)Bitmap.FromStream(stream);
             gl.Enable(OpenGL.GL_TEXTURE_2D);        // 啟用紋理映射
-            bp = textureImage.LockBits(new Rectangle(0, 0, textureImage.Width, textureImage.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            BitmapData bp = textureImage.LockBits(new Rectangle(0, 0, textureImage.Width, textureImage.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
 
             gl.GenTextures(3, textures);
             //  Bind the texture.
@@ -177,13 +174,29 @@ namespace TestSharpGl_01
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
             gl.Build2DMipmaps(OpenGL.GL_TEXTURE_2D, 3, textureImage.Width, textureImage.Height, OpenGL.GL_BGR, OpenGL.GL_UNSIGNED_BYTE, bp.Scan0);
             textureImage.UnlockBits(bp);
+        }
 
-            gl.ShadeModel(OpenGL.GL_SMOOTH);        // 啟用陰影平滑
-            gl.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);  // 黑色背景
-            gl.ClearDepth(1.0f);					// 設置深度緩存
-            gl.Enable(OpenGL.GL_DEPTH_TEST);		// 啟用深度測試
-            gl.DepthFunc(OpenGL.GL_LEQUAL);			// 所作深度測試的類型
-            gl.Hint(OpenGL.GL_PERSPECTIVE_CORRECTION_HINT, OpenGL.GL_NICEST);    // 告訴系統對透視進行修正
+        private void gl1_OpenGLInitialized(object sender, EventArgs e)
+        {
+            gl = this.gl1.OpenGL;
+            LoadGLTexture();
+
+
+            gl.Enable(OpenGL.GL_TEXTURE_2D);							// Enable Texture Mapping
+            gl.ShadeModel(OpenGL.GL_SMOOTH);							// Enable Smooth Shading
+            gl.ClearColor(0.0f, 0.0f, 0.0f, 0.5f);				// Black Background
+            gl.ClearDepth(1.0f);									// Depth Buffer Setup
+            gl.Enable(OpenGL.GL_DEPTH_TEST);							// Enables Depth Testing
+            gl.DepthFunc(OpenGL.GL_LEQUAL);								// The Type Of Depth Testing To Do
+            gl.Hint(OpenGL.GL_PERSPECTIVE_CORRECTION_HINT, OpenGL.GL_NICEST);	// Really Nice Perspective Calculations
+
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_AMBIENT, LightAmbient);		// Setup The Ambient Light
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_DIFFUSE, LightDiffuse);		// Setup The Diffuse Light
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_POSITION, LightPosition);	// Position The Light
+            gl.Enable(OpenGL.GL_LIGHT1);								// Enable Light One
+
+            gl.Color(1.0, 1.0, 1.0, 0.5);					// Full Brightness.  50% Alpha
+            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -201,15 +214,26 @@ namespace TestSharpGl_01
         {
             if (light.Checked)
             {
-                gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_AMBIENT, LightAmbient);    // 設置環境光
-                gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_DIFFUSE, LightDiffuse);    // 設置漫射光       
-                gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_POSITION, LightPosition); // 設置光源位置
-                gl.Enable(OpenGL.GL_LIGHT1);
                 gl.Enable(OpenGL.GL_LIGHTING);
             }
             else
             {
                 gl.Disable(OpenGL.GL_LIGHTING);
+            }
+            gl1.Refresh();
+        }
+
+        private void blend_CheckedChanged(object sender, EventArgs e)
+        {
+            if (blend.Checked)
+            {
+                gl.Enable(OpenGL.GL_BLEND);
+                gl.Disable(OpenGL.GL_DEPTH_TEST);
+            }
+            else
+            {
+                gl.Disable(OpenGL.GL_BLEND);
+                gl.Enable(OpenGL.GL_DEPTH_TEST);
             }
             gl1.Refresh();
         }

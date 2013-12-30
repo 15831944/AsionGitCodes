@@ -32,6 +32,7 @@
             this.gl1 = new SharpGL.OpenGLControl();
             this.textureMode = new System.Windows.Forms.ComboBox();
             this.light = new System.Windows.Forms.CheckBox();
+            this.blend = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.gl1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -80,11 +81,23 @@
             this.light.UseVisualStyleBackColor = true;
             this.light.CheckedChanged += new System.EventHandler(this.light_CheckedChanged);
             // 
+            // blend
+            // 
+            this.blend.AutoSize = true;
+            this.blend.Location = new System.Drawing.Point(69, 8);
+            this.blend.Name = "blend";
+            this.blend.Size = new System.Drawing.Size(52, 16);
+            this.blend.TabIndex = 2;
+            this.blend.Text = "Blend";
+            this.blend.UseVisualStyleBackColor = true;
+            this.blend.CheckedChanged += new System.EventHandler(this.blend_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 567);
+            this.Controls.Add(this.blend);
             this.Controls.Add(this.light);
             this.Controls.Add(this.textureMode);
             this.Controls.Add(this.gl1);
@@ -103,6 +116,7 @@
         private SharpGL.OpenGLControl gl1;
         private System.Windows.Forms.ComboBox textureMode;
         private System.Windows.Forms.CheckBox light;
+        private System.Windows.Forms.CheckBox blend;
 
     }
 }
