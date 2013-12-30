@@ -48,14 +48,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="iCacheTester.exe" size="1833472">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="iCacheTester.exe" size="1721856">
       <assemblyIdentity name="iCacheTester" version="1.0.0.28" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>gE23kDXuWV9BHDPmEy9RuTFGzL4=</dsig:DigestValue>
+        <dsig:DigestValue>alU5RWQ6hnRnq9XLHptdb4FppE4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -67,7 +67,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>pip2o+hGc8KQcsEQ9BHFPT978xk=</dsig:DigestValue>
+        <dsig:DigestValue>c9lK9+moJx0pyW9buZK6dAgpSSk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -79,7 +79,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>pjBWk+v9xtmsdz2Q7BJiFpyy9js=</dsig:DigestValue>
+        <dsig:DigestValue>9796C/KJ6Wt8ahwzSVlB/hUbHOc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

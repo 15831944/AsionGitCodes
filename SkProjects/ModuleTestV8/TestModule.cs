@@ -844,7 +844,7 @@ namespace ModuleTestV8
                 if (GPS_RESPONSE.NACK != rep)
                 {
                     r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                    r.output = "Test baud rate " + GpsBaudRateConverter.Index2BaudRate(first).ToString() + " fail!";
+                    r.output = "Baud rate " + GpsBaudRateConverter.Index2BaudRate(first).ToString() + " invalid.";
                     p.bw.ReportProgress(0, new WorkerReportParam(r));
                     p.gps.Close();
                 }
@@ -882,7 +882,7 @@ namespace ModuleTestV8
                 if (GPS_RESPONSE.NACK != rep)
                 {
                     r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                    r.output = "Test baud rate " + GpsBaudRateConverter.Index2BaudRate(i).ToString() + " fail!";
+                    r.output = "Baud rate " + GpsBaudRateConverter.Index2BaudRate(i).ToString() + " invalid!";
                     p.bw.ReportProgress(0, new WorkerReportParam(r));
                     p.gps.Close();
                 }
@@ -1220,6 +1220,52 @@ namespace ModuleTestV8
                 if (-1 != baudIdx)
                 {
                     lastDeviceBaudIdx = baudIdx;
+                    r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                    r.output = "Open " + p.comPort + " in " +
+                        GpsBaudRateConverter.Index2BaudRate(baudIdx).ToString() +
+                        " success.";
+                    p.bw.ReportProgress(0, new WorkerReportParam(r));
+                    break;
+                }
+                Thread.Sleep(50);
+            }
+
+            if (-1 == baudIdx)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = WorkerParam.ErrorType.OpenPortFail;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                EndProcess(p);
+                return false;
+            }
+            //Reboot to ROM Code
+            rep = p.gps.SetRegister(2000, 0x2000F050, 0x00000000);
+            if (GPS_RESPONSE.ACK != rep)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = (rep == GPS_RESPONSE.NACK) ? WorkerParam.ErrorType.ColdStartNack : WorkerParam.ErrorType.ColdStartTimeOut;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                EndProcess(p);
+                return false;
+            }
+            else
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "Reboot from ROM success";
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                p.gps.Close();
+                Thread.Sleep(3000);  //Waiting for reboot
+            }
+
+            // Retry three times for disable auto uart firmware, it'll 
+            // change uart output baud rate after 5 seconds.
+            baudIdx = -1;
+            for (int i = 0; i < 3; ++i)
+            {
+                baudIdx = ScanBaudRate(p, lastRomBaudIdx);
+                if (-1 != baudIdx)
+                {
+                    lastRomBaudIdx = baudIdx;
                     r.reportType = WorkerReportParam.ReportType.ShowProgress;
                     r.output = "Open " + p.comPort + " in " +
                         GpsBaudRateConverter.Index2BaudRate(baudIdx).ToString() +

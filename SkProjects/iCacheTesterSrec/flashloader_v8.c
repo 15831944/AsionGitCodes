@@ -1750,3 +1750,4 @@ void GetVersion(void)
   _LOADER_VER_[27] = 0x0a;
   _LOADER_VER_[28] = 0;
 }
+
