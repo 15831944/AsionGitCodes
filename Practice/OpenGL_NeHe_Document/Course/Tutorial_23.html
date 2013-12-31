@@ -1,0 +1,279 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_23.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:03 GMT -->
+<head>
+<title>NeHe OpenGL教程第二十三課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第23課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="30%"><img src="../Pic/lesson23.jpg" width="240" height="180"></td>
+            <td width="70%"><p><FONT class=head>球面映射:</FONT></p>
+              <p><font size="3">這一個將教會你如何把環境紋理包裹在你的3D模型上，讓它看起來像反射了周圍的場景一樣。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>球體環境映射是一個創建快速金屬反射效果的方法，但它並不像真實世界裡那麼精確！我們從18課的代碼開始來創建這個教程，教你如何創建這種效果。
+      <p>在我們開始之間，看一下紅寶書中的介紹。它定義球體環境映射為一幅位於無限遠的圖像，把它映射到球面上。 </p>
+      <p>在Photoshop中創建一幅球體環境映射圖。</p>
+      <p>首先，你需要一幅球體環境映射圖，用來把它映射到球體上。在Photoshop中打開一幅圖並選擇所有的像素，創建它的一個複製。<br>
+        接著，我們把圖像變為2的冪次方大小，一般為128x128或256x256。<br>
+        最後使用扭曲(distort)濾鏡，並應用球體效果。然後把它保存為*.bmp文件。</p>
+      <p>我們並沒有添加任何全局變量，只是把紋理組的大小變為6，以保存6幅紋理。<br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+GLuint	texture[6];								<font color=#ffffaa>// 保存6幅紋理 </font>
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面我們要做的就是載入這些紋理</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int LoadGLTextures()								<font color=#ffffaa></font>
+{
+	int Status=FALSE;							<font color=#ffffaa></font>
+
+	AUX_RGBImageRec *TextureImage[2];						<font color=#ffffaa>// 創建紋理的保存空間</font>
+
+	memset(TextureImage,0,sizeof(void *)*2);  		         	<font color=#ffffaa>		// 清空為0</font>
+
+	<font color=#ffffaa>// 載入*.bmp圖像</font>
+	if ((TextureImage[0]=LoadBMP("Data/BG.bmp")) &&				<font color=#ffffaa>// 背景圖</font>
+		(TextureImage[1]=LoadBMP("Data/Reflect.bmp")))			<font color=#ffffaa>// 反射圖（球形紋理圖）</font>
+	{
+		Status=TRUE;							
+
+		glGenTextures(6, &texture[0]);					<font color=#ffffaa>// 創建6個紋理</font>
+
+		for (int loop=0; loop&lt;=1; loop++)
+		{
+			<font color=#ffffaa>// 創建臨近點過濾紋理圖</font>
+			glBindTexture(GL_TEXTURE_2D, texture[loop]);		<font color=#ffffaa>	// 創建紋理0和1</font>
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+			glTexImage2D(GL_TEXTURE_2D, 0, 3, TextureImage[loop]->sizeX, TextureImage[loop]->sizeY,
+				0, GL_RGB, GL_UNSIGNED_BYTE, TextureImage[loop]->data);
+
+			<font color=#ffffaa>// 創建線形過濾紋理圖</font>
+			glBindTexture(GL_TEXTURE_2D, texture[loop+2]);		<font color=#ffffaa>// 創建紋理2，3</font>
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+			glTexImage2D(GL_TEXTURE_2D, 0, 3, TextureImage[loop]->sizeX, TextureImage[loop]->sizeY,
+				0, GL_RGB, GL_UNSIGNED_BYTE, TextureImage[loop]->data);
+
+			<font color=#ffffaa>// 創建線形Mipmap紋理圖</font>
+			glBindTexture(GL_TEXTURE_2D, texture[loop+4]);		<font color=#ffffaa>// 創建紋理4，5</font>
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
+			gluBuild2DMipmaps(GL_TEXTURE_2D, 3, TextureImage[loop]->sizeX, TextureImage[loop]->sizeY,
+				GL_RGB, GL_UNSIGNED_BYTE, TextureImage[loop]->data);
+		}
+		for (loop=0; loop&lt;=1; loop++)
+		{
+	        if (TextureImage[loop])						<font color=#ffffaa>// 如果圖像存在則清除</font>
+		    {
+			        if (TextureImage[loop]->data)			
+				    {
+					        free(TextureImage[loop]->data);	
+					}
+					free(TextureImage[loop]);		
+			}
+		}
+	}
+
+	return Status;				
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>我們對立方體的繪製代碼做了一些小的改動，把法線的範圍從[-1,1]縮放到[-0.5,0.5]。如果法向量太大的話，會產生一些塊狀效果，影響視覺效果。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLvoid glDrawCube()
+{
+		glBegin(GL_QUADS);
+		<font color=#ffffaa>// 前面</font>
+		glNormal3f( 0.0f, 0.0f, 0.5f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+		<font color=#ffffaa>// 背面</font>
+		glNormal3f( 0.0f, 0.0f,-0.5f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+		<font color=#ffffaa>// 上面</font>
+		glNormal3f( 0.0f, 0.5f, 0.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+		<font color=#ffffaa>// 下面</font>
+		glNormal3f( 0.0f,-0.5f, 0.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+		<font color=#ffffaa>// 右面</font>
+		glNormal3f( 0.5f, 0.0f, 0.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+		<font color=#ffffaa>// 左面</font>
+		glNormal3f(-0.5f, 0.0f, 0.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+	glEnd();
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在初始化OpenGL中，我們添加一些新的函數來使用球體紋理映射。<br>
+      下面的代碼讓OpenGL自動為我們計算使用球體映射時，頂點的紋理坐標。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);			<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>設置s方向的紋理自動生成</font></font>
+	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);			<font color=#ffffaa>// 設置t方向的紋理自動生成</font></pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>我們幾乎完成了所有的工作！接下來要做的就是就是繪製渲染，我刪除了一些二次幾何體，因為它們的視覺效果並不好。當然我們需要OpenGL為這些幾何體自動生成坐標，接著選擇球體映射紋理並繪製幾何體。最後把OpenGL狀態設置正常模式。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int DrawGLScene(GLvoid)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);			
+	glLoadIdentity();							<font color=#ffffaa>// 重置視口</font>
+
+	glTranslatef(0.0f,0.0f,z);
+
+	glEnable(GL_TEXTURE_GEN_S);						<font color=#ffffaa>// 自動生成s方向紋理坐標</font>
+	glEnable(GL_TEXTURE_GEN_T);						<font color=#ffffaa>// 自動生成t方向紋理坐標</font>
+
+	glBindTexture(GL_TEXTURE_2D, texture[filter+(filter+1)]);		<font color=#ffffaa>// 綁定紋理</font>
+	glPushMatrix();
+	glRotatef(xrot,1.0f,0.0f,0.0f);
+	glRotatef(yrot,0.0f,1.0f,0.0f);
+	switch(object)
+	{
+	case 0:
+		glDrawCube();
+		break;
+	case 1:
+		glTranslatef(0.0f,0.0f,-1.5f);					<font color=#ffffaa>// 創建圓柱</font>
+		gluCylinder(quadratic,1.0f,1.0f,3.0f,32,32);			
+		break;
+	case 2:
+		gluSphere(quadratic,1.3f,32,32);					<font color=#ffffaa>// 創建球</font>
+		break;
+	case 3:
+		glTranslatef(0.0f,0.0f,-1.5f);					<font color=#ffffaa>// 創建圓錐</font>
+		gluCylinder(quadratic,1.0f,0.0f,3.0f,32,32);			
+		break;
+	};
+
+	glPopMatrix();
+	glDisable(GL_TEXTURE_GEN_S);						<font color=#ffffaa>// 禁止自動生成紋理坐標</font>
+	glDisable(GL_TEXTURE_GEN_T);					
+
+	xrot+=xspeed;
+	yrot+=yspeed;
+	return TRUE;								<font color=#ffffaa>// 成功返回</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>最後我們使用空格來切換各個不同的幾何體</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+				if (keys[' '] && !sp)
+				{
+					sp=TRUE;
+					object++;
+					if(object>3)
+						object=0;
+				}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>我們成功了！現在你可以使用環境映射紋理做一些非常棒的特效了。我想做一個立方體環境映射的例子，但我現在的顯卡不支持這種特效，所以只有等到以後了。 
+      </p>
+      <p>謝謝，並祝你好運！ </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2023.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_23.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/23_SphereMap.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+      <FONT face=Tahoma,Verdana,sans-serif size=-1><table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_22.html">< 
+          第22課</a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_24.html">第24課 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_23.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:03 GMT -->
+</html>

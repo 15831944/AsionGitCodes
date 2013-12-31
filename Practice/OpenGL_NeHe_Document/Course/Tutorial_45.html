@@ -1,0 +1,858 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<HTML>
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_45.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:05:22 GMT -->
+<HEAD><TITLE>NeHe OpenGL教程第四十五課，DancingWind翻譯</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:active {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:link {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:visited {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:hover {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #ffda6a; TEXT-DECORATION: none
+}
+BODY {
+	COLOR: #ffffff; BACKGROUND-COLOR: #000000
+}
+TD IMG {
+	DISPLAY: block
+}
+.back {
+	BACKGROUND: #000022; COLOR: #ffffff
+}
+.back2 {
+	BACKGROUND: #000000; COLOR: #ffffff
+}
+.back3 {
+	BACKGROUND: #000022; COLOR: #ffffff
+}
+.copy {
+	FONT-SIZE: 11px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.head {
+	FONT: bold 13px Tahoma, Verdana, sans-serif; TEXT-DECORATION: none
+}
+.link {
+	FONT-SIZE: 14px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.menu {
+	FONT: bold 17px Tahoma, Verdana, sans-serif; TEXT-DECORATION: none
+}
+.news {
+	BACKGROUND: #00008b; COLOR: #ffffff
+}
+.tab {
+	PADDING-LEFT: 35px
+}
+.text {
+	FONT-SIZE: 12px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.theme {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff
+}
+.dotted {
+	BORDER-RIGHT: #00008b 2px dotted; BORDER-TOP: #00008b 2px dotted; BORDER-LEFT: #00008b 2px dotted; BORDER-BOTTOM: #00008b 2px dotted
+}
+.solid {
+	BORDER-RIGHT: #ffffff 1px solid; BORDER-TOP: #ffffff 1px solid; BORDER-LEFT: #ffffff 1px solid; BORDER-BOTTOM: #ffffff 1px solid
+}
+.logo {
+	BACKGROUND-IMAGE: url(../graphics/rgb/logo.html)
+}
+.menubar {
+	BACKGROUND-IMAGE: url(../graphics/rgb/menubar.html)
+}
+.menubg {
+	BACKGROUND-IMAGE: url(../graphics/rgb/menubg.html)
+}
+.menuheading {
+	BACKGROUND-IMAGE: url(../graphics/rgb/menuheading.html)
+}
+.nehebutton {
+	BACKGROUND-IMAGE: url(../graphics/rgb/nehebutton.html)
+}
+.newslogo {
+	BACKGROUND-IMAGE: url(../graphics/rgb/newslogo.html)
+}
+.tinylogo {
+	BACKGROUND-IMAGE: url(../graphics/rgb/border/tinylogo.html)
+}
+.bc {
+	BACKGROUND-IMAGE:  url(../Pic/bc.png)
+}
+.bl {
+	BACKGROUND-IMAGE:  url(../Pic/bl.png)
+}
+.br {
+	BACKGROUND-IMAGE:  url(../Pic/br.png)
+}
+.c {
+	BACKGROUND-IMAGE: url(../Picc.html)
+}
+.l {
+	BACKGROUND-IMAGE:  url(../Pic/l.png)
+}
+.lc {
+	BACKGROUND-IMAGE: url(../Piclc.html)
+}
+.r {
+	BACKGROUND-IMAGE:  url(../Pic/r.png)
+}
+.rc {
+	BACKGROUND-IMAGE: url(../Picrc.html)
+}
+.tc {
+	BACKGROUND-IMAGE:  url(../Pic/tc.png)
+}
+.tl {
+	BACKGROUND-IMAGE:  url(../Pic/tl.png)
+}
+.tr {
+	BACKGROUND-IMAGE:  url(../Pic/tr.png)
+}
+
+</style>
+</head>
+<BODY text=white vLink=#aaccff link=#aaccff bgColor=black>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tinylogo width=326 height=130><IMG height=130 
+      alt="NeHe Productions" 
+      src="../Pic/logo.png" width=326></TD>
+      <TD vAlign=center align=middle><div align="center"><FONT class=text><FONT class=theme 
+      size=+3><B><I>第45課</I></B></FONT></FONT></div></TD>
+  </TR></TBODY></TABLE>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="30%"><img src="../Pic/lesson45.jpg" width="240" height="180"></td>
+            <td width="70%"><p><font ><b>頂點緩存</b></font></p>
+              <p><font size="3">你想更快地繪製麼？直接操作顯卡吧，這可是當前的圖形技術，不要猶豫，我帶你入門。接下來，你自己向前走吧。</font></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">速度是3D程序中最重要的指標，你必須限制繪製的多邊形的個數，或者提高顯卡繪製多邊形的效率。顯卡最近增加了一個新的擴展，叫做頂點緩存VS，它直接把頂點放置在顯卡中的高速緩存中，極大的增加了繪製速度。<br>
+        在這個教程裡，我們會加載一個高度圖，使用頂點數組高效的把網格數據發送到OpenGL裡，並使用VBO擴展把頂點數據放入高效的顯存裡。<br>
+        現在讓我們開始吧，我們先來定義一些程序參數。
+<p>&nbsp;</p>
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>#define MESH_RESOLUTION 4.0f							<span class="theme">// 每個頂點使用的像素</span><br>#define MESH_HEIGHTSCALE 1.0f							<span class="theme">// 高度的縮放比例</span><br>//#define NO_VBOS								<span class="theme">// 如果定義將不使用VBO擴展</span></PRE>
+<PRE><span class="theme">// 定義VBO擴展它們在glext.h頭文件中被定義</span><br>#define GL_ARRAY_BUFFER_ARB 0x8892<br>#define GL_STATIC_DRAW_ARB 0x88E4<br>typedef void (APIENTRY * PFNGLBINDBUFFERARBPROC) (GLenum target, GLuint buffer);<br>typedef void (APIENTRY * PFNGLDELETEBUFFERSARBPROC) (GLsizei n, const GLuint *buffers);<br>typedef void (APIENTRY * PFNGLGENBUFFERSARBPROC) (GLsizei n, GLuint *buffers);<br>typedef void (APIENTRY * PFNGLBUFFERDATAARBPROC) (GLenum target, int size, const GLvoid *data, GLenum usage);</PRE>
+<p><span class="theme">// VBO 擴展函數的指針</span><br>
+  PFNGLGENBUFFERSARBPROC glGenBuffersARB = NULL; <span class="theme">// 創建緩存名稱</span><br>
+  PFNGLBINDBUFFERARBPROC glBindBufferARB = NULL; <span class="theme">// 綁定緩存</span><br>
+  PFNGLBUFFERDATAARBPROC glBufferDataARB = NULL; <span class="theme">// 綁定緩存數據</span><br>
+  PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB = NULL; <span class="theme">// 
+  刪除緩存</span></p>
+<p></p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=back3 vAlign=top width="100%"><p>現在我們來定義自己的網格類：</p>
+        </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>class CVert														<span class="theme">// 頂點類</span>
+{
+public:
+	float x;													
+	float y;													
+	float z;													
+};
+typedef CVert CVec;												
+
+class CTexCoord													<span class="theme">// 紋理坐標類</span>
+{
+public:
+	float u;													
+	float v;													
+};
+
+//網格類
+class CMesh
+{
+public:
+	// 網格數據
+	int				m_nVertexCount;							<span class="theme">	// 頂點個數</span>
+	CVert*			m_pVertices;								<span class="theme">// 頂點數據的指針</span>
+	CTexCoord*		m_pTexCoords;								<span class="theme">// 頂點的紋理坐標</span>
+	unsigned int	m_nTextureId;								<span class="theme">// 紋理的ID</span>
+
+	unsigned int	m_nVBOVertices;								<span class="theme">// 頂點緩存對象的名稱</span>
+	unsigned int	m_nVBOTexCoords;							<span class="theme">// 頂點紋理緩存對象的名稱</span>
+
+	AUX_RGBImageRec* m_pTextureImage;							<span class="theme">// 高度數據</span>
+
+public:
+	CMesh();													<span class="theme">// 構造函數</span>
+	~CMesh();													<span class="theme">// 析構函數</span>
+
+<span class="theme">	// 載入高度圖</span>
+	bool LoadHeightmap( char* szPath, float flHeightScale, float flResolution );
+	<span class="theme">// 返回單個點的高度</span>
+	float PtHeight( int nX, int nY );
+<span class="theme">	// 創建頂點緩存對像</span>
+	void BuildVBOs();
+};
+</pre>
+
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%"><p>大部分代碼都很簡單，這裡不多加解釋。</p>
+        <p>下面我們來定義一些全局變量：</p>
+        </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>bool		g_fVBOSupported = false;							<span class="theme">// 是否支持頂點緩存對像</span>
+CMesh*		g_pMesh = NULL;										<span class="theme">// 網格數據</span>
+float		g_flYRot = 0.0f;									<span class="theme">// 旋轉角度</span>
+int			g_nFPS = 0, g_nFrames = 0;							<span class="theme">// 幀率計數器</span>
+DWORD		g_dwLastFPS = 0;									<span class="theme">// 上一幀的計數	</span>
+</pre>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%"> 下面的代碼加載高度圖,它和34課的內容差不多,在這裡不多加解釋了: 
+      </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<pre><span class="theme">//加載高度圖</span>
+bool CMesh :: LoadHeightmap( char* szPath, float flHeightScale, float flResolution )
+{
+
+	FILE* fTest = fopen( szPath, "r" );							
+	if( !fTest )												
+		return false;											
+	fclose( fTest );											
+
+<span class="theme">	// 加載圖像文件</span>
+	m_pTextureImage = auxDIBImageLoad( szPath );				
+
+<span class="theme">	// 讀取頂點數據</span>
+	m_nVertexCount = (int) ( m_pTextureImage->sizeX * m_pTextureImage->sizeY * 6 / ( flResolution * flResolution ) );
+	m_pVertices = new CVec[m_nVertexCount];						
+	m_pTexCoords = new CTexCoord[m_nVertexCount];				
+	int nX, nZ, nTri, nIndex=0;									
+	float flX, flZ;
+	for( nZ = 0; nZ < m_pTextureImage->sizeY; nZ += (int) flResolution )
+	{
+		for( nX = 0; nX < m_pTextureImage->sizeX; nX += (int) flResolution )
+		{
+			for( nTri = 0; nTri < 6; nTri++ )
+			{
+				flX = (float) nX + ( ( nTri == 1 || nTri == 2 || nTri == 5 ) ? flResolution : 0.0f );
+				flZ = (float) nZ + ( ( nTri == 2 || nTri == 4 || nTri == 5 ) ? flResolution : 0.0f );
+
+				m_pVertices[nIndex].x = flX - ( m_pTextureImage->sizeX / 2 );
+				m_pVertices[nIndex].y = PtHeight( (int) flX, (int) flZ ) *  flHeightScale;
+				m_pVertices[nIndex].z = flZ - ( m_pTextureImage->sizeY / 2 );
+
+				m_pTexCoords[nIndex].u = flX / m_pTextureImage->sizeX;
+				m_pTexCoords[nIndex].v = flZ / m_pTextureImage->sizeY;
+
+				nIndex++;
+			}
+		}
+	}
+
+<span class="theme">	// 載入紋理，它和高度圖是同一副圖像</span>
+	glGenTextures( 1, &m_nTextureId );							
+	glBindTexture( GL_TEXTURE_2D, m_nTextureId );				
+	glTexImage2D( GL_TEXTURE_2D, 0, 3, m_pTextureImage->sizeX, m_pTextureImage->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, m_pTextureImage->data );
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+<span class="theme">	// 釋放紋理數據</span>
+	if( m_pTextureImage )
+	{
+		if( m_pTextureImage->data )
+			free( m_pTextureImage->data );
+		free( m_pTextureImage );
+	}
+	return true;
+}
+</pre>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面的代碼用來計算(x,y)處的亮度</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><span class="theme">//計算(x,y)處的亮度</span>
+float CMesh :: PtHeight( int nX, int nY )
+{
+	int nPos = ( ( nX % m_pTextureImage->sizeX )  + ( ( nY % m_pTextureImage->sizeY ) * m_pTextureImage->sizeX ) ) * 3;
+	float flR = (float) m_pTextureImage->data[ nPos ];			<span class="theme">// 返回紅色份量</span>
+	float flG = (float) m_pTextureImage->data[ nPos + 1 ];		<span class="theme">// 返回綠色份量</span>
+	float flB = (float) m_pTextureImage->data[ nPos + 2 ];		<span class="theme">// 返回藍色份量</span>
+	return ( 0.299f * flR + 0.587f * flG + 0.114f * flB );		<span class="theme">// 計算亮度</span>
+}
+</pre>
+<p></p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面的代碼把頂點數據綁定到頂點緩存，即把內存中的數據發送到顯存 
+      </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>void CMesh :: BuildVBOs()<br>{<br>	glGenBuffersARB( 1, &amp;m_nVBOVertices );							<span class="theme">// 創建一個頂點緩存，並把頂點數據綁定到緩存</span><br>	glBindBufferARB( GL_ARRAY_BUFFER_ARB, m_nVBOVertices );			<br>	glBufferDataARB( GL_ARRAY_BUFFER_ARB, m_nVertexCount*3*sizeof(float), m_pVertices, GL_STATIC_DRAW_ARB );</PRE>
+<p> glGenBuffersARB( 1, &amp;m_nVBOTexCoords ); <span class="theme">// 創建一個紋理緩存，並把紋理數據綁定到緩存</span><br>
+  glBindBufferARB( GL_ARRAY_BUFFER_ARB, m_nVBOTexCoords ); <br>
+  glBufferDataARB( GL_ARRAY_BUFFER_ARB, m_nVertexCount*2*sizeof(float), m_pTexCoords, 
+  GL_STATIC_DRAW_ARB );</p>
+<p> <span class="theme">// 刪除分配的內存</span><br>
+  delete [] m_pVertices; m_pVertices = NULL;<br>
+  delete [] m_pTexCoords; m_pTexCoords = NULL</p>
+<PRE>  }</PRE>
+<p></p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">好了，現在到了初始化的地方了。首先我將分配並載入紋理數據。接著檢測是否支持VBO擴展。如果支持我們將把函數指針和它對應的函數關聯起來，如果不支持將只返回數據。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><span class="theme">//初始化</span>
+BOOL Initialize (GL_Window* window, Keys* keys)					
+{
+	g_window	= window;
+	g_keys		= keys;
+
+	<span class="theme">// 載入紋理數據</span>
+	g_pMesh = new CMesh();										
+	if( !g_pMesh->LoadHeightmap( "terrain.bmp",					
+								MESH_HEIGHTSCALE,
+								MESH_RESOLUTION ) )
+	{
+		MessageBox( NULL, "Error Loading Heightmap", "Error", MB_OK );
+		return false;
+	}
+
+<span class="theme">	// 檢測是否支持VBO擴展</span>
+#ifndef NO_VBOS
+	g_fVBOSupported = IsExtensionSupported( "GL_ARB_vertex_buffer_object" );
+	if( g_fVBOSupported )
+	{
+<span class="theme">		// 獲得函數的指針</span>
+		glGenBuffersARB = (PFNGLGENBUFFERSARBPROC) wglGetProcAddress("glGenBuffersARB");
+		glBindBufferARB = (PFNGLBINDBUFFERARBPROC) wglGetProcAddress("glBindBufferARB");
+		glBufferDataARB = (PFNGLBUFFERDATAARBPROC) wglGetProcAddress("glBufferDataARB");
+		glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC) wglGetProcAddress("glDeleteBuffersARB");
+<span class="theme">		// 創建VBO對像</span>
+		g_pMesh->BuildVBOs();									
+	}
+#else 
+	g_fVBOSupported = false;
+#endif
+<span class="theme">	//設置OpenGL狀態</span>
+	glClearColor (0.0f, 0.0f, 0.0f, 0.5f);						
+	glClearDepth (1.0f);										
+	glDepthFunc (GL_LEQUAL);									
+	glEnable (GL_DEPTH_TEST);									
+	glShadeModel (GL_SMOOTH);									
+	glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);			
+	glEnable( GL_TEXTURE_2D );									
+	glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );						
+
+	return TRUE;												
+}
+</pre>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面的函數用來檢測是否包含特定的擴展名稱</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><span class="theme">// 返回是否支持指定的擴展</span>
+bool IsExtensionSupported( char* szTargetExtension )
+{
+	const unsigned char *pszExtensions = NULL;
+	const unsigned char *pszStart;
+	unsigned char *pszWhere, *pszTerminator;
+
+	pszWhere = (unsigned char *) strchr( szTargetExtension, ' ' );
+	if( pszWhere || *szTargetExtension == '\0' )
+		return false;
+
+<span class="theme">	// 返回擴展字符串</span>
+	pszExtensions = glGetString( GL_EXTENSIONS );
+
+<span class="theme">	// 在擴展字符串中搜索</span>
+	pszStart = pszExtensions;
+	for(;;)
+	{
+		pszWhere = (unsigned char *) strstr( (const char *) pszStart, szTargetExtension );
+		if( !pszWhere )
+			break;
+		pszTerminator = pszWhere + strlen( szTargetExtension );
+		if( pszWhere == pszStart || *( pszWhere - 1 ) == ' ' )
+			if( *pszTerminator == ' ' || *pszTerminator == '\0' )
+				<span class="theme">//如果存在返回True</span>
+				return true;
+		pszStart = pszTerminator;
+	}
+	return false;
+}
+</pre>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=back3 vAlign=top width="100%"><p>好了,幾乎結束了,我們下面來看看我們的渲染代碼.</p>
+        </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>void Draw (void)<br>{<br>	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		<br>	glLoadIdentity ();											</PRE>
+<p> <span class="theme">// 顯示當前的幀率</span><br>
+  if( GetTickCount() - g_dwLastFPS &gt;= 1000 ) <br>
+  {<br>
+  g_dwLastFPS = GetTickCount(); <br>
+  g_nFPS = g_nFrames; <br>
+  g_nFrames = 0; </p>
+<p> char szTitle[256]={0}; <br>
+  sprintf( szTitle, &quot;Lesson 45: NeHe &amp; Paul Frazee's VBO Tut - %d Triangles, 
+  %d FPS&quot;, g_pMesh-&gt;m_nVertexCount / 3, g_nFPS );<br>
+  if( g_fVBOSupported ) <span class="theme">// 是否支持VBO</span><br>
+  strcat( szTitle, &quot;, Using VBOs&quot; );<br>
+  else<br>
+  strcat( szTitle, &quot;, Not Using VBOs&quot; );<br>
+  SetWindowText( g_window-&gt;hWnd, szTitle ); <span class="theme">// 設置窗口標題</span><br>
+  }<br>
+  g_nFrames++; <br>
+  <br>
+  <span class="theme">// 設置視口</span><br>
+  glTranslatef( 0.0f, -220.0f, 0.0f ); <br>
+  glRotatef( 10.0f, 1.0f, 0.0f, 0.0f ); <br>
+  glRotatef( g_flYRot, 0.0f, 1.0f, 0.0f ); </p>
+<p> <span class="theme">// 使用頂點，紋理坐標數組</span><br>
+  glEnableClientState( GL_VERTEX_ARRAY ); <br>
+  glEnableClientState( GL_TEXTURE_COORD_ARRAY ); </p>
+<p></p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">為了使用VBO，你必須告訴OpenGL內存中的那部分需要加載到VBO中。所以第一步我們要起用頂點數組和紋理坐標數組。接著我們必須告訴OpenGL去把數據的指針設置到特定的地方，glVertexPointer函數可以完成這個功能。<br>
+        我們分為啟用和不啟用VBO兩個路徑來渲染，他們都差不多，唯一的區別是當你需要把指針指向VBO緩存時，記得把數據指針設置NULL。
+<p>&nbsp;</p>
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><span class="theme">	// 如果支持VBO擴展</span><br>	if( g_fVBOSupported )<br>	{<br>		glBindBufferARB( GL_ARRAY_BUFFER_ARB, g_pMesh-&gt;m_nVBOVertices );<br>		glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );		// 設置頂點數組的指針為頂點緩存<br>		glBindBufferARB( GL_ARRAY_BUFFER_ARB, g_pMesh-&gt;m_nVBOTexCoords );<br>		glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );		// 設置頂點數組的指針為紋理坐標緩存<br>	} <br><span class="theme">	// 不支持VBO擴展</span><br>	else<br>	{<br>		glVertexPointer( 3, GL_FLOAT, 0, g_pMesh-&gt;m_pVertices ); <br>		glTexCoordPointer( 2, GL_FLOAT, 0, g_pMesh-&gt;m_pTexCoords ); <br>	}</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">好了,渲染所有的三角形吧</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>// 渲染<br>	glDrawArrays( GL_TRIANGLES, 0, g_pMesh-&gt;m_nVertexCount );		<br></PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l width="3%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="94%">最後,別忘了恢復到默認的OpenGL狀態. </TD>
+    <TD class=r width="3%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD>
+  </TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><br>	glDisableClientState( GL_VERTEX_ARRAY );				<br>	glDisableClientState( GL_TEXTURE_COORD_ARRAY );			<br>}<br></PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%"><p>如果你想更多的瞭解VBO對像,我建議你讀一下SGI的擴展說明:<br>
+          http://oss.sgi.com/projects/ogl-sample/registry<br>
+          它會給你更多的信息</p>
+        <p>好了,那就是這次的課程,如果你發現任何問題,請聯繫我.</p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+              <p>感謝<br>
+                感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+                感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+              <p>資源下載: <br>
+                文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2045.mht">網頁格式</a> 
+                <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_45.pdf">PDF格式</a><br>
+                源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/45_vbo.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+        <FONT class=text>
+        <TABLE width="100%" border=0>
+          <TBODY>
+            <TR> 
+              <TD align=left width="50%"><B><FONT size=-1><A 
+            href="Tutorial_44.html">&lt; 第44課</A></FONT></B></TD>
+              <TD align=right width="50%"><B><FONT 
+        size=-1><a href="Tutorial_46.html">第46課 &gt;&nbsp;</a></FONT></B></TD>
+            </TR>
+          </TBODY>
+        </TABLE>
+        </FONT> 		
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+</BODY>
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_45.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:05:22 GMT -->
+</HTML>

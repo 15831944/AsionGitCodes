@@ -1,0 +1,419 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_29.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:47 GMT -->
+<head>
+<title>NeHe OpenGL教程第二十九課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第29課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="26%"><img src="../Pic/lesson29.jpg" width="240" height="180"></td>
+            <td width="74%"><p><FONT class=head>Blitter 函數:</FONT></p>
+              <p><font size="3">類似於DirectDraw的blit函數，過時的技術，我們有實現了它。它非常的簡單，就是把一塊紋理貼到另一塊紋理上。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這篇文章是有Andreas Lffler所寫的，它寫了一份原始的教程。過了幾天，Rob Fletcher發了封郵件給我，他重新改寫了所有的代碼，我在它的基礎上把glut的框架變換為Win32的框架。 
+      <p>現在讓我們開始吧！</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> </font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面是一個保存圖像數據的結構</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+typedef struct Texture_Image
+{
+	int width;									<font color=#ffffaa>// 寬</font>
+	int height;									<font color=#ffffaa>// 高</font>
+	int format;									<font color=#ffffaa>// 像素格式</font>
+	unsigned char *data;								<font color=#ffffaa>// 紋理數據</font>
+} TEXTURE_IMAGE;
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來定義了兩個指向這個結構的指針</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+typedef TEXTURE_IMAGE *P_TEXTURE_IMAGE;							
+
+P_TEXTURE_IMAGE t1;									<font color=#ffffaa>// 指向保存圖像結構的指針</font>
+P_TEXTURE_IMAGE t2;									<font color=#ffffaa>// 指向保存圖像結構的指針</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的函數為w*h的圖像分配內存</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+P_TEXTURE_IMAGE AllocateTextureBuffer( GLint w, GLint h, GLint f)
+{
+	P_TEXTURE_IMAGE ti=NULL;							
+	unsigned char *c=NULL;								</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+	ti = (P_TEXTURE_IMAGE)malloc(sizeof(TEXTURE_IMAGE));					<font color=#ffffaa>// 分配圖像結構內存</font>
+
+	if( ti != NULL ) {
+		ti->width  = w;								<font color=#ffffaa>// 設置寬度</font>
+		ti->height = h;								<font color=#ffffaa>// 設置高度</font>
+		ti->format = f;								<font color=#ffffaa>// 設置格式</font>
+		<font color=#ffffaa>// 分配w*h*f個字節</font>
+		c = (unsigned char *)malloc( w * h * f); 
+		if ( c != NULL ) {
+			ti->data = c;
+		}
+		else {
+			MessageBox(NULL,"內存不足","分配圖像內存錯誤",MB_OK | MB_ICONINFORMATION);
+			return NULL;
+		}
+	}
+</pre>
+</font><font color=#aaffaa size=3> 
+<pre>
+	else
+	{
+		MessageBox(NULL,"內存不足","分配圖像結構內存錯誤",MB_OK | MB_ICONINFORMATION);
+		return NULL;
+	}
+	return ti;									<font color=#ffffaa>// 返回指向圖像數據的指針</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的函數釋放分配的內存</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+<font color=#ffffaa>// 釋放圖像內存</font>
+void DeallocateTexture( P_TEXTURE_IMAGE t )
+{
+	if(t)
+	{
+		if(t->data)
+		{
+			free(t->data);							<font color=#ffffaa>// 釋放圖像內存</font>
+		}
+
+		free(t);								<font color=#ffffaa>	// 釋放圖像結構內存</font>
+	}
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面我們來讀取*.raw的文件，這個函數有兩個參數，一個為文件名，另一個為保存文件的圖像結構指針。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre><font color=#ffffaa>// 讀取*.RAW文件，並把圖像文件上下翻轉一符合OpenGL的使用格式。</font>
+int ReadTextureData ( char *filename, P_TEXTURE_IMAGE buffer)
+{
+	FILE *f;
+	int i,j,k,done=0;
+	int stride = buffer->width * buffer->format;					<font color=#ffffaa>// 記錄每一行的寬度，以字節為單位</font>
+	unsigned char *p = NULL;
+
+	f = fopen(filename, "rb");							<font color=#ffffaa>// 打開文件</font>
+	if( f != NULL )								<font color=#ffffaa>// 如果文件存在</font>
+	{
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如果文件存在，我們通過一個循環讀取我們的紋理，我們從圖像的最下面一行，一行一行的讀取圖像。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+		for( i = buffer->height-1; i >= 0 ; i-- )				<font color=#ffffaa>// 循環所有的行，從最下面以行開始，一行一行的讀取</font>
+		{
+			p = buffer->data + (i * stride );
+			for ( j = 0; j < buffer->width ; j++ )			<font color=#ffffaa>// 讀取每一行的數據</font>
+			{
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的循環讀取每一像素的數據，並把alpha設為255</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+				for ( k = 0 ; k < buffer->format-1 ; k++, p++, done++ )
+				{
+					*p = fgetc(f);					<font color=#ffffaa>// 讀取一個字節</font>
+				}
+				*p = 255; p++;						<font color=#ffffaa>// 把255存儲在alpha通道中</font>
+			}
+		}
+		fclose(f);								<font color=#ffffaa>// 關閉文件</font>
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如果出現錯誤，彈出一個提示框</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	else						
+	{
+		MessageBox(NULL,"不能打開文件","圖像錯誤",MB_OK | MB_ICONINFORMATION);
+	}
+	return done;									<font color=#ffffaa>// 返回讀取的字節數</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼創建一個2D紋理，和前面課程介紹的方法相同</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+void BuildTexture (P_TEXTURE_IMAGE tex)
+{
+	glGenTextures(1, &texture[0]);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, tex->width, tex->height, GL_RGBA, GL_UNSIGNED_BYTE, tex->data);
+}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在到了blitter函數的地方了，他運行你把一個圖像的任意部分複製到另一個圖像的任意部分，並混合。<br>
+      src為原圖像<br>
+      dst為目標圖像<br>
+      src_xstart,src_ystart為要複製的部分在原圖像中的位置<br>
+      src_width,src_height為要複製的部分的寬度和高度<br>
+      dst_xstart,dst_ystart為複製到目標圖像時的起始位置<br>
+      上面的意思是把原圖像中的(src_xstart,src_ystart)-(src_width,src_height)複製到目標圖像中(dst_xstart,dst_ystart)-(src_width,src_height)<br>
+      blend設置是否啟用混合，0為不啟用，1為啟用<br>
+      alpha設置源圖像中顏色在混合時所佔的百分比 </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void Blit( P_TEXTURE_IMAGE src, P_TEXTURE_IMAGE dst, int src_xstart, int src_ystart, int src_width, int src_height,
+	   int dst_xstart, int dst_ystart, int blend, int alpha)
+{
+	int i,j,k;
+	unsigned char *s, *d;								
+
+	<font color=#ffffaa>// 掐斷alpha的值</font>
+	if( alpha > 255 ) alpha = 255;
+	if( alpha < 0 ) alpha = 0;
+
+	<font color=#ffffaa>// 判斷是否啟用混合</font>
+	if( blend < 0 ) blend = 0;
+	if( blend > 1 ) blend = 1;
+</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+	d = dst->data + (dst_ystart * dst->width * dst->format);  			<font color=#ffffaa>// 要複製的像素在目標圖像數據中的開始位置 </font>
+	s = src->data + (src_ystart * src->width * src->format);			<font color=#ffffaa>// 要複製的像素在源圖像數據中的開始位置</font>
+
+	for (i = 0 ; i < src_height ; i++ )						<font color=#ffffaa>// 循環每一行</font>
+	{
+</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+		s = s + (src_xstart * src->format);					<font color=#ffffaa>// 移動到下一個像素</font>
+		d = d + (dst_xstart * dst->format);				
+		for (j = 0 ; j < src_width ; j++ )					<font color=#ffffaa>// 循環複製一行</font>
+		{
+</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+			for( k = 0 ; k < src->format ; k++, d++, s++)			<font color=#ffffaa>// 複製每一個字節</font>
+			{
+				if (blend)						<font color=#ffffaa>// 如果啟用了混合</font>
+					*d = ( (*s * alpha) + (*d * (255-alpha)) ) >> 8;	<font color=#ffffaa>// 根據混合複製顏色</font>
+				else							
+					*d = *s;						<font color=#ffffaa>// 否則直接複製</font>
+			}
+		}
+		d = d + (dst->width - (src_width + dst_xstart))*dst->format;		<font color=#ffffaa>// 移動到下一行</font>
+		s = s + (src->width - (src_width + src_xstart))*src->format;		
+	}
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>初始化代碼基本不變，我們使用新的函數，加載*.raw紋理。並把紋理t2的一部分blit到t1中混合，接著按常規的方法設置2D紋理。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+int InitGL(GLvoid) 
+{
+	t1 = AllocateTextureBuffer( 256, 256, 4 );						<font color=#ffffaa>// 為圖像t1分配內存</font>
+	if (ReadTextureData("Data/Monitor.raw",t1)==0)					<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>讀取圖像數據</font></font>
+	{										<font color=#ffffaa>// 失敗則彈出對話框</font>
+		MessageBox(NULL,"不能讀取 'Monitor.raw' 文件","讀取錯誤",MB_OK | MB_ICONINFORMATION);
+		return FALSE;
+	}
+
+	t2 = AllocateTextureBuffer( 256, 256, 4 );					<font color=#ffffaa>	// </font><font color=#aaffaa size=3><font color=#ffffaa>為圖像t2分配內存</font></font><font color=#ffffaa></font>
+	if (ReadTextureData("Data/GL.raw",t2)==0)						<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#aaffaa size=3><font color=#ffffaa>讀取圖像數據</font></font></font>
+	{										<font color=#ffffaa>// 失敗則彈出對話框</font>
+		MessageBox(NULL,"不能讀取 'GL.raw' 文件","讀取錯誤 ",MB_OK | MB_ICONINFORMATION);
+		return FALSE;
+	}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>把圖像t2的（127，127）-（256，256）部分和圖像t1的（64，64，196，196）部分混合</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	<font color=#ffffaa>// 把圖像t2的（127，127）-（256，256）部分和圖像t1的（64，64，196，196）部分混合</font>
+	Blit(t2,t1,127,127,128,128,64,64,1,127);					
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><FONT color="#FFFFFF">下面的代碼和前面一樣，釋放分配的空間，創建紋理</font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	BuildTexture (t1);								<font color=#ffffaa>// 把t1圖像加載為紋理</font>
+
+	DeallocateTexture( t1 );							<font color=#ffffaa>// 釋放圖像數據</font>
+	DeallocateTexture( t2 );						
+
+	glEnable(GL_TEXTURE_2D);							<font color=#ffffaa>// 使用2D紋理</font>
+
+	glShadeModel(GL_SMOOTH);							<font color=#ffffaa>// 使用光滑著色</font>
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);					<font color=#ffffaa>// 設置背景色為黑色</font>
+	glClearDepth(1.0);								<font color=#ffffaa>// 設置深度緩存清楚值為1</font>
+	glEnable(GL_DEPTH_TEST);							<font color=#ffffaa>// 使用深度緩存</font>
+	glDepthFunc(GL_LESS);							<font color=#ffffaa>// 設置深度測試函數</font>
+
+	return TRUE;
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼繪製一個盒子</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLvoid DrawGLScene(GLvoid)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				<font color=#ffffaa>// 清楚顏色緩存和深度緩存</font>
+	glLoadIdentity();							
+	glTranslatef(0.0f,0.0f,-5.0f);
+
+	glRotatef(xrot,1.0f,0.0f,0.0f);
+	glRotatef(yrot,0.0f,1.0f,0.0f);
+	glRotatef(zrot,0.0f,0.0f,1.0f);
+
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+	glBegin(GL_QUADS);
+		<font color=#ffffaa>// 前面</font>
+		glNormal3f( 0.0f, 0.0f, 1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+		<font color=#ffffaa>// 後面</font>
+		glNormal3f( 0.0f, 0.0f,-1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+		<font color=#ffffaa>// 上面</font>
+		glNormal3f( 0.0f, 1.0f, 0.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+		<font color=#ffffaa>// 下面</font>
+		glNormal3f( 0.0f,-1.0f, 0.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+		<font color=#ffffaa>// 右面</font>
+		glNormal3f( 1.0f, 0.0f, 0.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+		<font color=#ffffaa>// 左面</font>
+		glNormal3f(-1.0f, 0.0f, 0.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+	glEnd();
+
+	xrot+=0.3f;
+	yrot+=0.2f;
+	zrot+=0.4f;</pre>
+<pre>
+	return TRUE; <font color=#ffffaa>// 一切 OK</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>KillGLWindow() 函數沒有變化</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>CreateGLWindow函數沒有變化</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+ 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>WinMain() 沒有變化</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+ 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>好了，現你可以很輕鬆的繪製很多混合效果。如果你有什麼好的建議，請告訴我。 </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2029.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_29.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/29_Blit.rar">RAR格式</a></p></td>
+  </tr>
+</table><table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_28.html">< 
+          <font face="Tahoma,Verdana,sans-serif">第</font>28<font face="Tahoma,Verdana,sans-serif">課</font></a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_30.html"><font face="Tahoma,Verdana,sans-serif">第</font>30<font face="Tahoma,Verdana,sans-serif">課</font> 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_29.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:53 GMT -->
+</html>

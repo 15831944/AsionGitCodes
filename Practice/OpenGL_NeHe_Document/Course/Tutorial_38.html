@@ -1,0 +1,432 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn --><html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_38.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:03:22 GMT -->
+<head>
+<title>NeHe OpenGL教程第三十八課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第38課 
+      </i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="32%"><img src="../Pic/lesson38.jpg" width="240" height="180"></td>
+            <td width="68%"><p><FONT class=head>從資源文件中載入圖像:</FONT></p>
+              <p><font size="3">如何把圖像數據保存到*.exe程序中，使用Windows的資源文件吧，它既簡單又實用。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>歡迎來到NeHe教程第38課。離上節課的寫作已經有些時日了，加上寫了一整天的code，也許筆頭已經開始生銹了 
+      :) 
+      <p>現在你已經學會了如何做方格貼圖，如何讀入bitmap及各種光柵圖像...那麼如何做三角形貼圖，又如何在.exe文件中體現你的紋理呢？ </p>
+      <p>我每每被問及這兩個問題，可是一旦你看到他們是多麼簡單，你就會大罵自己居然沒有想到過 :) </p>
+      <p>我不會事無鉅細地解釋每一個細節，只需給你一些抓圖，就明白了。我將基於最新的code，請在主頁&quot;NeHeGL I Basecode&quot;下或者這張網頁最下面下載。 
+      </p>
+      <p>首先，我們把圖像加載入資源文件。我向大家已經知道怎麼做了，只是，你忽略了幾步，於是值得到一些無用的資源文件。裡面有bitmap文件，卻無法使用。 
+      </p>
+      <p>還記得吧？我們使用Visual C++ 6.0 做的。如果你使用其它工具，這頁教材關於資源的部分（尤其是那些圖）完全不適用。 </p>
+      <p>* 暫時你只能用24bit BMP 圖像。如果讀8bit BMP文件要寫很多額外的code。我很希望聽到你們誰有更小的/更好的loader。我這裡的讀入8bit 
+        和 24bit BMP 的code實在臃腫。用LoadImage就可以。 <br>
+      </p>
+      <FONT face=Tahoma,Verdana,sans-serif size=-1> 
+      <center>
+        <img src="../Pic/resource1.jpg"> 
+      </center>
+      <br>
+      <br>
+      </font>打開文件，點擊「插入」菜單，選「資源」<FONT face=Tahoma,Verdana,sans-serif size=-1><br>
+      <br>
+      <center>
+        <img src="../Pic/resource2.jpg"> 
+      </center>
+      </font>然後選擇你要插入的資源類型BITMAP文件，單擊&quot;插入&quot; <FONT face=Tahoma,Verdana,sans-serif size=-1><br>
+      <center>
+        <img src="../Pic/resource3.jpg"> 
+      </center>
+      </font>然後是文件窗口，進入DATA目錄，選中三個圖形文件（用Ctrl啦）然後點「讀入」。注意文件類型是否正確。 <FONT face=Tahoma,Verdana,sans-serif size=-1> 
+      <center>
+        <img src="../Pic/resource4.jpg"> 
+      </center>
+      </font>接下來會彈出三次警告（一個文件一次），說讀入正確，但該文件不能被瀏覽或編輯，因為它有多於256種顏色。沒什麼的！<FONT face=Tahoma,Verdana,sans-serif size=-1> 
+      <center>
+        <img src="../Pic/resource5.jpg"> 
+      </center>
+      <br>
+      <br>
+      </font>一旦所有圖形都調入，將會出現一個列表。每個圖分配有一個ID，每個ID都是IDB_BITMAP打頭的，然後數字1-3。你要是懶得改，就不用管它了。不過我們還都比較勤快！ 
+      <FONT face=Tahoma,Verdana,sans-serif size=-1><br>
+      <br>
+      <center>
+        <img src="../Pic/resource6.jpg"> 
+      </center>
+      <br>
+      <br>
+      </font>右健單擊每個ID，選&quot;屬性&quot;，然後重命名，使之與文件名匹配。就像我圖片上那樣。<FONT face=Tahoma,Verdana,sans-serif size=-1><br>
+      <br>
+      <center>
+        <img src="../Pic/resource7.jpg"> 
+      </center>
+      <br>
+      <br>
+      </font>接下來，選「文件--〉全部保存」。你剛剛創建一個新的資源文件，所以Windows會問你取什麼名字。你隨便拉，也可以叫&quot;lesson38.rc&quot; 
+      , 然後保存。 
+      <p>到此為止，你有了一個資源文件，裡面全是保存在硬盤上的Bitmap 圖形文件，要使用這些文件，你還需要完成一系列步驟。 </p>
+      <FONT face=Tahoma,Verdana,sans-serif size=-1><br>
+      <br>
+      <center>
+        <img src="../Pic/resource8.jpg"> 
+      </center>
+      <br>
+      </font><br>
+      接下來該把資源文件加到你自己的項目裡面了。選「項目--〉添加到項目--〉文件」<FONT face=Tahoma,Verdana,sans-serif size=-1><br>
+      <br>
+      <center>
+        <img src="../Pic/resource9.jpg"> 
+      </center>
+      <br>
+      </font><br>
+      選擇resorce.h文件和資源文件Lesson38.rc（用Ctrl）<FONT face=Tahoma,Verdana,sans-serif size=-1><br>
+      <br>
+      <center>
+        <img src="../Pic/resource10.jpg"> 
+      </center>
+      <br>
+      <br>
+      </font>最後確認資源文件Lesson38.rc放入RESOURCE FILES文件夾。就像上面圖片裡那樣，點擊並拖入RESOURCE FILES文件夾就好了。 
+      <p>移動之後選「文件--〉全部保存」，然後文件部分就好了。好多的圖阿:) </p>
+      <p>然後我們開始code的部分。下面一段最重要的一行是#include &quot;resource.h&quot;.沒有這行，編譯的時候就會有無數未定義變量的錯誤。resource.h文件定義了資源文件裡的對象。所以要從IDB_BUTTERFLY1里面讀取數據的話，最好include這個頭文件 
+        ! </p>
+      <FONT face=Tahoma,Verdana,sans-serif size=-1>&nbsp; </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+#include &lt;windows.h&gt;			
+#include &lt;gl\gl.h&gt;										
+#include &lt;gl\glu.h&gt;										
+#include &lt;gl\glaux.h&gt;										
+#include "NeHeGL.h"									
+#include "resource.h"										<font color=#ffffaa>// 資源文件的頭文件</font>
+
+#pragma comment( lib, "opengl32.lib" )								
+#pragma comment( lib, "glu32.lib" )								
+#pragma comment( lib, "glaux.lib" )								
+
+GL_Window*	g_window;
+Keys*		g_keys;
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面一段第一行分配三個紋理所需空間，接下來的結構體用於保存關於約50個在屏幕上運動的物體的信息。<br>
+      tex將跟蹤每個物體所用紋理，x是物體的x坐標，y是y坐標，z,z坐標，yi是一個隨機數用來控制物體下落速度，<br>
+      spinz用來控制沿z軸的旋轉，spinzi是另一個隨機樹，記錄旋轉速度。flap用來控制物體的翅膀（一會在解釋這個）隨機數fi控制翅膀拍打的速度。 
+      <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+<font color=#ffffaa>// 定義三個保存紋理變量的ID</font>
+GLuint texture[3];											<font color=#ffffaa>// 保存三個紋理</font>
+
+struct object											<font color=#ffffaa>// 定義一個物體</font>
+{
+	int   tex;										<font color=#ffffaa>// 紋理值</font>
+	float x;										<font color=#ffffaa>	// 位置</font>
+	float y;										
+	float z;										
+	float yi;											<font color=#ffffaa>// 速度</font>
+	float spinz;										<font color=#ffffaa>// 沿Z軸旋轉的角度和速度</font>
+	float spinzi;										
+	float flap;										<font color=#ffffaa>// 是否翻轉三角形</font>
+	float fi;										
+};
+
+object obj[50];											<font color=#ffffaa>// 創建50個物體</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面一段代碼是物體obj[loop]的初始化，loop從0到49（表示50個物體中的一個）。首先是隨機紋理從0到2表示<br>
+      一個隨機著色的蝴蝶。x坐標隨機的取-17.0f到+17.0f之間的值，y取18.0f，也就是從屏幕的上面一點點開始，<br>
+      這樣一開始時看不到物體的。z也是-10.0f到-40.f之間的隨機數，spinzi取-1.0f到1.0f之間。flap取翅膀中心<br>
+      位置，為0.0f。最後拍打速度fi和下落速度yi也是隨機的。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void SetObject(int loop)									<font color=#ffffaa>// 循環設置50個物體</font>
+{
+	obj[loop].tex=rand()%3;								<font color=#ffffaa>// 紋理</font>
+	obj[loop].x=rand()%34-17.0f;							<font color=#ffffaa>// 位置</font>
+	obj[loop].y=18.0f;									
+	obj[loop].z=-((rand()%30000/1000.0f)+10.0f);						
+	obj[loop].spinzi=(rand()%10000)/5000.0f-1.0f;						<font color=#ffffaa>// 旋轉</font>
+	obj[loop].flap=0.0f;									
+	obj[loop].fi=0.05f+(rand()%100)/1000.0f;						
+	obj[loop].yi=0.001f+(rand()%1000)/10000.0f;						
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這回該到了最有意思的地方了。從資源文件中讀入bitmap，轉為紋理。hBMP是指向這個bitmap文件的指針，<br>
+      它將告訴我們的程序從哪裡讀取數據。BMP是一個bitmap結構體，我們把從資源文件中讀取的數據保存在裡面。<br>
+      第三行是告訴我們的程序我們將使用哪些ID：IDB_BUTTERFLY1,IDB_BUTTERFLY2,IDB_BUTTERFLY3。要用更多<br>
+      的圖像的話，只需增加資源文件中的圖像，並在Texture[]中增加新的ID。 <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void LoadGLTextures()										<font color=#ffffaa>// 資源文件中讀入bitmap，轉為紋理</font>
+{
+	HBITMAP hBMP;										<font color=#ffffaa>// 位圖句柄</font>
+	BITMAP	BMP;										<font color=#ffffaa>// 位圖結構</font>
+
+	<font color=#ffffaa>// 紋理句柄</font>
+	byte	Texture[]={ IDB_BUTTERFLY1, IDB_BUTTERFLY2, IDB_BUTTERFLY3 };
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><FONT color="#FFFFFF">下面一行使用sizeof(Texture)來計算要創建多少個紋理。我們有3個ID，也就是3個紋理。</font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glGenTextures(sizeof(Texture), &amp;texture[0]);							<font color=#ffffaa>// 創建三個紋理</font>
+	for (int loop=0; loop&lt;sizeof(Texture); loop++)						<font color=#ffffaa>// 循環載入所有的位圖</font>
+	{
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>LoadImage需要如下參數：GetModuleHandle(NULL)-指向實例的句柄，MAKEINTRESOURCE(Texture[loop])-把Texture[loop]從整型轉為一個資<br>
+      源值，也就是要讀的圖形文件。IMAGE_BITMAP-告訴我們要讀的是一個bitmap文件。 <br>
+      接下來兩個參數(0,0)是讀入圖像的高度和寬度像素數，使用默認大小就設為0。 <br>
+      最後一個參數(LR_CREATEDIBSECTION)返回DIB section bitmap??這是一個沒有保存顏色信息的bitmap。也正是我們需要的。 
+      <br>
+      hBMP 指向從LoadImage()讀入的bitmap數據。 <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+		hBMP=(HBITMAP)LoadImage(GetModuleHandle(NULL),MAKEINTRESOURCE(Texture[loop]), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>檢查指針hBMP是否有效，即指向有用數據。如果沒有指向任何數據，也可以彈出錯誤提示。 <br>
+      如果數據存在，用GetObject()從hBMP取得數據(sizeof(BMP))並存儲在BMP中。 <br>
+      glPixelStorei告訴OpenGL這些數據是以word alignments存儲的，也就是每像素4字節。 <br>
+      綁定紋理，設置濾波方式為GL_LINEAR_MIPMAP_LINEAR(又好又光滑)，然後生成紋理。 <br>
+      注意到我們使用BMP.bmWidth和BMP.bmHeight獲取圖像的高度和寬度。並用GL_BGR_EXT交換紅藍，實際使用的資源數據是從BMP.bmBits中取得的<br>
+      。 <br>
+      最後刪除bitmap對象，釋放所有與之相聯繫的系統資源空間。 <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+		if (hBMP)									<font color=#ffffaa>// 位圖是否存在</font>
+		{									<font color=#ffffaa>// 存在</font>
+			GetObject(hBMP,sizeof(BMP), &amp;BMP);					<font color=#ffffaa>// 獲得位圖</font>
+			glPixelStorei(GL_UNPACK_ALIGNMENT,4);				<font color=#ffffaa>// 以四字節方式對其內存</font>
+			glBindTexture(GL_TEXTURE_2D, texture[loop]);				<font color=#ffffaa>// 綁定位圖</font>
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);		<font color=#ffffaa>// 設置紋理過濾器</font>
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR); <font color=#ffffaa>
+		// 創建紋理</font>
+			gluBuild2DMipmaps(GL_TEXTURE_2D, 3, BMP.bmWidth, BMP.bmHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+			DeleteObject(hBMP);						<font color=#ffffaa>// 刪除位圖對像</font>
+		}
+	}
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>init code沒有什麼新鮮的，只是增加了LoadGLTextures()調用上面的code。清屏的顏色是黑色，不進行深度檢測，這樣比較快。啟用紋理映<br>
+      射和混色效果。 <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+BOOL Initialize (GL_Window* window, Keys* keys)							<font color=#ffffaa>// 初始化</font>
+{
+	g_window	= window;
+	g_keys		= keys;
+
+	LoadGLTextures();										<font color=#ffffaa>//載入紋理</font>
+
+	glClearColor (0.0f, 0.0f, 0.0f, 0.5f);							<font color=#ffffaa>// 設置背景</font>
+	glClearDepth (1.0f);									
+	glDepthFunc (GL_LEQUAL);								
+	glDisable(GL_DEPTH_TEST);									<font color=#ffffaa>// 啟用深度測試</font>
+	glShadeModel (GL_SMOOTH);								
+	glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);				
+	glEnable(GL_TEXTURE_2D);									<font color=#ffffaa>// 啟用2D紋理</font>
+	glBlendFunc(GL_ONE,GL_SRC_ALPHA);								<font color=#ffffaa>// 使用混合</font>
+	glEnable(GL_BLEND);									</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><FONT color="#000066">初始化所有的物體</font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	for (int loop=0; loop&lt;50; loop++)
+	{
+		SetObject(loop);							
+	}
+
+	return TRUE;										<font color=#ffffaa>// 成功返回</font>
+}
+
+void Deinitialize (void)									
+{
+}
+
+void Update (DWORD milliseconds)									<font color=#ffffaa>// 更新,執行動畫</font>
+{
+	if (g_keys-&gt;keyDown [VK_ESCAPE] == TRUE)							<font color=#ffffaa>// 按ESC退出</font>
+	{
+		TerminateApplication (g_window);						
+	}
+
+	if (g_keys-&gt;keyDown [VK_F1] == TRUE)								<font color=#ffffaa>// 按F1切換顯示模式</font>
+	{
+		ToggleFullscreen (g_window);							
+	}
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來看看繪製代碼。在這部分我將講解如何用盡可能簡單的方式將一個圖像映到兩個三角形上。有些人認為有理由相信，一個圖像到三角形<br>
+      上的單一映射是不可能的。 <br>
+      實際上，你可以輕而易舉地將圖像映到任何形狀的區域內。使得圖像與邊界匹配或者完全不考慮形式。根本沒關係的。（譯者：我想作者的意<br>
+      思是，從長方形到三角形的解析影射是不存在的，但不考慮那麼多的話，任意形狀之間的連續影射總是可以存在的。他說的使紋理與邊界匹配<br>
+      ，大概是指某一種參數化的方法，簡單地說使得扭曲最小。） <br>
+      首先清屏，循環潤色50個蝴蝶對象。 <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void Draw (void)										<font color=#ffffaa>// 繪製場景</font>
+{
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);					
+
+	for (int loop=0; loop&lt;50; loop++)							
+	{
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 調用glLoadIdentify()重置投影矩陣，然後選擇對象的紋理。用glTranslatef()為蝴蝶定位，然後沿x軸旋轉45度。使之向觀眾微略傾斜，這<br>
+      樣比較有立體感。最後沿z軸旋轉，蝴蝶就旋轉下落了。 <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+		glLoadIdentity ();								<font color=#ffffaa>// 重置矩陣</font>
+		glBindTexture(GL_TEXTURE_2D, texture[obj[loop].tex]);				<font color=#ffffaa>// 綁定紋理</font>
+		glTranslatef(obj[loop].x,obj[loop].y,obj[loop].z);				<font color=#ffffaa>// 繪製物體</font>
+		glRotatef(45.0f,1.0f,0.0f,0.0f);						
+		glRotatef((obj[loop].spinz),0.0f,0.0f,1.0f);					</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>其實到三角形上的映射和到方形上並沒有很大區別。只是你只有三個定點，要小心一點。 <br>
+      下面的code中，我們將會值第一個三角形。從一個設想的方形的右上角開始，到左上角，再到左下角。潤色的結果像下面這樣：<FONT face=Tahoma,Verdana,sans-serif size=-1><br>
+      <br>
+      <br>
+      <center>
+        <img src="../Pic/triangle1.jpg"> 
+      </center>
+      <br>
+      <br>
+      </font>注意半個蝴蝶出現了。另外半個出現在第二個三角形裡。同樣地將三個紋理坐標與頂點坐標非別對應，這給出充分的信息定義一個三角形上的映射。 
+      <br></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+		glBegin(GL_TRIANGLES);	
+
+			glTexCoord2f(1.0f,1.0f); glVertex3f( 1.0f, 1.0f, 0.0f);			
+			glTexCoord2f(0.0f,1.0f); glVertex3f(-1.0f, 1.0f, obj[loop].flap);	
+			glTexCoord2f(0.0f,0.0f); glVertex3f(-1.0f,-1.0f, 0.0f);			</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的code潤色另一半。同上，只是我們的三角變成了從右上到左下，再到右下。 
+      <center>
+        <img src="../Pic/triangle2.jpg"> 
+      </center>
+      第一個三角形的第二點和第二個三角形的第三點（也就是翅膀的尖端）在z方向往復運動（即z=-1.0f和1.0f之間），兩個三角形沿著蝴蝶的身<br>
+      體折疊起來，產生拍打的效果，簡易可行。 <br></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+
+			glTexCoord2f(1.0f,1.0f); glVertex3f( 1.0f, 1.0f, 0.0f);			
+			glTexCoord2f(0.0f,0.0f); glVertex3f(-1.0f,-1.0f, 0.0f);			
+			glTexCoord2f(1.0f,0.0f); glVertex3f( 1.0f,-1.0f, obj[loop].flap);	
+
+		glEnd();				
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面一段通過從obj[loop].y中遞減obj[loop].yi使蝴蝶自上而下運動。spinz值遞增spinzi（可正可負）flap遞增fi.fi的正負取決於翅膀向<br>
+      上還是向下運動。 <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+		<font color=#ffffaa>//移動，選擇圖像</font>
+		obj[loop].y-=obj[loop].yi;							
+		obj[loop].spinz+=obj[loop].spinzi;						
+		obj[loop].flap+=obj[loop].fi;							
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>當蝴蝶向下運行時，需要檢查是否越出屏幕，如果是，就調用SetObject(loop)來給蝴蝶賦新的紋理，新下落速度等。 
+    </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+		if (obj[loop].y&lt;-18.0f)								<font color=#ffffaa>//判斷是否超出了屏幕，如果是重置它</font>
+		{
+			SetObject(loop);							
+		}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>翅膀拍打的時候，還要檢查flap是否小於-1.0f或大於1.0f，如果是，令fi=-fi，以改變運動方向。Sleep(15)是用來減緩運行速度，每幀15毫<br>
+      秒。在我朋友的機器上，這讓蝴蝶瘋狂的飛舞。不過我懶得改了:) <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+		if ((obj[loop].flap&gt;1.0f) || (obj[loop].flap&lt;-1.0f))				
+		{
+			obj[loop].fi=-obj[loop].fi;
+		}
+	}
+
+	Sleep(15);										
+
+	glFlush ();									
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>希望你在這一課學的開心。也希望通過這一課，從資源文件裡讀取紋理，和三角形映射的過程變得比較容易理解。我花五分鐘又衝讀了一遍，<br>
+        感覺還好。如果你還有什麼問題，儘管問。我希望我的講義盡可能好，因此期待您的任何回應。</p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2038.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_38.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/38_Resource.rar">RAR格式</a></p></td>
+  </tr>
+</table><table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_37.html">< 
+          第37課 </a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_39.html">第39課 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_38.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:04:31 GMT -->
+</html>

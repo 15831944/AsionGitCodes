@@ -1,0 +1,552 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<HTML>
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_40.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:04:33 GMT -->
+<HEAD><TITLE>NeHe OpenGL教程第四十課，DancingWind翻譯</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0
+cellspacing=0 width="100%"><tr><td width=326 height=130><img
+src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center
+width="75%"><font color=#ffccaa size=+3><b><i>第40課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="31%"><img src="../Pic/lesson40.jpg" width="240" height="180"></td>
+            <td width="69%"><p><FONT class=head>繩子的模擬:</FONT></p>
+              <p><font size="3">怎樣模擬一根繩子呢，把它想像成一個個緊密排列的點，怎麼樣有了思路了吧，在這一課你你將學會怎樣建模，簡單吧，你能模擬更多。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0
+cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28
+height=28></td><td width="100%"><img src="../Pic/tc.png" width=100%
+height=28></td><td><img src="../Pic/tr.png" width=28
+height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0
+width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td
+width=100% valign=top><u>繩索模擬</u> <BR> <BR>
+      在這個教程裡我們將模擬一段繩索，我們是在39課的基礎上進行的。<BR> <BR>
+      在物理模擬中，我們必須設置各個物理量，就像它們在自然界中的行為一樣。模擬中的運動並不一定和自然界相同，我們使用的運動模型，必須和我們需要模擬的目的有關，目的決定了它的精確度。要知道我們的目標不是模擬原子和分子，也不是模擬成千上萬的粒子系。首先我們需要確定我們模擬的目標，才能創建我們的物理模型。它和下面內容相關：<BR> 
+      <BR> <FONT color=#ffffaa>1. 運動的數學表示<BR>
+      2. 執行模擬的計算機的速度</FONT><BR> <BR> <U>1. 運動的數學表示:</U> <BR> <BR>
+      這個問題決定了我們使用何種數學方程來模擬運動，使用經典力學還是量子力學。<BR> <BR> <U>2. 執行模擬的計算機的速度:</U> <BR> 
+      <BR>
+      計算機的速度決定了我們可以模擬的精度。<BR> <BR> <U>設計繩索的物理模型:</U> <BR> <BR>
+      我們在經典力學和高於500Mhz的計算機上模擬這個問題。首先我們需要設定需要的精度，我們使用一系列互相用彈簧連接的質點來模擬繩索，精度決定了我們用多少個點來模擬，當然越多越精確。在下面我決定用50或100個點來模擬繩子一段3或4m長的繩子，換句話說，我們的模擬精度就是3到8厘米。<BR> 
+      <BR> <U>設計運動模型:</U> <BR> <BR>
+      在繩子中，施加給各個質點的力來自於自身的質量和相連的內力（參見大學裡的普通力學）。如下我們用&quot;O&quot;表示質點，「—」表示連接質點的彈簧。 
+      <PRE><font color="#ffffaa">O----O----O----O
+1    2    3    4
+</font></PRE>
+      <p>彈簧的力學公式如下: <BR>
+        <BR>
+        <FONT color=#aaffaa>力 = -k * x</FONT><BR>
+        <FONT 
+      color=#ffffaa>k: 彈性係數<BR>
+        x: 相距平衡位置的位移</FONT><BR>
+        <BR>
+        上面的公式說明，如果相鄰點的距離為平衡距離，那麼它們不受到任何力的作用。如果我們設置平衡位置為5cm，那麼100個點的繩子長5m。如果相連質點之間的位置小於5cm，它們受到排斥力。<BR>
+        <BR>
+        上面的公式只是一個基礎，現在我們可以加上摩擦力，如果沒有這項，那麼繩子將永遠動下去。<BR>
+        <BR>
+        <U>彈簧類:</U> <BR>
+        <BR>
+        這個類包含相連接的兩個物體，它們之間具有作用力。</p>
+      </TD>
+    <TD background=../Pic/r.png><IMG 
+    src="../Pic/r.png"></TD></TR></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/bl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/bc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/br.png" 
+width=28></TD></TR></TBODY></TABLE>
+<FONT color=#aaffaa size=3> 
+<PRE>class Spring									
+{										
+public:
+	Mass* mass1;								<FONT color=#ffffaa>// 質點1</FONT>
+	Mass* mass2;								<FONT color=#ffffaa>// 質點2</FONT>
+
+	float springConstant;							<FONT color=#ffffaa>// 彈性係數</FONT>
+	float springLength;							<FONT color=#ffffaa>//彈簧長度 </FONT>
+	float frictionConstant;							<FONT color=#ffffaa>//摩擦係數</FONT>
+
+	Spring(Mass* mass1, Mass* mass2,
+		<FONT color=#ffffaa>// 構造函數</FONT>
+		float springConstant, float springLength, float frictionConstant)
+	{
+		this-&gt;springConstant = springConstant;			
+		this-&gt;springLength = springLength;				
+		this-&gt;frictionConstant = frictionConstant;			
+
+		this-&gt;mass1 = mass1;						
+		this-&gt;mass2 = mass2;						
+	}
+
+	void solve()								<FONT color=#ffffaa>// 計算各個物體的受力</FONT>
+	{
+		Vector3D springVector = mass1-&gt;pos - mass2-&gt;pos;		
+		
+		float r = springVector.length();					<FONT color=#ffffaa>// 計算兩個物體之間的距離</FONT>
+
+		Vector3D force;							
+		
+		if (r != 0)							<FONT color=#ffffaa>// 計算力</FONT>
+			force += -(springVector / r) * (r - springLength) * springConstant;
+		...
+</PRE>
+</FONT> <FONT color=#aaffaa size=3> 
+<PRE>
+		force += -(mass1-&gt;vel - mass2-&gt;vel) * frictionConstant;		<FONT color=#ffffaa>// 加上摩擦力</FONT>
+		mass1-&gt;applyForce(force);					<FONT color=#ffffaa>	// 給物體1施加力</FONT>
+		mass2-&gt;applyForce(-force);					<FONT color=#ffffaa>	// 給物體2施加力</FONT>
+	}									</PRE>
+</FONT> 
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/tl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/tc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/tr.png" 
+width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD background=../Pic/l.png><IMG 
+    src="../Pic/l.png"></TD>
+      <TD vAlign=top width="100%">下面我們把繩子釘在牆上，所以我們的模擬就多了一個萬有引力，空氣摩擦力。萬有引力的公式如下：<BR> 
+        <BR> <FONT color=#aaffaa>力 = (重力加速度) * 質量</FONT> <BR> <BR>
+        萬有引力會作用在每一個質點上，地面也會給每個物體一個作用力。在我們的模型中將考慮繩子和地面之間的接觸，地面給繩子向上的力，並提供摩擦力。<BR> 
+        <BR> <U>設置模擬的初始值</U><BR> <BR>
+        現在我們已經設置好模擬環境了，長度單位是m，時間單位是秒，質量單位是kg。<BR> <BR>
+        為了設置初始值，我們必須提供供模擬開始的參數。我們定義一下參數：<BR> <BR> <FONT color=#ffffaa>1. 重力加速度: 
+        9.81 m/s/s 垂直向下<BR>
+        2. 質點個數: 80<BR>
+        3. 相連質點的距離: 5 cm (0.05 meters)<BR>
+        4. 質量: 50 克(0.05 kg)<BR>
+        5. 繩子開始處於垂直狀態</FONT><BR> <BR>
+        下面計算繩子受到的力<BR> <BR> <FONT 
+      color=#aaffaa>f = (繩子質量) * (重力加速度) = (4 kg) * (9.81) ~= 40 N</FONT> <BR> 
+        <BR>
+        彈簧必須平衡這個力 40 N，它伸長1cm，計算彈性係數: <BR> <BR> <FONT color=#aaffaa>合力= -k * x 
+        = -k * 0.01 m</FONT> <BR> <BR>
+        合力應該為0 : <BR> <BR> <FONT 
+      color=#aaffaa>40 N + (-k * 0.01 meters) = 0</FONT> <BR> <BR>
+        彈性係數 k 為: <BR> <BR> <FONT color=#aaffaa>k = 4000 N / m</FONT> <BR> <BR>
+        設置彈簧的摩擦係數: <BR> <BR> <FONT 
+      color=#aaffaa>springFrictionConstant = 0.2 N/(m/s)</FONT> <BR> <BR>
+        下面我們看看這個繩索類：<BR> <BR> <TABLE border=0>
+          <TBODY>
+            <TR> 
+              <TD><FONT color=#aaffaa>1. virtual void init()</FONT></TD>
+              <TD>---&gt; </TD>
+              <TD><FONT color=#ffffaa>重置力</FONT></TD>
+            </TR>
+            <TR></TR>
+            <TR> 
+              <TD><FONT color=#aaffaa>2. virtual void solve()</FONT></TD>
+              <TD>---&gt; </TD>
+              <TD><FONT color=#ffffaa>計算各個質點的力</FONT></TD>
+            </TR>
+            <TR></TR>
+            <TR> 
+              <TD><FONT color=#aaffaa>3. virtual void simulate(float dt)</FONT></TD>
+              <TD>---&gt; </TD>
+              <TD><FONT color=#ffffaa>模擬一次</FONT></TD>
+            </TR>
+            <TR></TR>
+            <TR> 
+              <TD><FONT color=#aaffaa>4. virtual void operate(float dt)</FONT></TD>
+              <TD>---&gt; </TD>
+              <TD><FONT color=#ffffaa>執行一次操作</FONT></TD>
+            </TR>
+          </TBODY>
+        </TABLE>
+        <BR>
+        繩索類如下所示 : </TD>
+    <TD background=../Pic/r.png><IMG 
+    src="../Pic/r.png"></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/bl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/bc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/br.png" 
+width=28></TD></TR></TBODY></TABLE>
+<FONT color=#aaffaa size=3> 
+<PRE>class RopeSimulation : public Simulation					<FONT color=#ffffaa>//繩索類</FONT>
+{
+public:
+	Spring** springs;							<FONT color=#ffffaa>// 彈簧類結構的數組的指針</FONT>
+
+	Vector3D gravitation;						<FONT color=#ffffaa>// 萬有引力</FONT>
+
+	Vector3D ropeConnectionPos;						<FONT color=#ffffaa>// 繩索的連接點</FONT>
+	
+	Vector3D ropeConnectionVel;						<FONT color=#ffffaa>//連接點的速度，我們使用這個移動繩子</FONT>
+
+	float groundRepulsionConstant;					<FONT color=#ffffaa>//地面的反作用力</FONT>
+	
+	float groundFrictionConstant;					<FONT color=#ffffaa>//地面的摩擦係數</FONT>
+	
+	float groundAbsorptionConstant;					<FONT color=#ffffaa>//地面的緩衝力</FONT>
+	
+	float groundHeight;						<FONT color=#ffffaa>//地面高度</FONT>
+
+	float airFrictionConstant;						<FONT color=#ffffaa>//空氣的摩擦係數</FONT></PRE>
+</FONT> 
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/tl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/tc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/tr.png" 
+width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD background=../Pic/l.png><IMG 
+    src="../Pic/l.png"></TD>
+      <TD vAlign=top width="100%">下面是它的構造函數</TD>
+    <TD background=../Pic/r.png><IMG 
+    src="../Pic/r.png"></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/bl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/bc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/br.png" 
+width=28></TD></TR></TBODY></TABLE>
+<FONT color=#aaffaa size=3> 
+<PRE>	RopeSimulation(								
+		int numOfMasses,					
+		float m,							
+		float springConstant,					
+		float springLength,						
+		float springFrictionConstant,					
+		Vector3D gravitation,						
+		float airFrictionConstant,				
+		float groundRepulsionConstant,				
+		float groundFrictionConstant,				
+		float groundAbsorptionConstant,				
+		float groundHeight						
+		) : Simulation(numOfMasses, m)			
+	{
+		this-&gt;gravitation = gravitation;
+		
+		this-&gt;airFrictionConstant = airFrictionConstant;
+
+		this-&gt;groundFrictionConstant = groundFrictionConstant;
+		this-&gt;groundRepulsionConstant = groundRepulsionConstant;
+		this-&gt;groundAbsorptionConstant = groundAbsorptionConstant;
+		this-&gt;groundHeight = groundHeight;
+
+		for (int a = 0; a &lt; numOfMasses; ++a)				<FONT color=#ffffaa>// 設置質點位置</FONT>
+		{
+			masses[a]-&gt;pos.x = a * springLength;			
+			masses[a]-&gt;pos.y = 0;					
+			masses[a]-&gt;pos.z = 0;					
+		}
+
+		springs = new Spring*[numOfMasses - 1];			
+		
+		for (a = 0; a &lt; numOfMasses - 1; ++a)				<FONT color=#ffffaa>//創建各個質點之間的模擬彈簧</FONT>
+		{
+			springs[a] = new Spring(masses[a], masses[a + 1], 
+				springConstant, springLength, springFrictionConstant);
+		}
+	}
+</PRE>
+</FONT> 
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/tl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/tc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/tr.png" 
+width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD background=../Pic/l.png><IMG 
+    src="../Pic/l.png"></TD>
+      <TD vAlign=top width="100%">計算施加給各個質點的力</TD>
+    <TD background=../Pic/r.png><IMG 
+    src="../Pic/r.png"></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/bl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/bc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/br.png" 
+width=28></TD></TR></TBODY></TABLE>
+<FONT color=#aaffaa size=3> 
+<PRE>	void solve()								<FONT color=#ffffaa>// 計算施加給各個質點的力</FONT>
+	{
+		for (int a = 0; a &lt; numOfMasses - 1; ++a)			<FONT color=#ffffaa>// 彈簧施加給各個物體的力</FONT>
+		{
+			springs[a]-&gt;solve();					
+		}
+
+		for (a = 0; a &lt; numOfMasses; ++a)				<FONT color=#aaffaa size=3><FONT color=#ffffaa>// 計算各個物體受到的其它的力</FONT></FONT>
+		{
+			masses[a]-&gt;applyForce(gravitation * masses[a]-&gt;m);	<FONT color=#ffffaa>// 萬有引力</FONT>
+			<FONT color=#ffffaa>// 空氣的摩擦力</FONT>
+			masses[a]-&gt;applyForce(-masses[a]-&gt;vel * airFrictionConstant);
+
+			if (masses[a]-&gt;pos.y &lt; groundHeight)			<FONT color=#ffffaa>// 計算地面對質點的作用</FONT>
+			{
+				Vector3D v;					
+
+				v = masses[a]-&gt;vel;				<FONT color=#ffffaa>// </FONT><FONT color=#aaffaa size=3><FONT color=#ffffaa>返回速度</FONT></FONT>
+				v.y = 0;					<FONT color=#ffffaa>// y方向的速度為0</FONT>
+
+<FONT color=#ffffaa>		// 計算地面給質點的力</FONT>
+				masses[a]-&gt;applyForce(-v * groundFrictionConstant);
+
+				v = masses[a]-&gt;vel;				
+				v.x = 0;					
+				v.z = 0;					
+
+				if (v.y &lt; 0)					<FONT color=#ffffaa>// 計算地面的緩衝力</FONT>
+
+					masses[a]-&gt;applyForce(-v * groundAbsorptionConstant);
+				
+				<FONT color=#ffffaa>// 計算地面的反作用力</FONT>
+				Vector3D force = Vector3D(0, groundRepulsionConstant, 0) * 
+					(groundHeight - masses[a]-&gt;pos.y);
+
+				masses[a]-&gt;applyForce(force);			<FONT color=#ffffaa>// 施加地面對質點的力</FONT>
+			}
+		}
+	}
+</PRE>
+</FONT> 
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/tl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/tc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/tr.png" 
+width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD background=../Pic/l.png><IMG 
+    src="../Pic/l.png"></TD>
+      <TD vAlign=top width="100%">下面的代碼完成整個模擬過程</TD>
+    <TD background=../Pic/r.png><IMG 
+    src="../Pic/r.png"></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/bl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/bc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/br.png" 
+width=28></TD></TR></TBODY></TABLE>
+<FONT color=#aaffaa size=3> 
+<PRE>	void simulate(float dt)						<FONT color=#ffffaa>// 模擬一次</FONT>
+	{
+		Simulation::simulate(dt);					<FONT color=#ffffaa>// 調用基類的模擬函數</FONT>
+
+		ropeConnectionPos += ropeConnectionVel * dt;			<FONT color=#ffffaa>// 計算繩子的連接點</FONT>
+
+		if (ropeConnectionPos.y &lt; groundHeight)				
+		{
+			ropeConnectionPos.y = groundHeight;
+			ropeConnectionVel.y = 0;
+		}
+
+		masses[0]-&gt;pos = ropeConnectionPos;				<FONT color=#ffffaa>// 更新繩子的連接點和速度</FONT>
+		masses[0]-&gt;vel = ropeConnectionVel;				
+	}
+</PRE>
+</FONT> <FONT color=#aaffaa size=3>
+<PRE>	void setRopeConnectionVel(Vector3D ropeConnectionVel)			
+	{
+		this-&gt;ropeConnectionVel = ropeConnectionVel;
+	}
+</PRE>
+</FONT>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/tl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/tc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/tr.png" 
+width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD background=../Pic/l.png><IMG 
+    src="../Pic/l.png"></TD>
+      <TD vAlign=top width="100%">有了上面的類，我們可以很方便的模擬繩子，代碼如下：</TD>
+    <TD background=../Pic/r.png><IMG 
+    src="../Pic/r.png"></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/bl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/bc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/br.png" 
+width=28></TD></TR></TBODY></TABLE>
+<FONT color=#aaffaa size=3> 
+<PRE>RopeSimulation* ropeSimulation =
+	new RopeSimulation(
+		80,								<FONT color=#ffffaa>// 80 質點</FONT>
+		0.05f,								<FONT color=#ffffaa>// 每個質點50g</FONT>
+		10000.0f,								<FONT color=#ffffaa>// 彈性係數</FONT>
+		0.05f,								<FONT color=#ffffaa>// 質點之間的距離</FONT>
+		0.2f,								<FONT color=#ffffaa>// 彈簧的內摩擦力</FONT>
+		Vector3D(0, -9.81f, 0),						<FONT color=#ffffaa>// 萬有引力</FONT>
+		0.02f,								<FONT color=#ffffaa>// 空氣摩擦力</FONT>
+		100.0f,								<FONT color=#ffffaa>// 地面反作用係數</FONT>
+		0.2f,								<FONT color=#ffffaa>// 地面摩擦係數</FONT>
+		2.0f,								<FONT color=#ffffaa>// 地面緩衝係數</FONT>
+		-1.5f);								<FONT color=#ffffaa>// 地面高度</FONT>
+</PRE>
+</FONT> 
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/tl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/tc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/tr.png" 
+width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD background=../Pic/l.png><IMG 
+    src="../Pic/l.png"></TD>
+      <TD vAlign=top width="100%">下面的代碼在程序中執行繩子的模擬</TD>
+    <TD background=../Pic/r.png><IMG 
+    src="../Pic/r.png"></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/bl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/bc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/br.png" 
+width=28></TD></TR></TBODY></TABLE><FONT color=#aaffaa size=3>
+<PRE>float dt = milliseconds / 1000.0f;						<FONT color=#ffffaa>// 經過的秒數</FONT>
+
+float maxPossible_dt = 0.002f;						<FONT color=#ffffaa>// 模擬間隔</FONT>
+
+int numOfIterations = (int)(dt / maxPossible_dt) + 1;				<FONT color=#ffffaa>// 模擬次數</FONT>
+if (numOfIterations != 0)							
+	dt = dt / numOfIterations;						
+
+for (int a = 0; a &lt; numOfIterations; ++a)					<FONT color=#ffffaa>// 執行模擬</FONT>
+	ropeSimulation-&gt;operate(dt);
+</PRE>
+</FONT>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG height=28 src="../Pic/tl.png" width=28></TD>
+    <TD width="100%"><IMG height=28 src="../Pic/tc.png" 
+      width="100%"></TD>
+    <TD><IMG height=28 src="../Pic/tr.png" 
+width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD background=../Pic/l.png><IMG 
+    src="../Pic/l.png"></TD>
+      <TD vAlign=top width="100%"><p>　</p>
+        <p>我相信這一個教會了你很多，從最開始的模型的建立，到完成最後的代碼。有了這個基礎，相信你會創造出很多更有意思的代碼！</p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+              <p>感謝<br>
+                感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+                感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+              <p>資源下載: <br>
+                文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2040.mht">網頁格式</a> 
+                <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_40.pdf">PDF格式</a><br>
+                源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/40_Robe.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+        <FONT face=Tahoma,Verdana,sans-serif 
+      size=-1><table border="0" width="100%">
+            <td width="50%" align="left"><b><font size="-1"> <a href="Tutorial_39.html">< 
+              第39課 </a></font></b></td>
+            <td width="50%" align="right"><b><font size="-1"> <a href="Tutorial_41.html">第41課 
+              ></a></font></b></td>
+</table>
+</font></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr>
+</table><table border=0 cellpadding=0 cellspacing=0 width="100%">
+<tr><td><img src="../Pic/bl.png" width=28 height=28></td>
+<td width="100%"><img src="../Pic/bc.png" width=100% height=28></td>
+<td><img src="../Pic/br.png" width=28 height=28></td></tr>
+</table>
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_40.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:04:33 GMT -->
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_24.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:03 GMT -->
+<head>
+<title>NeHe OpenGL教程第二十四課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第24課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="29%"><img src="../Pic/lesson24.jpg" width="240" height="180"></td>
+            <td width="71%"><p><FONT class=head>擴展，剪裁和TGA圖像文件的加載:</FONT></p>
+              <p><font size="3">在這一課裡，你將學會如何讀取你顯卡支持的OpenGL的擴展，並在你指定的剪裁區域把它顯示出來。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這個教程有一些難度，但它會讓你學到很多東西。我聽到很多朋友問我擴展方面的內容和怎樣找到它們。這個教程將交給你這<br>
+      一切。<br>
+      我將教會你怎樣滾動屏幕的一部分和怎樣繪製直線，最重要的是從這一課起，我們將不使用AUX庫，以及*.bmp文件。我將告訴你如何使用Targa(TGA)圖像文件。因為它簡單並且支持alpha通道，它可以使你更容易的創建酷的效果。
+      <p>接下來我們要做的第一件事就是不包含glaux.h頭文件和glaux.lib庫。另外，在使用glaux庫時，經常會發生一些可疑的警告，現在我們可以測定告別它了。</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+#include	&lt;stdarg.h&gt;								<font color=#ffffaa>// 處理可變參數的函數的頭文件</font>
+#include	&lt;string.h&gt;								<font color=#ffffaa>// 處理字符串的頭文件</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來我們添加一些變量，第一個為滾動參數。第二給變量記錄擴展的個數，swidth和sheight記錄剪切矩形的大小。base為字體顯示列表的開始值。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+	
+<pre>int		scroll;									<font color=#ffffaa>// 用來滾動屏幕</font>
+int		maxtokens;								<font color=#ffffaa>// 保存擴展的個數</font>
+int		swidth;									<font color=#ffffaa>// 剪裁寬度</font>
+int		sheight;								<font color=#ffffaa>	// 剪裁高度</font>
+
+GLuint		base;									<font color=#ffffaa>// 字符顯示列表的開始值</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在我們創建一個數據結構用來保存TGA文件，接著我們使用這個結構來加載紋理。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>typedef	struct										<font color=#ffffaa>// 創建加載TGA圖像文件結構</font>
+{
+	GLubyte	*imageData;								<font color=#ffffaa>// 圖像數據指針</font>
+	GLuint	bpp;									<font color=#ffffaa>// 每個數據所佔的位數（必須為24或32）</font>
+	GLuint	width;									<font color=#ffffaa>// 圖像寬度</font>
+	GLuint	height;									<font color=#ffffaa>// 圖像高度</font>
+	GLuint	texID;									<font color=#ffffaa>// 紋理的ID值</font>
+} TextureImage;										<font color=#ffffaa>// 結構名稱</font>
+
+TextureImage	textures[1];								<font color=#ffffaa>// 保存一個紋理</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這個部分的代碼將要加載一個TGA文件並把它轉換為紋理。必須注意的是這部分代碼只能加載24/32位的不壓縮的TGA文件。<br>
+      這個函數包含兩個參數，一個保存載入的圖像，一個為將載入的文件名。<br>
+      TGA文件包含一個12個字節的文件頭，載入圖像後，我們用type來設置圖像中像素格式在OpenGL中的對應。如果是24位的圖像我們使用GL_RGB，如果是32位的圖像我們使用GL_RGBA。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+bool LoadTGA(TextureImage *texture, char *filename)					<font color=#ffffaa>// 把TGA文件加載入內存</font>
+{
+	GLubyte		TGAheader[12]={0,0,2,0,0,0,0,0,0,0,0,0};			<font color=#ffffaa>// 無壓縮的TGA文件頭</font>
+	GLubyte		TGAcompare[12];						<font color=#ffffaa>// 保存讀入的文件頭信息</font>
+	GLubyte		header[6];						<font color=#ffffaa>// 保存最有用的圖像信息，寬，高，位深</font>
+	GLuint		bytesPerPixel;						<font color=#ffffaa>// 記錄每個顏色所佔用的字節數</font>
+	GLuint		imageSize;						<font color=#ffffaa>// 記錄文件大小</font>
+	GLuint		temp;							<font color=#ffffaa>// 臨時變量</font>
+	GLuint		type=GL_RGBA;						<font color=#ffffaa>// 設置默認的格式為GL_RGBA，即32位圖像</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>下面這個函數讀取TGA文件，並記錄文件信息。TGA文件格式如下所示： </p>
+      <p>Tga圖像格式<br>
+        無顏色表 rgb 圖像 </p>
+      <table width="100%" border="1">
+        <tr> 
+          <td width="6%">偏移</td>
+          <td width="9%">長度</td>
+          <td width="62%">描述</td>
+          <td width="21%">32位常用圖像文件各個字節的值</td>
+        </tr>
+        <tr> 
+          <td>0</td>
+          <td>1</td>
+          <td>指出圖像信息字段的長度，其取值範圍是 0 到 255 ，當它為 0 時表示沒有圖像的信息字段。</td>
+          <td>0</td>
+        </tr>
+        <tr> 
+          <td>1</td>
+          <td>1</td>
+          <td>是否使用顏色表，0 表示沒有顏色表，1 表示顏色表存在</td>
+          <td>0</td>
+        </tr>
+        <tr> 
+          <td>2</td>
+          <td>1</td>
+          <td>該字段總為 2。圖像類型碼，tga一共有6種格式，2表示無顏色表 rgb 圖像</td>
+          <td>2</td>
+        </tr>
+        <tr> 
+          <td>3</td>
+          <td rowspan="5">5</td>
+          <td rowspan="5">顏色表規格，總為0。</td>
+          <td>0</td>
+        </tr>
+        <tr> 
+          <td>4</td>
+          <td>0</td>
+        </tr>
+        <tr> 
+          <td>5</td>
+          <td>0</td>
+        </tr>
+        <tr> 
+          <td>6</td>
+          <td>0</td>
+        </tr>
+        <tr> 
+          <td>7</td>
+          <td>0</td>
+        </tr>
+        <tr> 
+          <td colspan="4" bgcolor="#000080">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 圖像規格說明 
+            開始</td>
+        </tr>
+        <tr> 
+          <td> 8</td>
+          <td rowspan="2">2</td>
+          <td rowspan="2">圖像 x 坐標起始位置，一般為0</td>
+          <td rowspan="2">0</td>
+        </tr>
+        <tr> 
+          <td>9</td>
+        </tr>
+        <tr> 
+          <td>10</td>
+          <td rowspan="2">2</td>
+          <td rowspan="2">圖像 y 坐標起始位置，一般為0</td>
+          <td rowspan="2">0</td>
+        </tr>
+        <tr> 
+          <td>11</td>
+        </tr>
+        <tr> 
+          <td>12</td>
+          <td rowspan="2">2</td>
+          <td rowspan="2">圖像寬度，以像素為單位</td>
+          <td rowspan="2">256</td>
+        </tr>
+        <tr> 
+          <td>13</td>
+        </tr>
+        <tr> 
+          <td>14</td>
+          <td rowspan="2">2</td>
+          <td rowspan="2">圖像高度，以像素為單位</td>
+          <td rowspan="2">256</td>
+        </tr>
+        <tr> 
+          <td>15</td>
+        </tr>
+        <tr> 
+          <td>16</td>
+          <td>1</td>
+          <td>圖像每像素存儲佔用位（bit）數</td>
+          <td>32</td>
+        </tr>
+        <tr> 
+          <td>17</td>
+          <td>1</td>
+          <td><p>圖像描述符字節<br>
+              bits 3-0 - 每像素對應的屬性位的位數，對於 TGA 24，該值為 0<br>
+              bit 4 - 保留，必須為 0<br>
+              bit 5 - 屏幕起始位置標誌，0 = 原點在左下角，1 = 原點在左上角<br>
+              一般這個字節設為0x00即可<br>
+            </p></td>
+          <td>00100000<sub>(2)</sub></td>
+        </tr>
+        <tr> 
+          <td>18 </td>
+          <td>可變</td>
+          <td>圖像數據域<br>
+            這裡存儲了（寬度）x（高度）個像素，每個像素中的 rgb 色值該色值包含整數個字節 </td>
+          <td>...</td>
+        </tr>
+      </table>
+      <p>如果一切順利，讀取文件後關閉文件。</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	FILE *file = fopen(filename, "rb");						<font color=#ffffaa>// 打開一個TGA文件</font>
+
+	if(	file==NULL ||							<font color=#ffffaa>// 文件存在麼?</font>
+		fread(TGAcompare,1,sizeof(TGAcompare),file)!=sizeof(TGAcompare) ||	<font color=#ffffaa>// 是否包含12個字節的文件頭?</font>
+		memcmp(TGAheader,TGAcompare,sizeof(TGAheader))!=0		||	<font color=#ffffaa>// 是否是我們需要的格式?</font>
+		fread(header,1,sizeof(header),file)!=sizeof(header))			<font color=#ffffaa>// 如果是讀取下面六個圖像信息</font>
+	{
+		if (file == NULL)							<font color=#ffffaa>// 文件不存在返回</font><font color=#aaffaa size=3><font color=#ffffaa>錯誤</font></font>
+			return false;							
+		else
+		{
+			fclose(file);						<font color=#ffffaa>// 關閉文件返回錯誤</font>
+			return false;							
+		}
+	}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼記錄文件的寬度和高度，並判斷文件是否為24位/32位TGA文件。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	texture-&gt;width  = header[1] * 256 + header[0];					<font color=#ffffaa>// 記錄文件高度</font>
+	texture-&gt;height = header[3] * 256 + header[2];					<font color=#ffffaa>// 記錄文件寬度</font>
+
+ 	if(	texture-&gt;width	&lt;=0	||						<font color=#ffffaa>// 寬度是否小於0</font>
+		texture-&gt;height	&lt;=0	||						<font color=#ffffaa>// 高度是否小於0</font>
+		(header[4]!=24 && header[4]!=32))					<font color=#ffffaa>	// TGA文件是24/32位？</font>
+	{
+		fclose(file);								<font color=#ffffaa>// 如果失敗關閉文件，返回錯誤</font>
+		return false;								
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼記錄文件的位深和加載它需要的內存大小</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	texture-&gt;bpp	= header[4];							<font color=#ffffaa>// 記錄文件的位深</font>
+	bytesPerPixel	= texture-&gt;bpp/8;							<font color=#ffffaa>// 記錄每個像素所佔的字節數</font>
+	imageSize	= texture-&gt;width*texture-&gt;height*bytesPerPixel;				<font color=#ffffaa>// 計算TGA文件加載所需要的內存大小</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼為圖像數據分配內存並載入它</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	texture-&gt;imageData=(GLubyte *)malloc(imageSize);				<font color=#ffffaa>// 分配內存去保存TGA數據</font>
+
+	if(	texture-&gt;imageData==NULL ||						<font color=#ffffaa>// 系統是否分配了足夠的內存？</font>
+		fread(texture-&gt;imageData, 1, imageSize, file)!=imageSize)		<font color=#ffffaa>// 是否成功讀入內存?</font>
+	{
+		if(texture-&gt;imageData!=NULL)					<font color=#ffffaa>// 是否有數據被加載</font>
+			free(texture-&gt;imageData);					<font color=#ffffaa>// 如果是，則釋放載入的數據</font>
+
+		fclose(file);							<font color=#ffffaa>// 關閉文件</font>
+		return false;							<font color=#ffffaa>// 返回錯誤</font>
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>TGA文件中，顏色的存儲順序為BGR，而OpenGL中顏色的順序為RGB，所以我們需要交換每個像素中R和B的值。如果一切順利，TGA文件中的圖像數據將按照OpenGL的要求存儲在內存中了。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	for(GLuint i=0; i&lt;int(imageSize); i+=bytesPerPixel)				<font color=#ffffaa>// 循環所有的像素</font>
+	{									<font color=#ffffaa>// 交換R和B的值</font>
+		temp=texture-&gt;imageData[i];						
+		texture-&gt;imageData[i] = texture-&gt;imageData[i + 2];		
+		texture-&gt;imageData[i + 2] = temp;				
+	}
+
+	fclose (file);								<font color=#ffffaa>// 關閉文件</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼創建一個紋理，並設置過濾方式為線性</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	<font color=#ffffaa>// 創建紋理</font>
+	glGenTextures(1, &texture[0].texID);						<font color=#ffffaa>// 創建紋理，並記錄紋理ID</font>
+
+	glBindTexture(GL_TEXTURE_2D, texture[0].texID);				<font color=#ffffaa>// 綁定紋理</font>
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);		<font color=#ffffaa>// 設置過濾器為線性過濾</font>
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);		</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>判斷圖像的位數是否為24，如果是則設置類型為GL_RGB</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	if (texture[0].bpp==24)								<font color=#ffffaa>// 是否為24位圖像？</font>
+	{
+		type=GL_RGB;								<font color=#ffffaa>// 如果是設置類型為GL_RGB</font>
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼在OpenGL中創建一個紋理</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	glTexImage2D(GL_TEXTURE_2D, 0, type, texture[0].width, texture[0].height, 0, type, GL_UNSIGNED_BYTE, texture[0].imageData);
+
+	return true;									<font color=#ffffaa>// 紋理綁定完成，成功返回</font>
+}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼是從圖像創建字體的典型的方法，這些代碼將包含在後面的課程中，以顯示文字。<br>
+      只有一個不同的地方，紋理0用來保存字符圖像。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+GLvoid BuildFont(GLvoid)								<font color=#ffffaa>// 創建字體顯示列表</font>
+{
+	base=glGenLists(256);							<font color=#ffffaa>// 創建256個顯示列表</font>
+	glBindTexture(GL_TEXTURE_2D, textures[0].texID);				<font color=#ffffaa>// 綁定紋理</font>
+	for (int loop1=0; loop1&lt;256; loop1++)					<font color=#ffffaa>// 循環創建256個顯示列表</font>
+	{
+		float cx=float(loop1%16)/16.0f;					<font color=#ffffaa>// 當前字符的X位置</font>
+		float cy=float(loop1/16)/16.0f;					<font color=#ffffaa>// 當前字符的Y位置</font>
+
+		glNewList(base+loop1,GL_COMPILE);					<font color=#ffffaa>// 開始創建顯示列表</font>
+			glBegin(GL_QUADS);						<font color=#ffffaa>// 創建一個四邊形用來包含字符圖像</font>
+				glTexCoord2f(cx,1.0f-cy-0.0625f);			<font color=#ffffaa>// 左下方紋理坐標</font>
+				glVertex2d(0,16);					<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>左下方坐標</font></font>
+				glTexCoord2f(cx+0.0625f,1.0f-cy-0.0625f);		<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>右下方紋理坐標</font></font>
+				glVertex2i(16,16);					<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#aaffaa size=3><font color=#ffffaa>右下方坐標</font></font></font>
+				glTexCoord2f(cx+0.0625f,1.0f-cy-0.001f);		<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>右上方紋理坐標</font></font>
+				glVertex2i(16,0);					<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#aaffaa size=3><font color=#ffffaa>右上方坐標</font></font></font>
+				glTexCoord2f(cx,1.0f-cy-0.001f);			<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>左上方紋理坐標</font></font>
+				glVertex2i(0,0);					<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#aaffaa size=3><font color=#ffffaa>左上方坐標</font></font></font>
+			glEnd();							<font color=#ffffaa>// 四邊形創建完畢</font>
+			glTranslated(14,0,0);					<font color=#ffffaa>// 向右移動14個單位</font>
+		glEndList();							<font color=#ffffaa>// 結束創建顯示列表</font>
+	}									
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的函數用來刪除顯示字符的顯示列表</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLvoid KillFont(GLvoid)
+{
+	glDeleteLists(base,256);							<font color=#ffffaa>// 從內存中刪除256個顯示列表</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>glPrint函數只有一點變化，我們在Y軸方向把字符拉長一倍</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLvoid glPrint(GLint x, GLint y, int set, const char *fmt, ...)
+{
+	char	text[1024];						<font color=#ffffaa>	// 保存我們的字符</font>
+	va_list	ap;								<font color=#ffffaa>// 指向第一個參數</font>
+
+	if (fmt == NULL)								<font color=#ffffaa>// 如果要顯示的字符為空則返回</font>
+		return;									
+
+	va_start(ap, fmt);								<font color=#ffffaa>// 開始分析參數，並把結果寫入到text中</font>
+	    vsprintf(text, fmt, ap);							
+	va_end(ap);									
+
+	if (set&gt;1)								<font color=#ffffaa>// 如果字符集大於1則使用第二個字符集</font>
+	{
+		set=1;									
+	}
+
+	glEnable(GL_TEXTURE_2D);							<font color=#ffffaa>// 使用紋理映射</font>
+	glLoadIdentity();								<font color=#ffffaa>// 重置視口矩陣</font>
+	glTranslated(x,y,0);							<font color=#ffffaa>// 平移到(x,y,0)處</font>
+	glListBase(base-32+(128*set));						<font color=#ffffaa>// 選擇字符集</font>
+
+	glScalef(1.0f,2.0f,1.0f);							<font color=#ffffaa>// 沿Y軸放大一倍</font>
+
+	glCallLists(strlen(text),GL_UNSIGNED_BYTE, text);				<font color=#ffffaa>// 把字符寫入到屏幕</font>
+	glDisable(GL_TEXTURE_2D);							<font color=#ffffaa>// 禁止紋理映射 </font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>窗口改變大小的函數使用正投影，把視口範圍設置為(0,0)-(640,480)</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLvoid ReSizeGLScene(GLsizei width, GLsizei height)
+{
+	swidth=width;									<font color=#ffffaa>// 設置剪切矩形為窗口大小</font>
+	sheight=height;									
+	if (height==0)									<font color=#ffffaa>// 防止高度為0時，被0除</font>
+	{
+		height=1;								
+	}
+	glViewport(0,0,width,height);							<font color=#ffffaa>// 設置窗口可見區</font>
+	glMatrixMode(GL_PROJECTION);							
+	glLoadIdentity();								
+	glOrtho(0.0f,640,480,0.0f,-1.0f,1.0f);						<font color=#ffffaa>// 設置視口大小為640x480</font>
+	glMatrixMode(GL_MODELVIEW);							
+	glLoadIdentity();						
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>初始化操作非常簡單，我們載入字體紋理，並創建字符顯示列表，如果順利，則成功返回。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int InitGL(GLvoid)				
+{
+	if (!LoadTGA(&textures[0],"Data/Font.TGA"))						<font color=#ffffaa>// 載入字體紋理</font>
+	{
+		return false;								<font color=#ffffaa>// 載入失敗則返回</font>
+	}
+
+	BuildFont();									<font color=#ffffaa>// 創建字體</font>
+
+	glShadeModel(GL_SMOOTH);								<font color=#ffffaa>// 使用平滑著色</font>
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);						<font color=#ffffaa>// 設置黑色背景</font>
+	glClearDepth(1.0f);								<font color=#ffffaa>// 設置深度緩存中的值為1</font>
+	glBindTexture(GL_TEXTURE_2D, textures[0].texID);					<font color=#ffffaa>// 綁定字體紋理</font>
+
+	return TRUE;									<font color=#ffffaa>// 成功返回</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>繪製代碼幾乎是全新的:)，token為一個指向字符串的指針，它將保存OpenGL擴展的全部字符串，cnt紀錄擴展的個數。<br>
+      接下來清楚背景，並顯示OpenGL的銷售商，實現它的公司和當前的版本。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int DrawGLScene(GLvoid)			
+{
+	char	*token;									<font color=#ffffaa>// 保存擴展字符串</font>
+	int	cnt=0;									<font color=#ffffaa>// 紀錄擴展字符串的個數</font>
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				<font color=#ffffaa>	// 清楚背景和深度緩存</font>
+
+	glColor3f(1.0f,0.5f,0.5f);							<font color=#ffffaa>	// 設置為紅色</font>
+	glPrint(50,16,1,"Renderer");							
+	glPrint(80,48,1,"Vendor");						
+	glPrint(66,80,1,"Version");						</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼顯示OpenGL實現方面的相關信息，完成之後我們用藍色在屏幕的下方寫上「NeHe Productions」，當然你可以使用任何你想使用的字符，比如&quot;DancingWind 
+      Translate&quot;。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glColor3f(1.0f,0.7f,0.4f);							<font color=#ffffaa>// 設置為橘黃色</font>
+	glPrint(200,16,1,(char *)glGetString(GL_RENDERER));				<font color=#ffffaa>// 顯示OpenGL的實現組織</font>
+	glPrint(200,48,1,(char *)glGetString(GL_VENDOR));				<font color=#ffffaa>// 顯示銷售商</font>
+	glPrint(200,80,1,(char *)glGetString(GL_VERSION));				<font color=#ffffaa>// 顯示當前版本</font>
+
+	glColor3f(0.5f,0.5f,1.0f);							<font color=#ffffaa>// 設置為藍色</font>
+	glPrint(192,432,1,"NeHe Productions");					<font color=#ffffaa>// 在屏幕的底端寫上NeHe Productions字符串</font></pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在我們繪製顯示擴展名的白色線框方塊，並用一個更大的白色線框方塊把所有的內容包圍起來。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glLoadIdentity();								<font color=#ffffaa>// 重置模型變換矩陣</font>
+	glColor3f(1.0f,1.0f,1.0f);							<font color=#ffffaa>// 設置為白色</font>
+	glBegin(GL_LINE_STRIP);					
+		glVertex2d(639,417);							
+		glVertex2d(  0,417);							
+		glVertex2d(  0,480);							
+		glVertex2d(639,480);						
+		glVertex2d(639,128);					
+	glEnd();								
+	glBegin(GL_LINE_STRIP);					
+		glVertex2d(  0,128);						
+		glVertex2d(639,128);							
+		glVertex2d(639,  1);						
+		glVertex2d(  0,  1);							
+		glVertex2d(  0,417);						
+	glEnd();									</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>glScissor函數用來設置剪裁區域，如果啟用了GL_SCISSOR_TEST,繪製的內容只能在剪裁區域中顯示。<br>
+      下面的代碼設置窗口的中部為剪裁區域，並獲得擴展名字符串。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glScissor(1	,int(0.135416f*sheight),swidth-2,int(0.597916f*sheight));	<font color=#ffffaa>// 定義剪裁區域</font>
+	glEnable(GL_SCISSOR_TEST);							<font color=#ffffaa>// 使用剪裁測試</font>
+
+	char* text=(char*)malloc(strlen((char *)glGetString(GL_EXTENSIONS))+1);		<font color=#ffffaa>// 為保存OpenGL擴展的字符串分配內存空間</font>
+	strcpy (text,(char *)glGetString(GL_EXTENSIONS));				<font color=#ffffaa>// 返回OpenGL擴展字符串</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面我們創建一個循環，循環顯示每個擴展名，並紀錄擴展名的個數</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	token=strtok(text," ");								<font color=#ffffaa>// 按空格分割text字符串，並把分割後的字符串保存在token中</font>
+	while(token!=NULL)								<font color=#ffffaa>	// 如果token不為NULL</font>
+	{
+		cnt++;									<font color=#ffffaa>// 增加計數器</font>
+		if (cnt&gt;maxtokens)							<font color=#ffffaa>	// 紀錄最大的擴展名數量</font>
+		{
+			maxtokens=cnt;							
+		}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現我們已經獲得第一個擴展名，下一步我們把它顯示在屏幕上。
+      <p>我們已經顯示了三行文本，它們在Y軸上佔用了3*32=96個像素的寬度，所以我們顯示的第一個行文本的位置是(0,96)，一次類推第i行文本的位置是(0,96+(cnt*32)),但我們需要考慮當前滾動過的位置，默認為向上滾動，所以我們得到顯示第i行文本的位置為(0,96+(cnt*32)=scroll)。</p>
+      <p>當然它們不會都顯示出來，記得我們使用了剪裁，只顯示(0,96)-(0,96+32*9)之間的文本，其它的都被剪裁了。</p>
+      <p>更具我們上面的講解，顯示的第一個行如下：<br>
+        1 GL_ARB_multitexture </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+		glColor3f(0.5f,1.0f,0.5f);						<font color=#ffffaa>// 設置顏色為綠色</font>
+		glPrint(0,96+(cnt*32)-scroll,0,"%i",cnt);				<font color=#ffffaa>// 繪製第幾個擴展名</font>
+</pre>
+</font>
+<font color=#aaffaa size=3>
+<pre>
+		glColor3f(1.0f,1.0f,0.5f);						<font color=#ffffaa>// 設置顏色為黃色</font>
+		glPrint(50,96+(cnt*32)-scroll,0,token);				<font color=#ffffaa>// 輸出第i個擴展名</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>當我們顯示完所有的擴展名,我們需要檢查一下是否已經分析完了所有的字符串。我們使用strtok(NULL,&quot; 
+      &quot;)函數代替strtok(text,&quot; &quot;)函數，把第一個參數設置為NULL會檢查當前指針位置到字符串末尾是否包含&quot; 
+      &quot;字符，如果包含返回其位置，否則返回NULL。
+      <p>我們舉例說明上面的過程，例如字符串&quot;GL_ARB_multitexture GL_EXT_abgr GL_EXT_bgra&quot;,它是以空格分割字符串的，第一次調用strtok(&quot;text&quot;,&quot; 
+        &quot;)返回text的首位置，並在空格&quot; &quot;的位置加入一個NULL。以後每次調用，刪除NULL，返回空格位置的下一個位置，接著搜索下一個空格的位置，並在空格的位置加入一個NULL。直道返回NULL。</p>
+      <p>返回NULL時循環停止，表示已經顯示完所有的擴展名。</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+		token=strtok(NULL," ");							<font color=#ffffaa>// 查找下一個擴展名</font>
+	}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼讓OpenGL返回到默認的渲染狀態，並釋放分配的內存資源</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glDisable(GL_SCISSOR_TEST);								<font color=#ffffaa>// 禁用剪裁測試</font>
+
+	free (text);									<font color=#ffffaa>// 釋放分配的內存</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼讓OpenGL完成所有的任務，並返回TRUE</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	glFlush();									<font color=#ffffaa>// 執行所有的渲染命令</font>
+	return TRUE;									<font color=#ffffaa>// 成功返回</font>
+}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>KillGLWindow函數基本沒有變化，唯一改變的是需要刪除我們創建的字體 </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table>
+<table border=0 cellpadding=0 cellspacing=0 width="100%">
+  <tr>
+    <td><img src="../Pic/bl.png" width=28 height=28></td>
+    <td width="100%"><img src="../Pic/bc.png" width=100% height=28></td>
+    <td><img src="../Pic/br.png" width=28 height=28></td>
+  </tr>
+</table>
+<font color=#aaffaa size=3> 
+<pre>
+	KillFont();									<font color=#ffffaa>// 刪除字體</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>CreateGLWindow(), 和 WndProc() 函數保持不變<br> <br>
+      在WinMain()函數中我們需要加入新的按鍵控制 </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td><td width=100% valign=top><p>下面的代碼檢查向上的箭頭是否被按下，如果scroll大於0，我們把它減少2</p>
+      </td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+				if (keys[VK_UP] && (scroll&gt;0))				<font color=#ffffaa>// 向上的箭頭是否被按下?</font>
+				{
+					scroll-=2;					<font color=#ffffaa>// 如果是，減少scroll的值</font>
+				}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如果向下的箭頭被按住，並且scroll小於32*(maxtoken-9),則增加scroll的值，32是每一個字符的高度，9是可以顯示的行數。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+				if (keys[VK_DOWN] && (scroll&lt;32*(maxtokens-9)))		<font color=#ffffaa>// 向下的箭頭是否被按住</font>
+				{
+					scroll+=2;					<font color=#ffffaa>// 如果是，增加scroll的值</font>
+				}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>我希望你覺得這個教程有趣，學完了這個教程你應該知道如何獲得你的顯卡的發售商的名稱，實現OpenGL的組織和你的顯卡所使用的OpenGL的版本。進一步，你應該知道你的顯卡支持的擴展的名稱，並熟練的使用剪切矩形和加載TGA圖像。 
+      <p>如果你發現任何問題，請讓我知道。我想做最好的教程，你的反饋對我很重要。</p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2024.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_24.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/24_TGA_Extension.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+      <FONT face=Tahoma,Verdana,sans-serif size=-1>
+      <table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_23.html">< 
+          第23課</a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_25.html">第25課 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_24.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:04 GMT -->
+</html>

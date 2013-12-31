@@ -1,0 +1,857 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn --><html>
+
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_15.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+<head>
+<title>NeHe OpenGL教程第十五課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type="text/css">A:link {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #ffccaa; TEXT-DECORATION: none
+}
+</style>
+<meta content="Microsoft FrontPage 3.0" name="GENERATOR">
+</head>
+
+<body bgColor="#000000" text="#ffffff">
+<CENTER><BR>
+  <table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td height="130" width="326"><img height="130" src="../Pic/logo.png" width="326"></td>
+      <td align="middle" vAlign="center" width="75%"><div align="center"><font color="#ffccaa" size="+3"><b><i>第15課</i></b></font></div></td>
+  </tr>
+</TBODY>
+</table>
+<!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+              <td width="29%"><img src="../Pic/lesson15.jpg" width="240" height="180"></td>
+              <td width="71%"><p><FONT class=head>圖形字體的紋理映射:</FONT></p>
+                <p><font size="3">這一課，我們將在上一課的基礎上創建帶有紋理的字體，它真的很簡單。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">在發佈了前兩篇關於位圖字體和輪廓字體的教程以後，我收到很多郵件，很多讀者都想知道如何才能給字體賦予紋理貼圖。你可以使用自動紋理坐標生成器。它會為字體上的每一個多邊形生成紋理坐標。
+        <p>一個小註釋，這段代碼是專門針對Windows寫的，它使用了Windows的wgl函數來創建字體，顯然，Apple機系統有agl，X系統有glx來支持做同樣事情的，不幸的是，我不能保證這些代碼也是容易使用的。如果哪位有能在屏幕上顯示文字且獨立於平台的代碼，請告訴我，我將重寫一個有關字體的教程。</p>
+        <p>我們將使用第14課的代碼來創作紋理字體的演示。如果程序中哪部分的代碼有變化，我會重寫那部分的所有代碼以便看出我做的改動。<br>
+        </p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> </font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">我們還要添加一個叫做texture[]的整型變量。它用於保存紋理。後面3行是第14課中的代碼，本課不做改動。<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> </font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面的部分做了一些小改動。我打算在這課使用wingdings字體來顯示一個海盜旗（骷髏頭和十字骨頭）的標誌。如果你想顯示文字的話，就不用改動第14課中的代碼了，也可以選擇另一種字體。
+        <p>有些人想知道如何使用wingdings字體，這也是我不用標準字體的一個原因。wingdings是一種符號字體，使用它時需要做一些改動。告訴Windows使用wingdings字體並不太簡單。如果你把字體的名字改為wingdings，你會注意到字體其實並沒有選到。你必須告訴Windows這種字體是一種符號字體而不是一種標準字符字體。後面會繼續解釋。<br>
+        </p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>GLvoid BuildFont(GLvoid)					<font color="#ffffaa">	// 創建位圖字體</font>
+{
+	GLYPHMETRICSFLOAT	gmf[256];					<font
+color="#ffffaa">// 記錄256個字符的信息</font>
+	HFONT	font;						<font
+color="#ffffaa">// 字體句柄</font>
+
+	base = glGenLists(256);					<font
+color="#ffffaa">// 創建256個顯示列表</font>
+	font = CreateFont(	-12,				<font
+color="#ffffaa">	// 字體高度</font>
+				0,				<font color="#ffffaa">// 字體寬度</font>
+				0,				<font
+color="#ffffaa">// 字體的旋轉角度 Angle Of Escapement</font>
+				0,				<font color="#ffffaa">// 字體底線的旋轉角度Orientation Angle</font>
+				FW_BOLD,				<font
+color="#ffffaa">// 字體的重量</font>
+				FALSE,				<font color="#ffffaa">// 是否使用斜體</font>
+				FALSE,				<font
+color="#ffffaa">// 是否使用下劃線</font>
+				FALSE,				<font color="#ffffaa">// 是否使用刪除線</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">這就是有魔力的那一行！不使用第14課中的ANSI_CHARSET，我們將使用SYMBOL_CHARSET。這會告訴Windows我們創建的字體並不是由標準字符組成的典型字體。所謂符號字體通常是由一些小圖片（符號）組成的。如果你忘了改變這行，wingdings,webdings以及你想用的其它符號字體就不會工作。<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>				SYMBOL_CHARSET,			<font color="#ffffaa">// 設置字符集</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面幾行沒有變化。<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>				OUT_TT_PRECIS,			<font color="#ffffaa">// 輸出精度</font>
+				CLIP_DEFAULT_PRECIS,		<font
+color="#ffffaa">// 裁剪精度</font>
+				ANTIALIASED_QUALITY,		<font
+color="#ffffaa">// 輸出質量</font>
+				FF_DONTCARE|DEFAULT_PITCH,	<font
+color="#ffffaa">	// Family And Pitch</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">既然我們已經選擇了符號字符集標識符，我們就可以選擇wingdings字體了</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>				&quot;Wingdings&quot;);			<font color="#ffffaa">// 字體名稱</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">剩下幾行代碼沒有變化</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	SelectObject(hDC, font);				<font color="#ffffaa">	// 選擇創建的字體</font>
+
+	wglUseFontOutlines(	hDC,				<font
+color="#ffffaa">// 設置當前窗口設備描述表的句柄</font>
+				0,				<font color="#ffffaa">// 用於創建顯示列表字體的第一個字符的ASCII值</font>
+				255,				<font
+color="#ffffaa">// 字符數</font>
+				base,				<font
+color="#ffffaa">// 第一個顯示列表的名稱</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">我們允許有更多的誤差，這意味著GL不會嚴格的遵守字體的輪廓線。如果你把誤差設置為0.0f，你就會發現嚴格地在曲面上貼圖存在一些問題。但是如果你允許一定的誤差，很多問題都可以避免。<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>				0.1f,				<font color="#ffffaa">// 字體的光滑度，越小越光滑，0.0為最光滑的狀態</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面三行代碼還是相同的</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>				0.2f,				<font color="#ffffaa">// 在z方向突出的距離</font>
+				WGL_FONT_POLYGONS,		<font
+color="#ffffaa">	// 使用多邊形來生成字符，每個頂點具有獨立的法線</font>
+				gmf);				<font color="#ffffaa">// 一個接收字形度量數據的數組的地址，每個數組元素用它對應的顯示列表字符的數據填充</font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">在ReSizeGLScene()函數之前，我們要加上下面一段代碼來讀取紋理。你可能會認得這些前幾課中的代碼。我們創建一個保存位圖的地方，讀取位圖，告訴Windows生成一個紋理，並把它保存在texture[0]中。
+        <p>我們創建一種細化紋理（mipmapped texture），這樣會看起來好些。紋理的名字叫做lights.bmp。</p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>if (TextureImage[0]=LoadBMP(&quot;Data/Lights.bmp&quot;))			<font
+color="#ffffaa">// 載入位圖</font>
+</pre>
+</font>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面四行代碼將為我們繪製在屏幕上的任何物體自動生成紋理坐標。函數glTexGen非常強大，而且複雜，如果要完全講清楚它的數學原理需要再寫一篇教程。不過，你只要知道GL_S和GL_T是紋理坐標就可以了。默認狀態下，它被設置為提取物體此刻在屏幕上的x坐標和y坐標，並把它們轉換為頂點坐標。你會發現到物體在z平面沒有紋理，只顯示一些斑紋。正面和反面都被賦予了紋理，這些都是由glTexGen函數產生的。(X(GL_S)用於從左到右映射紋理，Y(GL_T)用於從上到下映射紋理。
+        <p>GL_TEXTURE_GEN_MODE允許我們選擇我們想在S和T紋理坐標上使用的紋理映射模式。你有3種選擇：</p>
+        <p>GL_EYE_LINEAR - 紋理會固定在屏幕上。它永遠不會移動。物體將被賦予處於它通過的地區的那一塊紋理。</p>
+        <p>GL_OBJECT_LINEAR - 這種就是我們使用的模式。紋理被固定於在屏幕上運動的物體上。<br>
+          GL_SPHERE_MAP - 每個人都喜歡。創建一種有金屬質感的物體。<br>
+        </p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>		<font color="#ffffaa">// 設置紋理映射模式</font>
+		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+		glEnable(GL_TEXTURE_GEN_S);				<font
+color="#ffffaa">// 使用自動生成紋理</font>
+		glEnable(GL_TEXTURE_GEN_T);		</pre>
+</font>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">在InitGL()的最後有幾行新代碼。BuildFont()被放到了讀取紋理的代碼之後。glEnable(GL_COLOR_MATERIAL) 
+        這行被刪掉了，如果你想使用glColor3f(r,g,b)來改變紋理的顏色，那麼就把glEnable(GL_COLOR_MATERIAL)這行重新加到這部分代碼中。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>int InitGL(GLvoid)							<font color="#ffffaa">// 此處開始對OpenGL進行所有設置</font>
+{
+	if (!LoadGLTextures())					<font
+color="#ffffaa">// 載入紋理</font>
+	{
+		return FALSE;					<font
+color="#ffffaa">// 失敗則返回</font>
+	}
+	BuildFont();						<font
+color="#ffffaa">// 創建字體顯示列表</font>
+
+	glShadeModel(GL_SMOOTH);					<font color="#ffffaa">// 啟用陰影平滑</font>
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);			<font
+color="#ffffaa">// 黑色背景</font>
+	glClearDepth(1.0f);					<font color="#ffffaa">// 設置深度緩存</font>
+	glEnable(GL_DEPTH_TEST);				<font
+color="#ffffaa">	// 啟用深度測試</font>
+	glDepthFunc(GL_LEQUAL);					<font
+color="#ffffaa">// 所作深度測試的類型</font>
+	glEnable(GL_LIGHT0);					<font
+color="#ffffaa">// 使用第0號燈</font>
+	glEnable(GL_LIGHTING);					<font
+color="#ffffaa">// 使用光照</font>
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);		<font
+color="#ffffaa">// 告訴系統對透視進行修正</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">啟動2D紋理映射，並選擇第一個紋理。這樣就把第一個紋理映射到我們繪製在屏幕上的3D物體上了。如果你想加入更多的操作，可以按自己的意願啟動或禁用紋理映射。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	glEnable(GL_TEXTURE_2D);				<font color="#ffffaa">	// 使用二維紋理</font>
+	glBindTexture(GL_TEXTURE_2D, texture[0]);		<font
+color="#ffffaa">	// 選擇使用的紋理</font>
+	return TRUE;						<font color="#ffffaa">// 初始化成功</font>
+}
+</pre>
+</font>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">重置大小的代碼沒有變化，但DrawGLScene這部分代碼有變化。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> </font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">這裡是第一處變動。我們打算使用COS和SIN讓物體繞著屏幕旋轉而不是把它固定在屏幕中間。我們將把物體向屏幕裡移動3個單位。在x軸，我們將移動範圍限制在-1.1到+1.1之間。我們使用rot變量來控制左右移動。我們把上下移動的範圍限制在+0.8到-0.8之間。同樣使用rot變量來控制上下移動（最好充分利用你的變量）。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	<font color="#ffffaa">// 設置字體的位置</font>
+	glTranslatef(1.1f*float(cos(rot/16.0f)),0.8f*float(sin(rot/20.0f)),-3.0f);
+</pre>
+</font>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面做常規的旋轉。這會使符號在X，Y和Z軸旋轉。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	glRotatef(rot,1.0f,0.0f,0.0f);				<font color="#ffffaa">// 沿X軸旋轉</font>
+	glRotatef(rot*1.2f,0.0f,1.0f,0.0f);				<font
+color="#ffffaa">// 沿Y軸旋轉</font>
+	glRotatef(rot*1.4f,0.0f,0.0f,1.0f);				<font
+color="#ffffaa">// 沿Z軸旋轉</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">我們將物體相對觀察點向左向下移動一點，以便於把符號定位於每個軸的中心。否則，當我們旋轉它的時候，看起來就不像是在圍繞它自己的中心在旋轉。-0.35只是一個能讓符號正確顯示的數。我也試過一些其它數，因為我不知道這種字體的寬度是多少，可以適情況作出調整。我不知道為什麼這種字體沒有一個中心。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	glTranslatef(-0.35f,-0.35f,0.1f);			<font color="#ffffaa">	// 移動到可以顯示的位置</font>
+</pre>
+</font>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">最後，我們繪製海盜旗的符號，然後增加rot變量，從而使這個符號在屏幕中旋轉和移動。如果你不知道我是如何從字母『N』中得到海盜旗符號的，那就打開Microsoft 
+        Word或是寫字板。在字體下拉菜單中選擇Wingdings字體。輸入大寫字母『N』，就會顯示出海盜旗符號了。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	glPrint(&quot;N&quot;);						<font color="#ffffaa">// 繪製海盜旗符號</font>
+	rot+=0.1f;						<font
+color="#ffffaa">// 增加旋轉變量</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">最後要做的事就是在KillGLWindow()的最後添加KillFont()函數，如下所示。添加這行代碼很重要。它將在我們退出程序之前做清理工作。<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> </font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"><p>儘管我沒有講的細緻入微，但我想你應該很好的理解了如何讓OpenGL為你生成紋理坐標。在給你的字體或者是同類物體賦予紋理映射時，應該沒有問題了，而且只需要改變兩行代碼，你就可以啟用球體映射了，它的效果簡直酷斃了！</p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+                <p>感謝<br>
+                  感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+                  感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+                <p>資源下載: <br>
+                  文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2015.mht">網頁格式</a> 
+                  <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_15.pdf">PDF格式</a><br>
+                  源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/15_FontTexture.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+          <table border="0" width="100%">
+<TBODY>
+      <tr>
+              <td align="left" width="50%"><a href="Tutorial_14.html"><b><font size="-1">&lt; 
+                第14課</font></b></a></td>
+              <td align="right" width="50%"><a href="Tutorial_16.html"><b><font size="-1">第16課 
+                &gt;</font></b></a></td>
+      </tr>
+</TBODY>
+    </table>
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+  <TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+</center></body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_15.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+</html>

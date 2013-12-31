@@ -1,0 +1,1112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_32.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:02:02 GMT -->
+<head>
+<title>NeHe OpenGL教程第三十二課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第32課 
+      </i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="28%"><img src="../Pic/lesson32.jpg" width="240" height="180"></td>
+            <td width="72%"><p><FONT class=head>拾取, Alpha混合, Alpha測試, 排序:</FONT></p>
+              <p><font size="3">這又是一個小遊戲，交給的東西會很多，慢慢體會吧</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>歡迎來到32課. 這課大概是在我所寫作已來最大的一課. 超過1000 行代碼和約1540行的HTML. 
+      這也是第一課用到我新的NeHeGL 基本代碼. 這課寫了很長時間, 但我想他是值得期待的. 一些知識點用到是: Alpha 混合, Alpha 
+      測試, 讀取鼠標, 同時用到Ortho 和透視, 顯示客戶鼠標, 按深度排列物體, 動畫幀從單張材質圖 和更多要點, 你將學到更多精選的內容! 
+      <p>最初的版本是在屏幕上顯示三個物體，當你單擊他們將改變顏色. 很有趣!?! 不怎樣! 像往常一樣, 我想給你們這些傢伙留下一個超極好的課程. 
+        我想使課程有趣, 豐富，當然..美觀. 所以, 經過幾個星期的編碼之後, 這課程完成了! 即使你不編碼，你仍會喜歡這課. 這是個完整的遊戲. 
+        遊戲的目標是射擊更多的靶子, 在你失去一定數的靶子後，你將不能再用鼠標單擊物體. </p>
+      <p>我確信會有批評，但我非常樂觀對這課! 我已在從深度裡選擇和排序物體這個主題裡找到快樂! </p>
+      <p>一些需要注意的代碼. 我僅僅會在lesson32.cpp裡討論. 有一些不成熟的改動在 NeHeGL 代碼裡. 最重要的改動是我加入鼠標支持在 
+        WindowProc(). 我也加入 int mouse_x, mouse_y 在存鼠標運動. 在 NeHeGL.h 以下兩條代碼被加入: 
+        extern int mouse_x; &amp; extern int mouse_y; </p>
+      <p>課程用到的材質是用 Adobe Photoshop 做的. 每個 .TGA 文件是32位圖片有一個alpha 通道. 若你不確信自已能在一個圖片加入alpha通道, 
+        找一本好書，上網，或讀 Adobe Photoshop幫助. 全部的過程非常相似，我做了透明圖在透明圖課程. 調入你物體在 Adobe Photoshop 
+        (或一些其它圖形處理程序，且支持alpha 通道). 用選擇顏色工具選你圖片的背景. 複製選區. 新建一個圖. 粘貼生成新文件. 取消圖片選擇，你圖的背景應是黑色. 
+        使周圍是白色. 選全部圖複製. 回到最初的圖且建一個alpha 通道. 粘貼黑和白透明圖你就完成建立alpha通道.存圖片為32位t .TGA文件. 
+        使確定保存透明背景是選中的，保存! </p>
+      <p>如以往我希望你喜歡這課程. 我感興趣你對他的想法. 若你有些問題或你發現一些問題,告訴我. 我匆忙的完成這課程 所以若你發現哪部分很難懂，給我發些郵件,然後我會用不同的方式或更詳細的解釋! 
+        <br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>#include &lt;windows.h&gt;								
+#include &lt;stdio.h&gt;								
+#include &lt;stdarg.h&gt;								
+#include &lt;time.h&gt;								
+#include "NeHeGL.h"							</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在第1課裡, 我提倡關於適當的方法連接到 OpenGL 庫. 在 Visual C++ 裡點擊』項目』,設置，連接項. 
+      移下到 對像/庫 模塊 加入 OpenGL32.lib, GLu32.lib 和 GLaux.lib. 預編譯一個需要的庫的失敗將使編譯器找出所出的錯誤. 
+      有時你不想發生! 使事情更壞, 若你僅僅預編譯庫在debug 模式, 和有人試在release 模式建立你程序... 更多的錯誤. 有許多人看代碼. 
+      他們大多數是新程序員. 他們取到你的代碼, 試著編譯. 他們得到錯誤, 刪掉代碼，移走. 
+      <p>下而的代碼告訴編譯者去連接需要的庫. 一點多些的字, 但少些以後的頭痛. 在這個課程, 我們將連接 OpenGL32 庫,GLu32庫 和 
+        WinMM庫 (用來放音樂). 在這課程我們會調入 .TGA 文件，所以我們不用 GLaux庫. <br>
+      </p>
+      </td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+	  
+<pre>
+#pragma comment( lib, "opengl32.lib" )						<font color=#ffffaa>// 在鏈接時連接Opengl32.lib庫</font>
+#pragma comment( lib, "glu32.lib" )						<font color=#ffffaa>	// 鏈接glu32.lib庫</font>
+#pragma comment( lib, "winmm.lib" )							<font color=#ffffaa>// 鏈接winmm.lib庫</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下而的3 行檢查若 CDS_FULLSCREEN 已被你的編譯器定義. 若還沒被定義, 我們給 
+      CDS_FULLSCREEN 為 4. 馬上你完全部丟掉... 一些編譯器不給 CDS_FULLSCREEN 變量，將返回一個錯誤，但是 CDS_FULLSCREEN 
+      是有用的! 防止出錯消息, 我們檢查若 CDS_FULLSCREEN 是否定義，若出錯, 我們定義他. 使每人生活更簡單. 
+      <p>我們再定義 DrawTargets函數, 為窗口和按鍵設變量. 你若不懂定義,讀一遍MSDN術語表.保持清醒, 我不是教 C/C++, 買一本好書若你對非gl代碼要幫助! 
+        <br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+#ifndef		CDS_FULLSCREEN							
+#define		CDS_FULLSCREEN 4						
+#endif									
+
+void DrawTargets();								
+
+GL_Window*	g_window;
+Keys*		g_keys;
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼是用戶設置變量. base 是將用到的字體顯示列表的開始列表值. roll 是將用到的移動的大地和建立旋轉的雲. 
+      level 應是級別 (我們開始是 1級). miss 保留失去了多少物體. 他還用來顯示用戶的士氣(不丟失意味著高士氣). kills 保留每級打到多少靶子. 
+      score 會保存運行時打中的總數, 同時用到結束比賽! 
+      <p>最後一行是讓我們通過結構比較的函數. 是等待qsort 最後參數到 type (const *void, const *void). <br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+<font color=#ffffaa>// 用戶定義的變量</font>
+GLuint		base;								<font color=#ffffaa>// 字體顯示列表</font>
+GLfloat		roll;								<font color=#ffffaa>// 旋轉的雲</font>
+GLint		level=1;							<font color=#ffffaa>	// 現在的等級</font>
+GLint		miss;								<font color=#ffffaa>// 丟失的數</font>
+GLint		kills;								<font color=#ffffaa>// 打到的數</font>
+GLint		score;								<font color=#ffffaa>// 當前的分數</font>
+bool		game;								<font color=#ffffaa>// 遊戲是否結束?</font>
+
+typedef int (*compfn)(const void*, const void*);					<font color=#ffffaa>// 定義用來比較的函數</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在為我們物體的結構. 這個結構存了所有一個物體的信息. 旋轉的方向, 若被打中, 在屏幕的位置, 
+      等等. 
+      <p>一個快速運動的變量... rot 我想讓物體旋轉特別的方向. hit 若物體沒被打中將是 FALSE . 若物體給打中或飛出, 變量將是 
+        TRUE. </p>
+      <p>變量frame 是用來存我們爆炸動畫的週期. 每一幀改變增加一個爆炸材質. 在這課有更多在不久. </p>
+      <p>保存單個物體的移動方向, 我們用變量 dir. 一個dir 能有4 個值: 0 - 物體左移, 1 - 物體右移, 2 - 物體上移 和最後 
+        3 - 物體下移 </p>
+      <p>texid 能是從0到4的數. 0 表示是藍面材質, 1 是水桶材質， 2 是靶子的材質 , 3 是 可樂的材質 和 4 是 花瓶 材質. 
+        最近在調入材質的代碼, 你將看到先前5種材質來自目標圖片. </p>
+      <p>x 和 y 兩者都用來記屏模上物體的位置. x 表示物體在 x-軸, y 表示物體在 y-軸. </p>
+      <p>物體在z-軸上的旋轉是記在變量spin. 在以後的代碼, 我們將加或減spin基數在旅行的方向上. </p>
+      <p>最後, distance 保存我們物體到屏幕的距離. 距離是極端重要的變量, 我們將用他來計算屏幕的左右兩邊, 而且在對像關閉之前排序物體，畫出物體的距離. 
+      </p>
+      <p><br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+struct objects {
+	GLuint	rot;								<font color=#ffffaa>// 旋轉 (0-不轉, 1-順時針轉, 2-逆時針轉)</font>
+	bool	hit;								<font color=#ffffaa>// 物體碰撞?</font>
+	GLuint	frame;								<font color=#ffffaa>// 當前爆炸效果的動畫幀</font>
+	GLuint	dir;								<font color=#ffffaa>// 物體的方向 (0-左, 1-右, 2-上, 3-下)</font>
+	GLuint	texid;								<font color=#ffffaa>// 物體材質 ID</font>
+	GLfloat	x;								<font color=#ffffaa>// 物體 X 位置</font>
+	GLfloat y;								<font color=#ffffaa>// 物體 Y 位置</font>
+	GLfloat	spin;								<font color=#ffffaa>// 物體旋轉</font>
+	GLfloat	distance;							<font color=#ffffaa>	// 物體距離</font>
+};
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>解釋下面的代碼沒有真正的結果. 我們在這課調入TGA圖代替bitmaps圖片. 下面的用來表示TGA圖片數據的結構是盡可能好的 
+      . 若你需要詳細的解釋下面的代碼，請讀關於調入TGA 文件的課程. </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+typedef struct									<font color=#ffffaa>// 新建一個結構</font>
+{
+	GLubyte	*imageData;							<font color=#ffffaa>// 圖片數據 (最大 32 位)</font>
+	GLuint	bpp;								<font color=#ffffaa>// 圖片顏色深度 每象素</font>
+	GLuint	width;								<font color=#ffffaa>// 圖片寬度</font>
+	GLuint	height;								<font color=#ffffaa>// 圖片高度</font>
+	GLuint	texID;								<font color=#ffffaa>// 貼圖材質 ID 用來選擇一個材質</font>
+} TextureImage;									<font color=#ffffaa>// 結構 名稱</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>緊接下面的代碼為們10個材質和個30物體留出空間. 若你打算在遊戲裡加更多物體，得增加這個變量到你想到的數</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+TextureImage textures[10];							<font color=#ffffaa>// 定義10個材質</font>
+
+objects	object[30];							<font color=#ffffaa>// 定義 30 個物體</font>
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>我不想限制每個物體的大小. 我想瓶子(vase)比can高, 我想水桶bucket比瓶子寬. 去改變一切是簡單的, 
+      我建了一個結構存物體的寬和高. 
+      <p>我然後在最後一行代碼中設每個物體的寬高. 得到這個coke cans的寬, 我將檢查size[3].w. 藍面是 0, 水桶是 1, 和靶子是 
+        2, 等. 寬度表現在 w. 使有意義? </p>
+      <p><br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+struct dimensions {								<font color=#ffffaa>// 物體維數</font>
+	GLfloat	w;								<font color=#ffffaa>// 物體寬</font>
+	GLfloat h;								<font color=#ffffaa>// 物體高</font>
+};
+
+<font color=#ffffaa>// 每個物體的大小: 藍面, 水桶, 靶子, 可樂, 瓶子</font>
+dimensions size[5] = { {1.0f,1.0f}, {1.0f,1.0f}, {1.0f,1.0f}, {0.5f,1.0f}, {0.75f,1.5f} };
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面是大段代碼是調入我們 TGA 圖片和轉換他為材質. 這是同我在第25課所用的一樣的代碼，你可回去看一看. 
+      <p>我用TGA 圖片的原因是他們是有alpha 通道的. 這個alpha 通道告訴 OpenGL 哪一部分圖是透明的，哪一部分是白底. alpha 
+        通道是被建立在圖片處理程序, 並保存在.TGA圖片裡面. OpenGL 調入圖片, 能用alpha 通道設置圖片中每個像素透明的數量. </p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+bool LoadTGA(TextureImage *texture, char *filename)					<font color=#ffffaa>// 調入一個TGA 文件到內存</font>
+{
+	GLubyte		TGAheader[12]={0,0,2,0,0,0,0,0,0,0,0,0};			<font color=#ffffaa>// (未)壓縮的 TGA 頭</font>
+	GLubyte		TGAcompare[12];						<font color=#ffffaa>// 用來比較 TGA 頭</font>
+	GLubyte		header[6];						<font color=#ffffaa>// 首先 6 個有用的字節</font>
+	GLuint		bytesPerPixel;						<font color=#ffffaa>// 每象素字節數在 TGA 文件使用</font>
+	GLuint		imageSize;						<font color=#ffffaa>// 用來圖片大小的存儲</font>
+	GLuint		temp;							<font color=#ffffaa>// 臨時變量</font>
+	GLuint		type=GL_RGBA;						<font color=#ffffaa>// 設置默認的 GL 模式 為 RBGA </font>
+
+	FILE *file = fopen(filename, "rb");						<font color=#ffffaa>// 打開 TGA 文件</font>
+
+	if(	file==NULL ||							<font color=#ffffaa>// 文件是否已存在 ?</font>
+		fread(TGAcompare,1,sizeof(TGAcompare),file)!=sizeof(TGAcompare) ||	<font color=#ffffaa>// 是否讀出12個字節?</font>
+		memcmp(TGAheader,TGAcompare,sizeof(TGAheader))!=0 ||			<font color=#ffffaa>// 文件頭是不是我們想要的 ?</font>
+		fread(header,1,sizeof(header),file)!=sizeof(header))		<font color=#ffffaa>	// 若正確則讀下 6 個 Bytes</font>
+	{
+		if (file == NULL)						<font color=#ffffaa>	// 文件是否已存在 ? </font>
+			return FALSE;						<font color=#ffffaa>// 返回錯誤</font>
+		else								<font color=#ffffaa>// 否則</font>
+		{
+			fclose(file);						<font color=#ffffaa>// 若有任何錯誤, 關掉文件</font>
+			return FALSE;						<font color=#ffffaa>// 返回錯誤</font>
+		}
+	}
+
+	texture-&gt;width  = header[1] * 256 + header[0];				<font color=#ffffaa>// 定義 TGA 寬</font>
+	texture-&gt;height = header[3] * 256 + header[2];				<font color=#ffffaa>// 定義 TGA 高</font>
+
+ 	if(	texture-&gt;width	&lt;=0 ||						<font color=#ffffaa>// 若 寬&lt;=0</font>
+		texture-&gt;height	&lt;=0 ||						<font color=#ffffaa>// 若 高&lt;=0</font>
+		(header[4]!=24 && header[4]!=32))					<font color=#ffffaa>// 若 TGA 是 24 or 32 位?</font>
+	{
+		fclose(file);							<font color=#ffffaa>// 若有任何錯誤, 關掉文件</font>
+		return FALSE;							<font color=#ffffaa>// 返回錯誤</font>
+	}
+
+	texture-&gt;bpp	= header[4];						<font color=#ffffaa>// 取 TGA 的位每象素 (24 或 32)</font>
+	bytesPerPixel	= texture-&gt;bpp/8;						<font color=#ffffaa>// 除以 8 得到字節每象素</font>
+	imageSize		= texture-&gt;width*texture-&gt;height*bytesPerPixel;		<font color=#ffffaa>// 計算 所需內存為 TGA 數據</font>
+
+	texture-&gt;imageData=(GLubyte *)malloc(imageSize);				<font color=#ffffaa>// 分配 內存 為 TGA 數據</font>
+
+	if(	texture-&gt;imageData==NULL ||						<font color=#ffffaa>// 這個內存是否存在?</font>
+		fread(texture-&gt;imageData, 1, imageSize, file)!=imageSize)		<font color=#ffffaa>// 圖片大小與保留內存的大小想等 ?</font>
+	{
+		if(texture-&gt;imageData!=NULL)					<font color=#ffffaa>// 圖片數據的調入</font>
+			free(texture-&gt;imageData);				<font color=#ffffaa>	// 若成功, 釋放圖像數據</font>
+
+		fclose(file);							<font color=#ffffaa>// 關掉文件</font>
+		return FALSE;							<font color=#ffffaa>// 返回錯誤</font>
+	}
+
+	for(GLuint i=0; i&lt;int(imageSize); i+=bytesPerPixel)			<font color=#ffffaa>	// 在圖像數據裡循環</font>
+	{									<font color=#ffffaa>// 交換第1和第3 Bytes (』紅』red 和 』藍』blue)</font>
+		temp=texture-&gt;imageData[i];					<font color=#ffffaa>	// 臨時存儲 圖像的 』i』</font>
+		texture-&gt;imageData[i] = texture-&gt;imageData[i + 2];		<font color=#ffffaa>	// 設 第1 Byte 得到變量 第3 Byte</font>
+		texture-&gt;imageData[i + 2] = temp;					<font color=#ffffaa>// 設第3 Byte 得到變量 』temp』 (第1 Byte 變量)</font>
+	}
+
+	fclose (file);								<font color=#ffffaa>// 關掉文件</font>
+
+	<font color=#ffffaa>// 建立一個貼圖材質從以上數據</font>
+	glGenTextures(1, &texture[0].texID);						<font color=#ffffaa>// 生成 OpenGL 材質 ID</font>
+
+	glBindTexture(GL_TEXTURE_2D, texture[0].texID);				<font color=#ffffaa>// 綁定我們的材質</font>
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	<font color=#ffffaa>	// 線過濾器</font>
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);		<font color=#ffffaa>// 線過濾器</font>
+
+	if (texture[0].bpp==24)							<font color=#ffffaa>// 若 TGA 是24 位的</font>
+	{
+		type=GL_RGB;							<font color=#ffffaa>// 設 』type』 為 GL_RGB</font>
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, type, texture[0].width, texture[0].height, 0, type, GL_UNSIGNED_BYTE, texture[0].imageData);
+
+	return true;								<font color=#ffffaa>// 材質建立成功, 返回正確</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>2D 字體材質代碼同我已在前一課用的是一樣的. 然而, 有一些小不同. 第一是你將看到僅僅唯一生成95 
+      顯示列表. 若你看字體材質, 你會看到只有 95 字母計算空間在圖片頂，左. 第二個事是你將通知分在16.0f 為 cx 和 我們只分在8.0f 
+      為cy. 我這樣做的結果是因為字體材質是256 象素寬, 但僅僅一伴就高(128 象素). 所以計算cx 我們分為16.0f 和計算分cy 為一半(8.0f). 
+      <p>若你不懂下面的代碼, 回去讀17課. 建立字體的代碼的詳細解釋在第17課裡! </p>
+      <p><br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+GLvoid BuildFont(GLvoid)							<font color=#ffffaa>// 建立我們字體顯示列表</font>
+{
+	base=glGenLists(95);						<font color=#ffffaa>// 建立 95 顯示列表</font>
+	glBindTexture(GL_TEXTURE_2D, textures[9].texID);			<font color=#ffffaa>// 綁我們字體材質</font>
+	for (int loop=0; loop&lt;95; loop++)					<font color=#ffffaa>// 循環在 95 列表</font>
+	{
+		float cx=float(loop%16)/16.0f;				<font color=#ffffaa>// X 位置 在當前字母</font>
+		float cy=float(loop/16)/8.0f;				<font color=#ffffaa>// Y 位置 在當前字母</font>
+
+		glNewList(base+loop,GL_COMPILE);				<font color=#ffffaa>// 開始建立一個列表</font>
+			glBegin(GL_QUADS);					<font color=#ffffaa>// 用四邊形組成每個字母</font>
+				glTexCoord2f(cx,         1.0f-cy-0.120f); glVertex2i(0,0);	<font color=#ffffaa>// 質地 / 點 座標 (底 左)</font>
+				glTexCoord2f(cx+0.0625f, 1.0f-cy-0.120f); glVertex2i(16,0);	<font color=#ffffaa>// 質地 / 點 座標 (底 右)</font>
+				glTexCoord2f(cx+0.0625f, 1.0f-cy);	  glVertex2i(16,16);	<font color=#ffffaa>// 質地 / 點 座標 (頂 右)</font>
+				glTexCoord2f(cx,         1.0f-cy);	  glVertex2i(0,16);	<font color=#ffffaa>// 質地 / 點 座標 (頂 左)</font>
+			glEnd();						<font color=#ffffaa>// 完成建立我們的 四邊形 (字母)</font>
+			glTranslated(10,0,0);				<font color=#ffffaa>// 移到字體的右邊</font>
+		glEndList();						<font color=#ffffaa>// 完成建軍立這個顯示列表</font>
+	}								<font color=#ffffaa>// 循環直到所有 256 完成建立</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>輸出的代碼也在第17課, 但已修改為在屏幕輸出我們的分數, 等級和士氣(不斷改變的值). </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+GLvoid glPrint(GLint x, GLint y, const char *string, ...)				<font color=#ffffaa>// 輸出在屏慕的位置</font>
+{
+	char		text[256];						<font color=#ffffaa>// 保存在我們的字符串</font>
+	va_list		ap;							<font color=#ffffaa>// 到列表的指針</font>
+
+	if (string == NULL)							<font color=#ffffaa>// 若文字為空</font>
+		return;								<font color=#ffffaa>// 返回</font>
+
+	va_start(ap, string);							<font color=#ffffaa>// 解析字符串</font>
+	    vsprintf(text, string, ap);						<font color=#ffffaa>// 轉換字符串</font>
+	va_end(ap);								<font color=#ffffaa>// 結果的字符串</font>
+
+	glBindTexture(GL_TEXTURE_2D, textures[9].texID);			<font color=#ffffaa>	// 選擇我們字體材質</font>
+	glPushMatrix();								<font color=#ffffaa>// 存觀看模式矩陣</font>
+	glLoadIdentity();							<font color=#ffffaa>	// 設觀看模式矩陣</font>
+	glTranslated(x,y,0);							<font color=#ffffaa>// 文字輸出位置 (0,0 - 底 左-Bottom Left)</font>
+	glListBase(base-32);							<font color=#ffffaa>// 選擇字體設置</font>
+	glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);				<font color=#ffffaa>// 輸出顯示列表中的文字</font>
+	glPopMatrix();								<font color=#ffffaa>// 取出以前的模式矩陣</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這些代碼調用排序程序. 它比較距離在兩個結構並返回-1 若第一個結構的距離小於第二個 , 1 i若 
+      第一個結構的距離大於第二個 0 否則 (若 距離相等) </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+int Compare(struct objects *elem1, struct objects *elem2)			<font color=#ffffaa>// 比較 函數</font>
+{
+   if ( elem1-&gt;distance &lt; elem2-&gt;distance)					<font color=#ffffaa>// 若 第一個結構的距離小於第二個</font>
+      return -1;								<font color=#ffffaa>// 返回 -1</font>
+   else if (elem1-&gt;distance &gt; elem2-&gt;distance)				<font color=#ffffaa>// 若 第一個結構的距離大於第二個</font>
+      return 1;								<font color=#ffffaa>// 返回1</font>
+   else									<font color=#ffffaa>// 否則 (若 距離相等)</font>
+      return 0;								<font color=#ffffaa>// 返回 0</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>InitObject() 代碼是來建立每個物體. 我們開始設 rot 為 1. 這使物體順時針旋轉. 
+      然後設爆炸效果動畫幀為0(我們不想爆炸效果從中間開始).我們下面設 hit 為 FALSE, 意思是物體還沒被擊中或正開如. 選一個物體材質, 
+      texid 用來給一個隨機的變量從 0 到 4. 0是blueface 材質 和4 是 vase 材質. 這給我們5種隨機物體. 
+      <p>距離變量是在-0.0f to -40.0f (4000/100 is 40)的隨機數 . 當我們真實的畫物體,我們透過在屏幕上的另10 個單位. 
+        所以當物體在畫時, 他們將畫從-10.0f to -50.0f 單位 在屏幕(不挨著, 也不離得太遠). 我分隨機數為 100.0f 得到更精確的浮點數值. 
+      </p>
+      <p>在給完隨機的距離之後, 我們給物體一個隨機的 y . 我們不想物體低於 -1.5f, 否則他將低於大地, 且我們不想物體高於3.0f. 所以留在我們的區間的隨機數不能高於4.5f 
+        (-1.5f+4.5f=3.0f). </p>
+      <p>去計算 x 位置, 用一些狡猾的數學. 用我們的距離減去15.0f . 除以2 減5*level. 再 減隨機數（0.0f 到5） 乘level. 
+        減 5*level rndom(0.0f to 5*level) 這是最高級. </p>
+      <p>選一個方向. </p>
+      <p>使事情簡單明白x, 寫一個快的例子. 距離是 -30.0f ，當前級是 1: </p>
+      <p>object[num].x=((-30.0f-15.0f)/2.0f)-(5*1)-float(rand()%(5*1));<br>
+        object[num].x=(-45.0f/2.0f)-5-float(rand()%5);<br>
+        object[num].x=(-22.5f)-5-{lets say 3.0f};<br>
+        object[num].x=(-22.5f)-5-{3.0f};<br>
+        object[num].x=-27.5f-{3.0f};<br>
+        object[num].x=-30.5f; </p>
+      <p>開始在屏模上移 10 個單位 , 距離是 -30.0f. 其實是 -40.0f.用透視的代碼在 NeHeGL.cpp 文件. </p>
+      <p></p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+GLvoid InitObject(int num)							<font color=#ffffaa>// 初始化一個物體</font>
+{
+	object[num].rot=1;							<font color=#ffffaa>// 順時針旋轉</font>
+	object[num].frame=0;						<font color=#ffffaa>// 設爆炸效果動畫幀為0</font>
+	object[num].hit=FALSE;						<font color=#ffffaa>// 設點擊檢測為0</font>
+	object[num].texid=rand()%5;						<font color=#ffffaa>// 設一個材質</font>
+	object[num].distance=-(float(rand()%4001)/100.0f);			<font color=#ffffaa>// 隨機距離</font>
+	object[num].y=-1.5f+(float(rand()%451)/100.0f);			<font color=#ffffaa>// 隨機 Y 位置</font>
+	<font color=#ffffaa>// 隨機開始 X 位置 基於物體的距離 和隨機的延時量 (確定變量)</font>
+	object[num].x=((object[num].distance-15.0f)/2.0f)-(5*level)-float(rand()%(5*level));
+	object[num].dir=(rand()%2);						<font color=#ffffaa>// 選一個隨機的方向</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>檢查方向 <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+
+	if (object[num].dir==0)							<font color=#ffffaa>// 若隨機的方向正確</font>
+	{
+		object[num].rot=2;							<font color=#ffffaa>// 逆時針旋轉</font>
+		object[num].x=-object[num].x;					<font color=#ffffaa>// 開始在左邊 (否定 變量)</font>
+	}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在我們檢查texid 來找出所選的的物體. 若 texid 為0, 所選的物體是 Blueface 
+      . blueface 總是在大地上面旋轉. 確定開始時在地上的層, 我們設 y 是 -2.0f. <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+
+	if (object[num].texid==0)							<font color=#ffffaa>// 藍色天空表面</font>
+		object[num].y=-2.0f;						<font color=#ffffaa>// 總是在大地上面旋轉</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面檢查若texid 是 1. 這樣, 電腦所選物體的是 Bucket. bucket不從左到右運動, 
+      它從天上掉下來. 首先我們不得不設 dir 是 3. 這告訴電腦我們的水桶bucket 是掉下來或向下運動. 
+      <p>我們最初的代碼假定物體從左到右運動. 因為bucket 是向下落的, 我們得不給它一個新的隨機的變量 x . 若不是這樣, bucket 
+        會被看不到. 它將不在左邊落下就在屏幕外面. 我們給它一個新的隨機距離變量在屏幕上. 代替減去15, 我們僅僅減去 10. 這給我們一些幅度, 
+        保持物體在屏幕??. 設我們的distance 是-30.0f, 從0.0f -40.0f的隨機變量. 為什麼從 0.0f 到 40.0f? 
+        不是從0.0f to -40.0f? 答案很簡單. rand() 函數總返回正數. 所以總是正數. 另外，回到我們的故事. 我們有個正數 從0.0f 
+        到 40.0f.我們加距離 最小 10.0f 除以 2. 舉個例子，設x變量為 15 ，距離是 -30.0f:</p>
+      <p>object[num].x=float(rand()%int(-30.0f-10.0f))+((-30.0f-10.0f)/2.0f); 
+      </p>
+      <p>object[num].x=float(rand()%int(-40.0f)+(-40.0f)/2.0f); </p>
+      <p>object[num].x=float(15 {assuming 15 was returned))+(-20.0f); </p>
+      <p>object[num].x=15.0f-20.0f; </p>
+      <p>object[num].x=-5.0f; </p>
+      <p>下面設y. 我們想水桶從天上下來. 我人不想穿過雲. 所以我們設 y 為 4.5f. 剛在去的下面一點. <br>
+      </p>
+      </td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+
+	if (object[num].texid==1)						<font color=#ffffaa>// 水桶(Bucket)</font>
+	{
+		object[num].dir=3;						<font color=#ffffaa>// 下落</font>
+		object[num].x=float(rand()%int(object[num].distance-10.0f))+((object[num].distance-10.0f)/2.0f);
+		object[num].y=4.5f;					<font color=#ffffaa>// 隨機 X, 開始在屏模上方</font>
+	}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>我們想靶子從地面突出到天上. 我們檢查物體為 (texid 是 2). 若是, 設方向(dir) 
+      是 2 (上). 用精確的數 x 位置. 
+      <p>我們不想target 開始在地上. 設 y 初值為-3.0f (在地下). 然後減一個值從0.0f 到 5 乘當前 level. 靶子不是立即出現. 
+        在高級別是有延時， 通過delay, 靶子將出現在一個在另一個以後, 給你很少時間打到他們. </p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	if (object[num].texid==2)						<font color=#ffffaa>// 靶子</font>
+	{
+		object[num].dir=2;						<font color=#ffffaa>// 開始向上飛</font>
+		object[num].x=float(rand()%int(object[num].distance-10.0f))+((object[num].distance-10.0f)/2.0f);
+		object[num].y=-3.0f-float(rand()%(5*level));			<font color=#ffffaa>// 隨機 X, 開始在下面的大地 + 隨機變量</font>
+	}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>所有其它的物體從右到左旅行, 因而不必給任何變量付值來改變物體. 它們應該剛好工作在所給的隨機變量. 
+      <p>現在來點有趣的材料! &quot;為了alpha 混合技術正常的工作, 透明的原物必須不斷地排定在從後向前畫&quot;. 當畫alpha 
+        混合物體是, 在遠處的物體是先畫的,這是非常重要的, 下面畫緊臨的上面的物體. </p>
+      <p>理由是簡單的... Z 緩衝區防止 OpenGL 從已畫好的混合東西再畫像素. 這就是為什麼會發生物體畫在透明混合之後而不再顯示出來. 為什麼你最後看到的是一個四邊形與物體重疊... 
+        很不好看! </p>
+      <p>我們已知道每個物體的深度. 因而在初始化一個物體之後, 我們能通過把物體排序，而用qsort 函數(快速排序sort)，來解決這個問題 . 
+        通過物體排序, 我們能確信第一個畫的是最遠的物體. 這意味著當我們畫物體時, 起始於第一個物體, 物體通過用距離將被先畫. 緊挨著那個物體(晚一會兒畫) 
+        將看到先前的物體在他們的後面, 再將適度的混合! </p>
+      <p>這文中的這行線註釋是我在 MSDN 裡發現這些代碼，在網上花時間查找之後找到的解答 . 他們工作的很好,允許各種的排序結構. qsort 
+        傳送 4 個參數. 第一個參數指向物體數組 (被排序的數組d). 第二個參數是我們想排序數組的個數... 當然，我們想所有的排序的物體普遍的被顯示(各個level). 
+        第三個參數規定物體結構的大不, 第四個參數指向我們的 Compare() 函數. </p>
+      <p>大概有更好的排序結構的方法, 但是 qsort() 工作起來... 快速方便，簡單易用! </p>
+      <p>這個是重要的知識點, 若你們想用 glAlphaFunc() 和 glEnable(GL_ALPHA_TEST), 排序是沒必要的. 然而, 
+        用Alpha 功能你被限制在完全透明或完全白底混合, 沒有中間值. 用 Blendfunc()排序用一些更多的工作，但他顧及半透明物體. <br>
+      </p>
+      </td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre><font color=#ffffaa>// 排序物體從距離:我們物體數組的開始地址 *** MSDN 代碼修改為這個 TUT ***<br>// 各種的數按<br>// 各自的要素的<br>// 指針比較的函數</font>
+	qsort((void *) &object, level, sizeof(struct objects), (compfn)Compare );
+}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>初始化的代碼總是一樣的. 首先的現兩行取得我們window 的消息和我們建盤消息. 然後我們用 
+      srand() 建一個基於時間的多樣化的遊戲. 之後我們調入 TGA 圖片並用LoadTGA()轉換到材質 . 先前的 5個圖片是將穿過屏幕的物體. 
+      Explode 是我們爆炸動畫, 大地和天空 彌補現場背景, crosshair是你在屏幕上看到表現鼠標當前位置的十字光標, 最後, 用來顯示分數，標題和士氣值的字體的圖片. 
+      若任何調入圖片的失誤,則到返回 FALSE 值, 並程序結束. 值得注意的是這些基本代碼不是返回整數型(INIT)的 FAILED 錯誤消息. 
+      <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+BOOL Initialize (GL_Window* window, Keys* keys)				<font color=#ffffaa>// 任何 OpenGL 從這初始化</font>
+{
+	g_window	= window;
+	g_keys		= keys;
+
+	srand( (unsigned)time( NULL ) );					<font color=#ffffaa>// 使隨機化事件</font>
+
+	if ((!LoadTGA(&textures[0],"Data/BlueFace.tga")) ||			<font color=#ffffaa>// 調入藍面材質</font>
+		(!LoadTGA(&textures[1],"Data/Bucket.tga")) ||			<font color=#ffffaa>// 調入水桶材質</font>
+		(!LoadTGA(&textures[2],"Data/Target.tga")) ||			<font color=#ffffaa>// 調入靶子材質</font>
+		(!LoadTGA(&textures[3],"Data/Coke.tga")) ||			<font color=#ffffaa>// 調入 可樂材質</font>
+		(!LoadTGA(&textures[4],"Data/Vase.tga")) ||			<font color=#ffffaa>// 調入 花瓶 材質</font>
+		(!LoadTGA(&textures[5],"Data/Explode.tga")) ||			<font color=#ffffaa>// 調入 爆炸材質</font>
+		(!LoadTGA(&textures[6],"Data/Ground.tga")) ||			<font color=#ffffaa>// 調入 地面 材質</font>
+		(!LoadTGA(&textures[7],"Data/Sky.tga")) ||			<font color=#ffffaa>// 調入 天空 材質</font>
+		(!LoadTGA(&textures[8],"Data/Crosshair.tga")) ||		<font color=#ffffaa>// 調入 十字光標 材質</font>
+		(!LoadTGA(&textures[9],"Data/Font.tga")))			<font color=#ffffaa>// 調入 字符 材質</font>
+	{
+		return FALSE;						<font color=#ffffaa>// 若調入失敗, 返回錯誤</font>
+	}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>若所有圖片調入成功則輪到材質, 我們能繼續初始化. 字體材質被調入, 因而保險能建立我們的字體. 
+      我們跳入BuildFont()來做這些. 
+      <p>然後我們設置OpenGL. 背景色為黑, alpha 也設為0.0f. 深度緩衝區設為激活小於或等於測試. </p>
+      <p>glBlendFunc() 是很重要的一行代碼. 我們設混合函數(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA). 
+        這些加上alpha變量的屏幕上的混合物體存在物體的材質. 在設置混合模式之後, 我們激活blending(混合). 然後我們打開 2D 材質貼圖, 
+        最後,打開 GL_CULL_FACE. 這是去除每個物體的後面( 沒有一點浪費在一些我們看不到的循環 ). 畫一些四邊形逆時針捲動 ,因而精緻而適當的面片. 
+      </p>
+      <p>早先的教程我談論使用glAlphaFunc()代替alpha 混合. 若你想用Alpha 函數, 註釋出的兩行混合代碼和不註釋的兩行在glEnable(GL_BLEND)之下. 
+        你也能註釋出qsort()函數在 InitObject() 部分裡的代碼. </p>
+      <p>程序應該運行ok,但sky 材質將不在這. 因為sky的材質已是一個alpha 變量0.5f. 當早在我說關於Alpha函數, 我提及它只工作在alpha 
+        變量0 或 1. 若你想它出現,你將不得不修改sky的材質alpha 通道! 再則, 若你決定用Alpha 函數代替, 你不得排序物體.兩個方法都有好處! 
+        再下而是從SGI 網站的快速引用: </p>
+      <p>&quot;alpha 函數丟棄細節,代替畫他們在結構緩衝器裡. 因此排序原來的物體不是必須的 (除了一些其它像混合alpha模式是打開的). 
+        不佔優勢的是象素必須完全白底或完全透明&quot;. </p>
+      <p><br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	BuildFont();								<font color=#ffffaa>// 建立我們的字體顯示列表</font>
+
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);					<font color=#ffffaa>// 黑色背景</font>
+	glClearDepth(1.0f);							<font color=#ffffaa>// 安裝深度緩衝器</font>
+	glDepthFunc(GL_LEQUAL);							<font color=#ffffaa>// 深度的類型測試</font>
+	glEnable(GL_DEPTH_TEST);							<font color=#ffffaa>// 打開深度測試</font>
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);			<font color=#ffffaa>	// 打開 Alpha 混合</font>
+	glEnable(GL_BLEND);							<font color=#ffffaa>// 打開混合</font>
+	glAlphaFunc(GL_GREATER,0.1f);						<font color=#ffffaa>// 設 Alpha 測試</font>
+	glEnable(GL_ALPHA_TEST);							<font color=#ffffaa>// 打開 Alpha 測試</font>
+	glEnable(GL_TEXTURE_2D);							<font color=#ffffaa>// 打開材質貼圖</font>
+	glEnable(GL_CULL_FACE);							<font color=#ffffaa>// 去掉畫物體的背面</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在程序的這段, 還沒有物體被定義,所以循環30個物體，每個物體都調InitObject().</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+	for (int loop=0; loop&lt;30; loop++)					<font color=#ffffaa>// 循環在 30 個物體Objects</font>
+		InitObject(loop);						<font color=#ffffaa>// 初始化每個物體</font>
+
+	return TRUE;							<font color=#ffffaa>// 返回正確 (設初值成功)</font>
+}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在初始化代碼裡, 調入BuildFont() 建立95 的顯示列表. 所以這裡在程序結束前刪掉95顯示列表</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+void Deinitialize (void)							<font color=#ffffaa>// 任何user 結束初始化從這</font>
+{
+	glDeleteLists(base,95);							<font color=#ffffaa>// 刪掉所有95 字體顯示列表</font>
+}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在為急速原始物體... 是實際被選?形鍰宓拇�@?. 第一行為我們選擇物體的信息分配內存. hits 
+      是當選擇時碰撞迅檢測的次數. <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void Selection(void)								<font color=#ffffaa>// 這是選擇正確</font>
+{
+	GLuint	buffer[512];							<font color=#ffffaa>//  設選擇緩衝</font>
+	GLint	hits;								<font color=#ffffaa>// 選擇物體的數</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼, 若遊戲結束(FALSE).沒有選任何, 返回(exit). 若遊戲還在運行 (TRUE),用Playsound() 
+      命令放射擊的聲間. 僅僅調Selection()的時間是在當已鼠標按下時和每次按下按鍵調用時, 想放射擊的聲音. 聲音在放在 async 模式 
+      ,所以放音樂是程序不會停. </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	if (game)								<font color=#ffffaa>// 遊戲是否結束?</font>
+		return;							<font color=#ffffaa>// 是，返回, 不在檢測 Hits<br></font>
+	
+	PlaySound("data/shot.wav",NULL,SND_ASYNC);				<font color=#ffffaa>// 放音樂 Gun Shot</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>設視點. viewport[] 包括當前 x, y, 當前的視點(OpenGL Window)長度，寬度. 
+      </p>
+      <p>glGetIntegerv(GL_VIEWPORT, viewport) 取當前視點存在viewport[]. 最初，等於 OpenGL 
+        窗口維數. glSelectBuffer(512, buffer) 說 OpenGL 用這個內存. </p></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+
+	<font color=#ffffaa>// 視點的大小. [0] 是 &lt;x&gt;, [1] 是 &lt;y&gt;, [2] 是 &lt;length&gt;, [3] 是 &lt;width&gt;</font>
+	GLint	viewport[4];
+
+	<font color=#ffffaa>// 這是設視點的數組在屏幕窗口的位置</font>
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	glSelectBuffer(512, buffer);						<font color=#ffffaa>// 告訴 OpenGL 使我們的數組來選擇</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>存opengl的模式. 在這個模式什麼也不畫. 代替, 在選擇模式物體渲染信息存在緩存. 
+      <p>下面初實化name 堆棧,通過調入glInitNames() 和glPushName(0). I它重要的是標記若程序不在選擇模式, 一個到glPushName()調用將忽略. 
+        當然在選擇的模試, 但這一些是是緊記的. <br>
+      </p>
+      </td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+
+	<font color=#ffffaa>// 設 OpenGL 選擇模式. 將不畫東西. 物體 ID』的廣度放在內存</font>
+	(void) glRenderMode(GL_SELECT);
+
+	glInitNames();								<font color=#ffffaa>// 設名字堆棧</font>
+	glPushName(0);								<font color=#ffffaa>// Push 0 (最少一個) 在棧上</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>之後, 不得不限制在光標的下面畫圖. 為了做這些得用到投影矩陣. 然後把它推到堆棧中.重設矩陣則用到 
+      glLoadIdentity(). 
+      <p>用gluPickMatrix()限制的畫. 第1個參數是當前鼠標的 x-座標, 第2個參數是當前鼠標的 y-座標, 然後寬和高的選區. 最後當前的 
+        viewport[]. viewport[] 是指出視點的邊界. x 和_y 將在選區的中心. <br>
+      </p>
+      </td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	glMatrixMode(GL_PROJECTION);						<font color=#ffffaa>// 選投影矩陣</font>
+	glPushMatrix();								<font color=#ffffaa>// 壓入投影矩陣</font>
+	glLoadIdentity();								<font color=#ffffaa>// 重設矩陣</font>
+
+	<font color=#ffffaa>//  這是建一個矩陣使鼠標在屏幕縮放</font>
+	gluPickMatrix((GLdouble) mouse_x, (GLdouble) (viewport[3]-mouse_y), 1.0f, 1.0f, viewport);
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>調入 gluPerspective() 應用透視矩陣 ,被gluPickMatrix()選擇矩陣限制所畫區域 
+      . 
+      <p>打開modelview 矩陣，調用DrawTargets()畫我們的靶子. 畫靶子在DrawTargets() 而不在 Draw() 是因為僅僅想選擇物體的碰撞檢測且, 
+        不是天空，大地，光標. </p>
+      <p>之後, 打開回到發射矩陣， 從堆棧中彈出矩陣. 之扣打開回到modelview 矩陣. </p>
+      <p>最後一行，回到渲染模式 因而物體畫的很真實的在屏幕上. hits 將採集gluPickMatrix()所需要取渲染的物體數 .<br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	<font color=#ffffaa>// 應用透視矩陣</font>
+	gluPerspective(45.0f, (GLfloat) (viewport[2]-viewport[0])/(GLfloat) (viewport[3]-viewport[1]), 0.1f, 100.0f);
+	glMatrixMode(GL_MODELVIEW);						<font color=#ffffaa>	// 選擇模型變換矩陣</font>
+	DrawTargets();								<font color=#ffffaa>// 畫目標</font>
+	glMatrixMode(GL_PROJECTION);						<font color=#ffffaa>// 選擇投影變換矩陣</font>
+	glPopMatrix();								<font color=#ffffaa>// 取出投影矩陣</font>
+	glMatrixMode(GL_MODELVIEW);						<font color=#ffffaa>	// 選模式顯示矩陣</font>
+	hits=glRenderMode(GL_RENDER);						<font color=#ffffaa>// 切換模式, 找出有多少</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>檢查若多於0 個hits 記錄. 若這樣, 設choose 為 第一個物體的名子. depth 
+      取得它有多遠. 
+      <p>每個hit 分有4 個項目在內存. 第一，在名子堆棧上打擊發生時的數字 .第二， 所選物體的最小z值. 第三，所選物體的最大 z 值, 最後，在同一時間裡所選物體名子堆棧的內容 
+        (物體的名子). 在這一課,我們僅對最小z值和物體名子感興趣. </p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	if (hits &gt; 0)								<font color=#ffffaa>// 若有大於0個 Hits</font>
+	{
+		int	choose = buffer[3];					<font color=#ffffaa>// 選擇第一物體</font>
+		int	depth = buffer[1];						<font color=#ffffaa>// 存它有多遠</font></pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><br>
+      做循環所有hits 使沒有物體在第一個物體旁邊. 否則, 兩個物體會重疊, 一個物體碰到另一個.當你射擊時, 重疊的物體會被誤選.</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+		for (int loop = 1; loop &lt; hits; loop++)				<font color=#ffffaa>// 循環所有檢測到的物體</font>
+		{
+			<font color=#ffffaa>// 對於其它的物體</font>
+			if (buffer[loop*4+1] &lt; GLuint(depth))
+			{
+				choose = buffer[loop*4+3];				<font color=#ffffaa>// 選擇更近的物體</font>
+				depth = buffer[loop*4+1];			<font color=#ffffaa>	// 保存它有多遠</font>
+			}
+		}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>若物體被選. <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+
+		if (!object[choose].hit)					<font color=#ffffaa>// 如果物體還沒有被擊中</font>
+		{
+			object[choose].hit=TRUE;				<font color=#ffffaa>// 標記物體象被擊中</font>
+			score+=1;						<font color=#ffffaa>// 增加分數</font>
+			kills+=1;						<font color=#ffffaa>// 加被殺數</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如下 <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+			if (kills&gt;level*5)					<font color=#ffffaa>// 已有新的級?</font>
+			{
+				miss=0;					<font color=#ffffaa>// 失掉數回0</font>
+				kills=0;					<font color=#ffffaa>// 設 Kills數為0</font>
+				level+=1;					<font color=#ffffaa>// 加 Level</font>
+				if (level&gt;30)				<font color=#ffffaa>// 高過 30?</font>
+					level=30;				<font color=#ffffaa>// 設 Level 為 30 (你是 God 嗎?)</font>
+			}
+		}
+	}
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如下 <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void Update(DWORD milliseconds)							<font color=#ffffaa>// 這裡用來更新</font>
+{
+	if (g_keys-&gt;keyDown[VK_ESCAPE])						<font color=#ffffaa>// 按下 ESC?</font>
+	{
+		TerminateApplication (g_window);					<font color=#ffffaa>// 推出程序</font>
+	}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如下 </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	if (g_keys-&gt;keyDown[' '] && game)					<font color=#ffffaa>// 按下空格鍵?</font>
+	{
+		for (int loop=0; loop&lt;30; loop++)				<font color=#ffffaa>// 循環所有的物體</font>
+			InitObject(loop);					<font color=#ffffaa>// 初始化</font>
+
+		game=FALSE;						<font color=#ffffaa>//設game為false </font>
+		score=0;							<font color=#ffffaa>// 分數為0</font>
+		level=1;							<font color=#ffffaa>// 級別為1</font>
+		kills=0;							<font color=#ffffaa>// 殺敵數為0</font>
+		miss=0;							<font color=#ffffaa>// 漏過數為0</font>
+	}
+</pre>
+</font> <font color=#aaffaa size=3> 
+<pre>
+
+	if (g_keys-&gt;keyDown[VK_F1])						<font color=#ffffaa>// 按下f1?</font>
+	{
+		ToggleFullscreen (g_window);				<font color=#ffffaa>// 換到全屏模式</font>
+	}
+</pre>
+</font> <font color=#aaffaa size=3>
+<pre>
+	roll-=milliseconds*0.00005f;					<font color=#ffffaa>// 雲的旋轉</font>
+
+	for (int loop=0; loop&lt;level; loop++)					<font color=#ffffaa>// 循環所有的物體</font>
+	{
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼按物體的運動方向更新所有的運動</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+		if (object[loop].rot==1)					
+			object[loop].spin-=0.2f*(float(loop+milliseconds));	<font color=#ffffaa>// 若順時針,則順時針旋轉</font>
+</pre>
+</font><font color=#aaffaa size=3> 
+<pre>
+		if (object[loop].rot==2)
+			object[loop].spin+=0.2f*(float(loop+milliseconds));	<font color=#ffffaa>// 若逆時針,則逆時針旋轉</font>
+</pre>
+</font><font color=#aaffaa size=3> 
+<pre>
+		if (object[loop].dir==1)					
+			object[loop].x+=0.012f*float(milliseconds);		<font color=#ffffaa>// 向右移動</font>
+</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+		if (object[loop].dir==0)					
+			object[loop].x-=0.012f*float(milliseconds);		<font color=#ffffaa>// 向左移動</font>
+</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+		if (object[loop].dir==2)					
+			object[loop].y+=0.012f*float(milliseconds);		<font color=#ffffaa>// 向上移動</font>
+</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+		if (object[loop].dir==3)					
+			object[loop].y-=0.0025f*float(milliseconds);		<font color=#ffffaa>// 向下移動</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼處理當物體移動到邊緣處,如果你沒有擊中它的結果</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+		<font color=#ffffaa>// 如果到達左邊界,你沒有擊中,則增加丟失的目標數</font>
+		if ((object[loop].x&lt;(object[loop].distance-15.0f)/2.0f) && (object[loop].dir==0) && !object[loop].hit)
+		{
+			miss+=1;						
+			object[loop].hit=TRUE;					
+		}
+</pre>
+</font><font color=#aaffaa size=3> 
+<pre>
+
+		<font color=#ffffaa>// 如果到達右邊界,你沒有擊中,則增加丟失的目標數</font>
+		if ((object[loop].x&gt;-(object[loop].distance-15.0f)/2.0f) && (object[loop].dir==1) && !object[loop].hit)
+		{
+			miss+=1;						
+			object[loop].hit=TRUE;				
+		}
+</pre>
+</font><font color=#aaffaa size=3> 
+<pre>
+
+		<font color=#ffffaa>// 如果到達下邊界,你沒有擊中,則增加丟失的目標數</font>
+		if ((object[loop].y&lt;-2.0f) && (object[loop].dir==3) && !object[loop].hit)
+		{
+			miss+=1;						
+			object[loop].hit=TRUE;					
+		}
+</pre>
+</font><font color=#aaffaa size=3> 
+<pre>		<font color=#ffffaa>//如果到達左邊界,你沒有擊中,則方向變為向下</font>
+		if ((object[loop].y&gt;4.5f) && (object[loop].dir==2))		
+			object[loop].dir=3;				
+	}
+}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼在屏幕上繪製一個圖像</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void Object(float width,float height,GLuint texid)				<font color=#ffffaa>// 畫物體用需要的寬，高，材質</font>
+{
+	glBindTexture(GL_TEXTURE_2D, textures[texid].texID);			<font color=#ffffaa>// 選合適的材質</font>
+	glBegin(GL_QUADS);							<font color=#ffffaa>// 開始畫四邊形</font>
+		glTexCoord2f(0.0f,0.0f); glVertex3f(-width,-height,0.0f);	
+		glTexCoord2f(1.0f,0.0f); glVertex3f( width,-height,0.0f);	
+		glTexCoord2f(1.0f,1.0f); glVertex3f( width, height,0.0f);	
+		glTexCoord2f(0.0f,1.0f); glVertex3f(-width, height,0.0f);	
+	glEnd();								
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼繪製爆炸的效果</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	void Explosion(int num)						<font color=#ffffaa>// 畫爆炸動畫的1幀</font>
+{
+	float ex = (float)((object[num].frame/4)%4)/4.0f;			<font color=#ffffaa>// 計算爆炸時生成的x的紋理坐標</font>
+	float ey = (float)((object[num].frame/4)/4)/4.0f;			<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>計算爆炸時生成的y的紋理坐標</font></font>
+</pre>
+</font><font color=#aaffaa size=3> 
+<pre>
+	glBindTexture(GL_TEXTURE_2D, textures[5].texID);			<font color=#ffffaa>// 選擇爆炸的紋理</font>
+	glBegin(GL_QUADS);							
+		glTexCoord2f(ex      ,1.0f-(ey      )); glVertex3f(-1.0f,-1.0f,0.0f);	
+		glTexCoord2f(ex+0.25f,1.0f-(ey      )); glVertex3f( 1.0f,-1.0f,0.0f);	
+		glTexCoord2f(ex+0.25f,1.0f-(ey+0.25f)); glVertex3f( 1.0f, 1.0f,0.0f);
+		glTexCoord2f(ex      ,1.0f-(ey+0.25f)); glVertex3f(-1.0f, 1.0f,0.0f);	
+	glEnd();								</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>增加幀數,如果大於63,則重置動畫</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+
+	object[num].frame+=1;						<font color=#ffffaa>// 加當前的爆炸動畫幀</font>
+	if (object[num].frame&gt;63)						<font color=#ffffaa>// 是否已完成所有的16幀?</font>
+	{
+		InitObject(num);						<font color=#ffffaa>// 定義物體 (給新的變量)</font>
+	}
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>畫靶子</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void DrawTargets(void)								<font color=#ffffaa>// 畫靶子</font>
+{
+	glLoadIdentity();							
+	glTranslatef(0.0f,0.0f,-10.0f);						<font color=#ffffaa>// 移入屏幕 20 個單位</font>
+	for (int loop=0; loop&lt;level; loop++)						<font color=#ffffaa>// 循環在 9 個物體</font>
+	{
+</pre>
+</font> <font color=#aaffaa size=3> 
+<pre>
+		glLoadName(loop);							<font color=#ffffaa>// 給物體新名字</font>
+		glPushMatrix();							<font color=#ffffaa>// 存矩陣</font>
+		glTranslatef(object[loop].x,object[loop].y,object[loop].distance);	<font color=#ffffaa>// 物體的位置 (x,y)</font>
+</pre>
+</font> <font color=#aaffaa size=3> 
+<pre>
+		if (object[loop].hit)						<font color=#ffffaa>// 若物體已被點擊</font>
+		{
+			Explosion(loop);					<font color=#ffffaa>	// 畫爆炸動畫</font>
+		}
+		else								
+		{
+			glRotatef(object[loop].spin,0.0f,0.0f,1.0f);		<font color=#ffffaa>	// 旋轉物體</font>
+			Object(size[object[loop].texid].w,size[object[loop].texid].h,object[loop].texid);	<font color=#ffffaa>// 畫物體</font>
+		}
+		glPopMatrix();							<font color=#ffffaa>// 彈出矩陣</font>
+	}
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼繪製整個場景</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void Draw(void)								<font color=#ffffaa>// 畫我們的現場</font>
+{
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);			<font color=#ffffaa>// 清除屏幕和深度緩衝</font>
+	glLoadIdentity();							<font color=#ffffaa>// 重設矩陣</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼繪製飄動的天空,它由四塊紋理組成,每一塊的移動速度都不一樣,並把它們混合起來</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+	glPushMatrix();								
+	glBindTexture(GL_TEXTURE_2D, textures[7].texID);			<font color=#ffffaa>// 選天空的材質</font>
+	glBegin(GL_QUADS);						
+		glTexCoord2f(1.0f,roll/1.5f+1.0f); glVertex3f( 28.0f,+7.0f,-50.0f);	
+		glTexCoord2f(0.0f,roll/1.5f+1.0f); glVertex3f(-28.0f,+7.0f,-50.0f);	
+		glTexCoord2f(0.0f,roll/1.5f+0.0f); glVertex3f(-28.0f,-3.0f,-50.0f);	
+		glTexCoord2f(1.0f,roll/1.5f+0.0f); glVertex3f( 28.0f,-3.0f,-50.0f);	
+
+		glTexCoord2f(1.5f,roll+1.0f); glVertex3f( 28.0f,+7.0f,-50.0f);		
+		glTexCoord2f(0.5f,roll+1.0f); glVertex3f(-28.0f,+7.0f,-50.0f);		
+		glTexCoord2f(0.5f,roll+0.0f); glVertex3f(-28.0f,-3.0f,-50.0f);		
+		glTexCoord2f(1.5f,roll+0.0f); glVertex3f( 28.0f,-3.0f,-50.0f);		</pre>
+</font> <font color=#aaffaa size=3>
+<pre>
+		glTexCoord2f(1.0f,roll/1.5f+1.0f); glVertex3f( 28.0f,+7.0f,0.0f);	
+		glTexCoord2f(0.0f,roll/1.5f+1.0f); glVertex3f(-28.0f,+7.0f,0.0f);	
+		glTexCoord2f(0.0f,roll/1.5f+0.0f); glVertex3f(-28.0f,+7.0f,-50.0f);	
+		glTexCoord2f(1.0f,roll/1.5f+0.0f); glVertex3f( 28.0f,+7.0f,-50.0f);	
+
+		glTexCoord2f(1.5f,roll+1.0f); glVertex3f( 28.0f,+7.0f,0.0f);		
+		glTexCoord2f(0.5f,roll+1.0f); glVertex3f(-28.0f,+7.0f,0.0f);		
+		glTexCoord2f(0.5f,roll+0.0f); glVertex3f(-28.0f,+7.0f,-50.0f);		
+		glTexCoord2f(1.5f,roll+0.0f); glVertex3f( 28.0f,+7.0f,-50.0f);		
+	glEnd();							</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><FONT color="#FFFFFF">下面的代碼繪製地面</font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glBindTexture(GL_TEXTURE_2D, textures[6].texID);			<font color=#ffffaa>// 大地材質</font>
+	glBegin(GL_QUADS);							
+		glTexCoord2f(7.0f,4.0f-roll); glVertex3f( 27.0f,-3.0f,-50.0f);	
+		glTexCoord2f(0.0f,4.0f-roll); glVertex3f(-27.0f,-3.0f,-50.0f);	
+		glTexCoord2f(0.0f,0.0f-roll); glVertex3f(-27.0f,-3.0f,0.0f);	
+		glTexCoord2f(7.0f,0.0f-roll); glVertex3f( 27.0f,-3.0f,0.0f);	
+	glEnd();								</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>繪製我們的靶子</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+
+	DrawTargets();								<font color=#ffffaa>// 畫我們的靶子</font>
+	glPopMatrix();								</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼繪製我們的十字光標<FONT face=Tahoma,Verdana,sans-serif size=-1><br>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+
+	<font color=#ffffaa>// 十字光標 (在光標裡)</font>
+	RECT window;								<font color=#ffffaa>// 用來存窗口位置</font>
+	GetClientRect (g_window-&gt;hWnd,&window);					<font color=#ffffaa>// 取窗口位置</font>
+	glMatrixMode(GL_PROJECTION);						
+	glPushMatrix();								
+	glLoadIdentity();						
+	glOrtho(0,window.right,0,window.bottom,-1,1);				<font color=#ffffaa>// 設置為正投影</font>
+	glMatrixMode(GL_MODELVIEW);						
+	glTranslated(mouse_x,window.bottom-mouse_y,0.0f);			<font color=#ffffaa>// 移動到當前鼠標位置</font>
+	Object(16,16,8);							<font color=#ffffaa>// 畫十字光標</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼用來顯示幫助文字</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+
+	<font color=#ffffaa>// 遊戲狀態 / 標題名稱</font>
+	glPrint(240,450,"NeHe Productions");					<font color=#ffffaa>// 輸出 標題名稱</font>
+	glPrint(10,10,"Level: %i",level);					<font color=#ffffaa>// 輸出 等級</font>
+	glPrint(250,10,"Score: %i",score);					<font color=#ffffaa>// 輸出 分數</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如果丟失10個物體,遊戲結束</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	if (miss&gt;9)								<font color=#ffffaa>// 我們已丟失 10 個物體?</font>
+	{
+		miss=9;								<font color=#ffffaa>// 限制丟失是10個</font>
+		game=TRUE;							<font color=#ffffaa>// 遊戲結束</font>
+	}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在下面的代碼裡, 我們查看若game 是TRUE. 若 game 是TRUE, 我們輸出 』GAME 
+      OVER』遊戲結束的消息. 若game 是false, 我們輸出 玩家的士氣morale (到10溢出). 士氣morale是被設計用來從10減去玩家失誤的次數(miss) 
+      . 玩家失掉的越多, 士氣越低. <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	if (game)								<font color=#ffffaa>// 遊戲是否結束?</font>
+		glPrint(490,10,"GAME OVER");				<font color=#ffffaa>// 結束消息</font>
+	else
+		glPrint(490,10,"Morale: %i/10",10-miss);			<font color=#ffffaa>// 輸出剩餘生命</font></pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>最後做的事我們選投影矩陣, 恢復(取出) 我們的矩陣返回到前一個情形, 設矩陣模式為 modelview 
+      ，刷新緩衝區 ，使所有物體被渲染. </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glMatrixMode(GL_PROJECTION);						
+	glPopMatrix();								
+	glMatrixMode(GL_MODELVIEW);						
+
+	glFlush();								
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這課程是多次熬夜的成果, 許多的時間用來編碼和寫 HTML. 在這一課結束的時候你應你會學會怎樣picking, 
+      sorting, alpha blending and alpha testing 工作. 制做點和軟件. 每一個遊戲, 到精選的GUI』們.最好的未來是制做時你不用記錄物體. 
+      你給一個名字和碰撞 . 這很簡單! 用alpha 通道和alpha 測試你能使物體完全顯示, 或漏出一些. 結果是很好, 你不用擔心關於顯示物體的材質, 
+      除非你不顯示他們! 同以往一樣, 我希望你喜歡這個課程,願看到一些好的遊戲或好的項目從這個課程誕生.如果你有什麼問題或找到錯誤，讓我知道 ... 
+      我僅是一個普通人 :) 
+      <p>我將花大量的時間加入東西像物理系統, 更多圖, 更多聲音, 等. 雖然只是一個課程! 我不寫不按車燈和車輪. 我寫這個用盡量不混亂的方法教你 
+        OpenGL . 我希望看到一些嚴謹的修改. 若你找一些cool的課程發給我一份. 若是好的修改我將放到下載頁. 若有足夠充分的修改我會專注修改這個課程的版本! 
+        我在這裡給你一個起點. 剩下的靠你了 :) </p>
+      <p>要點: 這是很重要的，稱為glTexImage2D 你設為兩種格式國際 GL_RGBA. 否則 alpha blending 將不工作! 
+        <br>
+      </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2032.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_32.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/32_Pick.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+      <table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_31.html">< 
+          第31課 </a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_33.html">第33課 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_32.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:03:13 GMT -->
+</html>

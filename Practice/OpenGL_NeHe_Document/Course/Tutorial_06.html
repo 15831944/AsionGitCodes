@@ -1,0 +1,1060 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<html>
+
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_06.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+<head>
+<title>NeHe OpenGL教程第六課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type="text/css">A:link {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #ffccaa; TEXT-DECORATION: none
+}
+</style>
+<meta content="Microsoft FrontPage 6.0" name="GENERATOR">
+</head>
+
+<body bgColor="#000000" text="#ffffff">
+<CENTER><BR>
+
+<p><br>
+</p>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td height="130" width="326"><img height="130" src="../Pic/logo.png" width="326"></td>
+      <td align="middle" vAlign="center" width="75%"><div align="center"><font color="#ffccaa" size="+3"><b><i>第06課</i></b></font></div></td>
+  </tr>
+</TBODY>
+</table>
+<!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+              <td width="23%"><img src="../Pic/lesson06.jpg" width="240" height="180"></td>
+              <td width="77%"><p><FONT class=head>紋理映射:</FONT></p>
+                <p><font size="3">在這一課裡，我將教會你如何把紋理映射到立方體的六個面。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">學習 texture map 紋理映射(貼圖)有很多好處。比方說您想讓一顆導彈飛過屏幕。根據前幾課的知識，我們最可行的辦法可能是很多個多邊形來構建導彈的輪廓並加上有趣的顏色。使用紋理映射，您可以使用真實的導彈圖像並讓它飛過屏幕。您覺得哪個更好看？照片還是一大堆三角形和四邊形？使用紋理映射的好處還不止是更好看，而且您的程序運行會更快。導彈貼圖可能只是一個飛過窗口的四邊形。一個由多邊形構建而來的導彈卻很可能包括成百上千的多邊形。很顯然，貼圖極大的節省了CPU時間。<br>
+        現在我們在第一課的代碼開始處增加五行新代碼。新增的第一行是 #include &lt;stdio.h&gt; 。它允許我們對文件進行操作，為了在後面的代碼中使用 
+        fopen() ，我們增加了這一行。然後我們增加了三個新的浮點變量... xrot , yrot 和 zrot 。這些變量用來使立方體繞X、Y、Z軸旋轉。最後一行 
+        GLuint texture[1] 為一個紋理分配存儲空間。如果您需要不止一個的紋理，應該將參數1改成您所需要的參數。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>#include	&lt;stdio.h&gt;							<font
+color="#ffffaa">// 標準輸入/輸出庫的頭文件</font>
+#include	&lt;glaux.h&gt;							<font
+color="#ffffaa">// GLaux庫的頭文件</font>
+
+GLfloat		xrot;								<font color="#ffffaa">// X 旋轉量</font>
+GLfloat		yrot;								<font
+color="#ffffaa">// Y 旋轉量</font>
+GLfloat		zrot;								<font color="#ffffaa">// Z 旋轉量</font>
+
+GLuint		texture[1];							<font
+color="#ffffaa">// 存儲一個紋理</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">緊跟上面的代碼在 ReSizeGLScene() 之前，我們增加了下面這一段代碼。這段代碼用來加載位圖文件。如果文件不存在，返回 
+        NULL 告知程序無法加載位圖。在我開始解釋這段代碼之前，關於用作紋理的圖像我想有幾點十分重要，並且您必須明白。此圖像的寬和高必須是2的n次方；寬度和高度最小必須是64象素；並且出於兼容性的原因，圖像的寬度和高度不應超過256象素。如果您的原始素材的寬度和高度不是64,128,256象素的話，使用圖像處理軟件重新改變圖像的大小。可以肯定有辦法能繞過這些限制，但現在我們只需要用標準的紋理尺寸。
+        <p>首先，我們創建一個文件句柄。句柄是個用來鑒別資源的數值，它使程序能夠訪問此資源。我們開始先將句柄設為 NULL 。</p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>AUX_RGBImageRec *LoadBMP(char *Filename)					<font color="#ffffaa">// 載入位圖圖像</font>
+{
+	FILE *File=NULL;							<font
+color="#ffffaa">// 文件句柄</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">接下來檢查文件名是否已提供。因為 LoadBMP() 可以無參數調用，所以我們不得不檢查一下。您可不想什麼都沒載入吧.....:)</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	if (!Filename)								<font color="#ffffaa">// 確保文件名已提供</font>
+	{
+		return NULL;							<font
+color="#ffffaa">// 如果沒提供，返回 NULL</font>
+	}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">接著檢查文件是否存在。下面這一行嘗試打開文件。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	File=fopen(Filename,&quot;r&quot;);						<font color="#ffffaa">// 嘗試打開文件</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">如果我們能打開文件的話，很顯然文件是存在的。使用 fclose(File) 關閉文件。 
+        auxDIBImageLoad(Filename) 讀取圖像數據並將其返回。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	if (File)								<font color="#ffffaa">// 文件存在麼?</font>
+	{
+		fclose(File);							<font
+color="#ffffaa">// 關閉句柄</font>
+		return auxDIBImageLoad(Filename);				<font
+color="#ffffaa">// 載入位圖並返回指針</font>
+	}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">如果我們不能打開文件，我們將返回NULL。這意味著文件無法載入。程序在後面將檢查文件是否已載入。如果沒有，我們將退出程序並彈出錯誤消息。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	return NULL;								<font color="#ffffaa">// 如果載入失敗，返回 NULL</font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下一部分代碼載入位圖(調用上面的代碼)並轉換成紋理。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>int LoadGLTextures()								<font color="#ffffaa">// 載入位圖(調用上面的代碼)並轉換成紋理</font>
+{
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">然後設置一個叫做 Status 的變量。我們使用它來跟蹤是否能夠載入位圖以及能否創建紋理。 
+        Status 缺省設為 FALSE (表示沒有載入或創建任何東東)。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	int Status=FALSE;							<font color="#ffffaa">// 狀態指示器</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">現在我們創建存儲位圖的圖像記錄。次記錄包含位圖的寬度、高度和數據。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	AUX_RGBImageRec *TextureImage[1];					<font color="#ffffaa">// 創建紋理的存儲空間</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">清除圖像記錄，確保其內容為空</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	memset(TextureImage,0,sizeof(void *)*1);				<font color="#ffffaa">// 將指針設為 NULL</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">現在載入位圖，並將其轉換為紋理。 TextureImage[0]=LoadBMP(&quot;Data/NeHe.bmp&quot;) 
+        調用 LoadBMP() 的代碼。載入 Data 目錄下的 NeHe.bmp 位圖文件。如果一切正常，圖像數據將存放在 TextureImage[0] 
+        中， Status 被設為 TRUE ，然後我們開始創建紋理。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	<font color="#ffffaa">// 載入位圖，檢查有無錯誤，如果位圖沒找到則退出</font>
+	if (TextureImage[0]=LoadBMP(&quot;Data/NeHe.bmp&quot;))
+	{
+		Status=TRUE;							<font
+color="#ffffaa">// 將 Status 設為 TRUE</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">現在使用中 TextureImage[0] 的數據創建紋理。第一行 glGenTextures(1, 
+        &amp;texture[0]) 告訴OpenGL我們想生成一個紋理名字(如果您想載入多個紋理，加大數字)。值得注意的是，開始我們使用 GLuint 
+        texture[1] 來創建一個紋理的存儲空間，您也許會認為第一個紋理就是存放在 &amp;texture[1] 中的，但這是錯的。正確的地址應該是 
+        &amp;texture[0] 。同樣如果使用 GLuint texture[2] 的話，第二個紋理存放在 texture[1] 中。『譯者註：學C的，在這裡應該沒有障礙，數組就是從零開始的嘛。』
+        <p>第二行 glBindTexture(GL_TEXTURE_2D, texture[0]) 告訴OpenGL將紋理名字 texture[0] 
+          綁定到紋理目標上。2D紋理只有高度(在 Y 軸上)和寬度(在 X 軸上)。主函數將紋理名字指派給紋理數據。本例中我們告知OpenGL， 
+          &amp;texture[0] 處的內存已經可用。我們創建的紋理將存儲在 &amp;texture[0] 的 指向的內存區域。</p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>		glGenTextures(1, &amp;texture[0]);					<font color="#ffffaa">// 創建紋理</font>
+
+		<font
+color="#ffffaa">// 使用來自位圖數據生成 的典型紋理</font>
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下來我們創建真正的紋理。下面一行告訴OpenGL此紋理是一個2D紋理 ( GL_TEXTURE_2D 
+        )。參數「0」代表圖像的詳細程度，通常就由它為零去了。參數三是數據的成分數。因為圖像是由紅色數據，綠色數據，藍色數據三種組分組成。 TextureImage[0]-&gt;sizeX 
+        是紋理的寬度。如果您知道寬度，您可以在這裡填入，但計算機可以很容易的為您指出此值。 TextureImage[0]-&gt;sizey 是紋理的高度。參數零是邊框的值，一般就是「0」。 
+        GL_RGB 告訴OpenGL圖像數據由紅、綠、藍三色數據組成。<br>
+        GL_UNSIGNED_BYTE 意味著組成圖像的數據是無符號字節類型的。最後... TextureImage[0]-&gt;data 告訴OpenGL紋理數據的來源。此例中指向存放在 
+        TextureImage[0] 記錄中的數據。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>		<font color="#ffffaa">// 生成紋理</font>
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, TextureImage[0]-&gt;sizeX, TextureImage[0]-&gt;sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, TextureImage[0]-&gt;data);
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面的兩行告訴OpenGL在顯示圖像時，當它比放大得原始的紋理大 ( GL_TEXTURE_MAG_FILTER 
+        )或縮小得比原始得紋理小( GL_TEXTURE_MIN_FILTER )時OpenGL採用的濾波方式。通常這兩種情況下我都採用 GL_LINEAR 
+        。這使得紋理從很遠處到離屏幕很近時都平滑顯示。使用 GL_LINEAR 需要CPU和顯卡做更多的運算。如果您的機器很慢，您也許應該採用 GL_NEAREST 
+        。過濾的紋理在放大的時候，看起來斑駁的很『譯者註：馬賽克啦』。您也可以結合這兩種濾波方式。在近處時使用 GL_LINEAR ，遠處時 GL_NEAREST 
+        。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);	<font
+color="#ffffaa">// 線形濾波</font>
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);	<font
+color="#ffffaa">// 線形濾波</font>
+	}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">現在我們釋放前面用來存放位圖數據的內存。我們先查看位圖數據是否存放在處。如果是的話，再查看數據是否已經存儲。如果已經存儲的話，刪了它。接著再釋放 
+        TextureImage[0] 圖像結構以保證所有的內存都能釋放。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	if (TextureImage[0])							<font color="#ffffaa">// 紋理是否存在</font>
+	{
+		if (TextureImage[0]-&gt;data)					<font
+color="#ffffaa">// 紋理圖像是否存在</font>
+		{
+			free(TextureImage[0]-&gt;data);				<font
+color="#ffffaa">// 釋放紋理圖像佔用的內存</font>
+		}
+
+		free(TextureImage[0]);						<font
+color="#ffffaa">// 釋放圖像結構</font>
+	}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">最後返回狀態變量。如果一切OK，變量 Status 的值為 TRUE 。否則為 FALSE 
+        。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	return Status;								<font color="#ffffaa">// 返回 Status</font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">我只在 InitGL 中增加很少的幾行代碼。但為了方便您查看增加了哪幾行，我這段代碼全部重貼一遍。 
+        if (!LoadGLTextures()) 這行代碼調用上面講的子例程載入位圖並生成紋理。如果因為任何原因 LoadGLTextures() 
+        調用失敗，接著的一行返回FALSE。如果一切OK，並且紋理創建好了，我們啟用2D紋理映射。如果您忘記啟用的話，您的對象看起來永遠都是純白色，這一定不是什麼好事。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>int InitGL(GLvoid)								<font color="#ffffaa">// 此處開始對OpenGL進行所有設置</font>
+{
+	if (!LoadGLTextures())							<font
+color="#ffffaa">// 調用紋理載入子例程</font>
+	{
+		return FALSE;							<font
+color="#ffffaa">// 如果未能載入，返回FALSE</font>
+	}
+
+	glEnable(GL_TEXTURE_2D);						<font
+color="#ffffaa">// 啟用紋理映射</font>
+	glShadeModel(GL_SMOOTH);						<font
+color="#ffffaa">// 啟用陰影平滑</font>
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);					<font
+color="#ffffaa">// 黑色背景</font>
+	glClearDepth(1.0f);							<font color="#ffffaa">// 設置深度緩存</font>
+	glEnable(GL_DEPTH_TEST);						<font
+color="#ffffaa">// 啟用深度測試</font>
+	glDepthFunc(GL_LEQUAL);							<font
+color="#ffffaa">// 所作深度測試的類型</font>
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);			<font
+color="#ffffaa">// 真正精細的透視修正</font>
+	return TRUE;								<font
+color="#ffffaa">// 初始化 OK</font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">現在我們繪製貼圖『譯者註：其實貼圖就是紋理映射。將術語換來換去不好，我想少打倆字。^_^』過的立方體。這段代碼被狂註釋了一把，應該很好懂。開始兩行代碼 
+        glClear() 和 glLoadIdentity() 是第一課中就有的代碼。 glClear(GL_COLOR_BUFFER_BIT | 
+        GL_DEPTH_BUFFER_BIT) 清除屏幕並設為我們在 InitGL() 中選定的顏色，本例中是黑色。深度緩存也被清除。模型觀察矩陣也使用glLoadIdentity()重置。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>int DrawGLScene(GLvoid)								<font color="#ffffaa">// 從這裡開始進行所有的繪製</font>
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);			<font
+color="#ffffaa">// 清除屏幕和深度緩存</font>
+	glLoadIdentity();							<font
+color="#ffffaa">// 重置當前的模型觀察矩陣</font>
+	glTranslatef(0.0f,0.0f,-5.0f);						<font
+color="#ffffaa">// 移入屏幕 5 個單位</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面三行使立方體繞X、Y、Z軸旋轉。旋轉多少依賴於變量 xrot ， yrot 和 zrot 
+        的值。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	glRotatef(xrot,1.0f,0.0f,0.0f);						<font color="#ffffaa">// 繞X軸旋轉</font>
+	glRotatef(yrot,0.0f,1.0f,0.0f);						<font
+color="#ffffaa">// 繞Y軸旋轉</font>
+	glRotatef(zrot,0.0f,0.0f,1.0f);						<font
+color="#ffffaa">// 繞Z軸旋轉</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下一行代碼選擇我們使用的紋理。如果您在您的場景中使用多個紋理，您應該使用來 glBindTexture(GL_TEXTURE_2D, 
+        texture[ 所使用紋理對應的數字 ]) 選擇要綁定的紋理。當您想改變紋理時，應該綁定新的紋理。有一點值得指出的是，您不能在 glBegin() 
+        和 glEnd() 之間綁定紋理，必須在 glBegin() 之前或 glEnd() 之後綁定。注意我們在後面是如何使用 glBindTexture 
+        來指定和綁定紋理的。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	glBindTexture(GL_TEXTURE_2D, texture[0]);				<font color="#ffffaa">// 選擇紋理</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">為了將紋理正確的映射到四邊形上，您必須將紋理的右上角映射到四邊形的右上角，紋理的左上角映射到四邊形的左上角，紋理的右下角映射到四邊形的右下角，紋理的左下角映射到四邊形的左下角。如果映射錯誤的話，圖像顯示時可能上下顛倒，側向一邊或者什麼都不是。
+        <p>glTexCoord2f 的第一個參數是X坐標。 0.0f 是紋理的左側。 0.5f 是紋理的中點， 1.0f 是紋理的右側。 glTexCoord2f 
+          的第二個參數是Y坐標。 0.0f 是紋理的底部。 0.5f 是紋理的中點， 1.0f 是紋理的頂部。</p>
+        <p>所以紋理的左上坐標是 X：0.0f，Y：1.0f ，四邊形的左上頂點是 X： -1.0f，Y：1.0f 。其餘三點依此類推。</p>
+        <p>試著玩玩 glTexCoord2f 的X，Y坐標參數。把 1.0f 改為 0.5f 將只顯示紋理的左半部分，把 0.0f 改為 0.5f 
+          將只顯示紋理的右半部分。</p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	glBegin(GL_QUADS);
+		<font color="#ffffaa">// 前面</font>
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左下</font>
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右下</font>
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右上</font>
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左上</font>
+		<font color="#ffffaa">// 後面</font>
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右下</font>
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右上</font>
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左上</font>
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左下</font>
+		<font color="#ffffaa">// 頂面</font>
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左上</font>
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左下</font>
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右下</font>
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右上</font>
+		<font color="#ffffaa">// 底面</font>
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右上</font>
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左上</font>
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左下</font>
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右下</font>
+		<font color="#ffffaa">// 右面</font>
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右下</font>
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右上</font>
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左上</font>
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左下</font>
+		<font color="#ffffaa">// 左面</font>
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左下</font>
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右下</font>
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的右上</font>
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	<font
+color="#ffffaa">// 紋理和四邊形的左上</font>
+	glEnd();
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">現在增加 xrot , yrot 和 zrot 的值。嘗試變化每次各變量的改變值來調節立方體的旋轉速度，或改變+/-號來調節立方體的旋轉方向。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	xrot+=0.3f;								<font color="#ffffaa">// X 軸旋轉</font>
+	yrot+=0.2f;								<font
+color="#ffffaa">// Y 軸旋轉</font>
+	zrot+=0.4f;								<font color="#ffffaa">// Z 軸旋轉</font>
+	return true;								<font
+color="#ffffaa">// 繼續運行</font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">現在您應該比較好的理解紋理映射(貼圖)了。您應該掌握了給任意四邊形表面貼上您所喜愛的圖像的技術。一旦您對2D紋理映射的理解感到自信的時候，試試給立方體的六個面貼上不同的紋理。
+        <p>當您理解紋理坐標的概念後，紋理映射並不難理解。！如果您有什麼意見或建議請給我EMAIL。如果您認為有什麼不對或可以改進，請告訴我。</p>
+       <table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+                <p>感謝<br>
+                  感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+                  感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+                <p>資源下載: <br>
+                  文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2006.mht">網頁格式</a> 
+                  <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_06.pdf">PDF格式</a><br>
+                  源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/06_Texture.rar">RAR格式</a></p></td>
+  </tr>
+</table> 
+		<table border="0" width="100%">
+<TBODY>
+      <tr>
+              <td align="left" width="50%"><a href="Tutorial_05.html"><b><font size="-1">&lt; 
+                第05課</font></b></a></td>
+              <td align="right" width="50%"><a href="Tutorial_07.html"><b><font size="-1">第07課 
+                &gt;</font></b></a></td>
+      </tr>
+</TBODY>
+    </table>
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+  <TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+</center></body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_06.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+</html>

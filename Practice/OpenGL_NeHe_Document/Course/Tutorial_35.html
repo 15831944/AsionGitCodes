@@ -1,0 +1,637 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_35.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:03:14 GMT -->
+<head>
+<title>NeHe OpenGL教程第三十五課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第35課 
+      </i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="31%"><img src="../Pic/lesson35.jpg" width="240" height="180"></td>
+            <td width="69%"><p><FONT class=head>在OpenGL中播放AVI:</FONT></p>
+              <p><font size="3">在OpenGL中如何播放AVI呢？利用Windows的API把每一幀作為紋理綁定到OpenGL中，雖然很慢，但它的效果不錯。你可以試試。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>首先我得說我非常喜歡這一章節.Jonathan de Blok使我產生了用OpenGL編寫AVI播放器的想法,可那時,我跟本不知如何打開AVI文件,更不必說去寫一個播放器了.於是我瀏覽了搜藏的編程書籍,沒有一本講到AVI文件的.我又閱讀了MSDN上和AVI文件格式有關的一切內容,上面有很多有用的信息,但我需要更多的.
+      <p>花了幾小時在網上搜到AVI範例,只找到兩個網站.我的搜索技巧不能說很棒吧,但99.9%的情況,我能找到我要尋找的東西.瞭解到AVI範例竟如此之少時,我完全震驚了.大多數範例並不能編譯通過...有一些則用了太複雜的的方法(至少對我如此),剩下的不錯,可是用VB,Delphi等寫的(不是用vc++).</p>
+      <p>找到的第一個網頁是Jonathan Nix寫的題為&quot;AVI 文件&quot;的文章.網址是http://www.gamedev.net/reference/programming/features/avifile.感謝Jonathan寫了這片關於AVI格式的好文章.雖然我用不同的做法,但他的代碼片斷和清晰的註解讓人學得很輕鬆!第二個網站標題為&quot;AVI 
+        總體觀&quot;(John F. McGowan, Ph.D寫的)..我可以大肆讚美John的網葉有多麼驚奇,但你最好自己去看看.他的網址是http://www.jmcgowan.com/avi.html.這個網站講到了和AVI格式有關的幾乎所有內容.感謝John做了一個這麼有用的網站.</p>
+      <p>最後要提到是我沒有借鑒任何代碼,沒有抄襲任何代碼.我的代碼是花了三天時間瞭解到上述網站和文章的信息後才寫成的.我是想說我的代碼也許不是播放AVI文件的最好代碼,他也許不是放AVI文件的正確代碼,但他管用而且使用方便.如果你不喜歡這些代碼和我的編程風格,或者覺得我的言論傷害到整個編程界,你有以下選擇:1)在網上找到替換的資源2)寫自己的AVI播放器3)寫一篇更好的文章.任何訪問本網站的人現在應該知道我只是一名中級程序員(這一點我在網站裡很多文章的開頭都提到過)!我編寫代碼自樂而已.本網站的目的在於讓非精英程序員更輕鬆的開始OpenGl編程.這些文章只是關於我實現的幾個特殊的效果...沒有其他的.</p>
+      <p>開始講代碼首先你要注意的是我們要包括和連接到視頻頭文件和庫文件.非常感謝微軟(窩不敢相信我說了什麼).庫文件使打開,播放AVI文件都很簡便.現在你要知道的是必須包括頭文件vfw.h而且要連接到vfw32.lib庫文件如果想編譯你的代碼的話:)<br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+#include &lt;vfw.h&gt;							<font color=#ffffaa>// Video For Windows頭文件</font>
+#include "NeHeGL.h"						<font color=#ffffaa>// NeHeGL頭文件</font>
+
+#pragma comment( lib, "opengl32.lib" )				
+#pragma comment( lib, "glu32.lib" )				
+#pragma comment( lib, "vfw32.lib" )					<font color=#ffffaa>// 鏈接到VFW32.lib</font>
+
+
+GL_Window*	g_window;
+Keys*		g_keys;
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在定義變量.angle是用來根據時間來旋轉物體的.為簡單起見我們用angle來控制所有的旋轉.<br>
+      接下來是一個整型變量是用來計算經過的時間(以毫秒計).它使幀速保持一個速度.<br>
+      後面細講!<br>
+      frame是動畫要顯示的當前幀,初始值為0(第一幀).我想如果成功打開AVI,他至少有一幀吧,這樣假定比較安全:)<br>
+      effect是當前屏幕上的效果(有:立方體,球體,圓柱體).env是布爾值.若它為true則環境映射啟動,若為假,則物體沒有環境映射.若bg為true,你會看到物體後有全屏的動畫;若為假,你只會看到物體(沒有背景).<br>
+      sp,ep和bp用來確定使用者沒有按著鍵不放.</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>float		angle;							<font color=#ffffaa>// 旋轉用</font>
+int		next;							<font color=#ffffaa>// 動畫用</font>
+int		frame=0;						<font color=#ffffaa>	// 幀計數器</font>
+int		effect;							<font color=#ffffaa>// 當前效果</font>
+bool		sp;							<font color=#ffffaa>// 空格鍵按下?</font>
+bool		env=TRUE;							<font color=#ffffaa>// 環境映射(默認開)</font>
+bool		ep;							<font color=#ffffaa>//』E』 按下?</font>
+bool		bg=TRUE;							<font color=#ffffaa>// 背景(默認開)</font>
+bool		bp;							<font color=#ffffaa>// 』B』 按下?</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>psi結構體包含AVI文件信息.pavi緩衝的指針,緩衝用來接受AVI文件打開時的流句柄.pgf是指向GetFrame對象的指針.bmih在後面的代碼中將被用來把動畫的每一幀轉換為我們需要的格式(保存位圖的頭信息).lastframe保存AVI動畫最後一幀的序號.width和height保存AVI流的維信息,最後...pdata是圖像數據的指針(每次在從AVI中獲得一幀後返回).mpf用來計算每幀需要多少毫秒.後面細談這個變量.</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+AVISTREAMINFO		psi;						<font color=#ffffaa>// 包含流信息的結構體的指針</font>
+PAVISTREAM		pavi;						<font color=#ffffaa>// 流句柄</font>
+PGETFRAME		pgf;							<font color=#ffffaa>// GetFrame對象的指針</font>
+BITMAPINFOHEADER	bmih;							<font color=#ffffaa>// 頭信息 For DrawDibDraw </font>
+long			lastframe;					<font color=#ffffaa>// 流中最後一幀</font>
+int			width;						<font color=#ffffaa>// 視頻寬</font>
+int			height;						<font color=#ffffaa>// 視頻高</font>
+char			*pdata;						<font color=#ffffaa>// 紋理數據指針</font>
+int			mpf;						<font color=#ffffaa>// 控制每幀顯示時間</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在本章中我們用GLU庫創建兩個二次曲面(球體和圓柱體).quadratic是曲面對象的指針.<br>
+      hdd是DrawDib設備上下文的句柄.hdc是設備上下文的句柄.<br>
+      hBitmap是設備無關位圖的句柄(在後面位圖轉換時用到).<br>
+      data是最後指向轉換後位圖的圖像數據的指針,在後面的代碼中會有意義,往下讀:)</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+GLUquadricObj *quadratic;						<font color=#ffffaa>// 存儲二次曲面對像</font>
+
+HDRAWDIB hdd;							<font color=#ffffaa>// Dib句柄</font>
+HBITMAP hBitmap;							<font color=#ffffaa>// 設備無關位圖的句柄</font>
+HDC hdc = CreateCompatibleDC(0);					<font color=#ffffaa>// 創建一個兼容的設備上下文</font>
+unsigned char* data = 0;						<font color=#ffffaa>// 調整後的圖像數據指針</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面使用到彙編語言.那些從來沒有用過彙編的不要被嚇倒了.他看起來神秘,實際上非常簡單!
+      <p>在寫本章是我發現了十分奇怪的事.第一次做出來的可以播放,但色彩混亂了.本來是紅色的變成藍色的了,本來是藍色的變成紅色的了.我簡直要發狂了!我相信我的代碼某處有問題.看了一邊代碼還是找不到bug於是又讀了MSDN.為什麼紅色與藍色互換了!?!MSDN明明說24比特位圖是RGB啊!又讀了一些東西,我找到了答案.在WINDOWS圖形系統中,RGB數據是倒著存儲的(BGR).而在OpenGL中,要用的RGB數據就是RGB的順序!</p>
+      <p>在抱怨了微軟之後:)我決定加一條註解!我不因為RGB數據倒過來存放而打算罵微軟.只是覺得很奇怪--他叫做RGB實際上在文件中是按BGR存的!</p>
+      <p>另:這一點和&quot;little endian&quot;和&quot;big endian&quot;有關.Intel以及Intel兼容產品用little 
+        endian--LSB(數據最低位)首先存.OpenGL是產生於Silicon Graphics的機器的,用的是big endian,所以標準的OpenGL要位圖格式是big 
+        endian格式.這是我的理解.</p>
+      <p>棒極了!所以說這第一個播放器就是一個垃圾!我的解決方法是用一個循環把數據交換過來.這能行,但太慢.我又在紋理生成代碼中用GL_BGR_EXT代替了GL_RGB,速度暴升,色彩顯示也對了!問題解決了...原來我是這樣想!後來發現一些OpenGL驅動不支持GL_BGR... 
+        :(</p>
+      <p>與好友Maxwell Sayles討論後,他推薦我用彙編代碼來交換數據.一分鐘後,他用icq發來下面的代碼!也許不是最優化的,但他很快也很有效!</p>
+      <p>動畫的每一幀存在一個緩衝裡.圖像256像素寬,256像素高,每個色彩一字節(一像素3字節).下面的代碼會掃瞄整個緩衝並交換紅與藍的字節.紅存在ebx+0,藍存在ebx+2.我們一次向前走3字節(因為一個像素3字節).不斷掃瞄直到所有數據交換過來.</p>
+      <p>你們有些人不喜歡用彙編代碼,所以我想有必要在本章裡解釋一下.本來計劃用GL_BGR_EXT,他管用,但不是所有的顯卡都支持!我又用異或交換法,這在所有機器上都是有效的,但不十分快.用了彙編後速度相當快.考慮到我們在處理實時視頻,你需要最快的交換方法.權衡了以上選擇,彙編是最好的!如果你有更好的辦法,就用你自己的吧!我並不是告訴你必須如何去做,只是告訴你我的做法.我也會細緻的解釋代碼.如果你要用更好的代碼來作替換,你要清楚這些代碼是來幹什麼的,自己寫代碼時,要為日後的優化提供方便.</p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void flipIt(void* buffer)						<font color=#ffffaa>// 交換紅藍數據(256x256)</font>
+{
+	void* b = buffer;						<font color=#ffffaa>// 緩衝指針</font>
+	__asm							<font color=#ffffaa>// 彙編代碼</font>
+	{
+		mov ecx, 256*256					<font color=#ffffaa>// 設置計數器</font>
+		mov ebx, b					<font color=#ffffaa>// ebx存數據指針</font>
+		label:						<font color=#ffffaa>// 循環標記</font>
+			mov al,[ebx+0]				<font color=#ffffaa>// 把ebx位置的值賦予al</font>
+			mov ah,[ebx+2]				<font color=#ffffaa>// 把ebx+2位置的值賦予ah</font>
+			mov [ebx+2],al				<font color=#ffffaa>// 把al的值存到ebx+2的位置</font>
+			mov [ebx+0],ah				<font color=#ffffaa>// 把ah的值存到ebx+0的位置</font>
+
+			add ebx,3					<font color=#ffffaa>// 向前走3個字節</font>
+			dec ecx					<font color=#ffffaa>// 循環計數器減1</font>
+			jnz label					<font color=#ffffaa>// ecx非0則跳至label</font>
+	}
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼以只讀方式打開AVI文件.szFile是打開文件的名字.title[100]用來修改window標題(顯示AVI文件信息).
+      <p>首先調用AVIFileInit().他初始化AVI文件庫(使東西能用?鵠?).</p>
+      <p>打開AVI文件有很多方法.我採用AVIStreamOpenFromFile(...).他能打開AVI文件中單獨一個流(AVI文件可以包含多個流).它的參數如下:pavi是接收流句柄的緩衝的指針,szFile是打開文件的名字(包括路徑).第三參數是打開的流的類型.在這個工程裡,我們只對視頻流感興趣(streamtypeVIDEO).第四參數是0,這表示我們需要第一次讀到的視頻流(一個AVI文件裡會有多個視頻流,我們要第一個).OF_READ表示以只讀方式打開文件.最後一個參數是一個類標識句柄的指針.說實話,我也不清楚他是幹嗎的.我讓windows自己設定,於是把NULL傳過去.<br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void OpenAVI(LPCSTR szFile)						<font color=#ffffaa>// 打開AVI文件szFile</font>
+{
+	TCHAR	title[100];					<font color=#ffffaa>// 包含修改了的window標題</font>
+
+	AVIFileInit();						<font color=#ffffaa>// 打開AVI文件庫</font>
+
+	<font color=#ffffaa>// 打開AVI流</font>
+	if (AVIStreamOpenFromFile(&pavi, szFile, streamtypeVIDEO, 0, OF_READ, NULL) !=0)
+	{
+		<font color=#ffffaa>// 打開流時的出錯處理</font>
+		MessageBox (HWND_DESKTOP, "打開AVI流失敗", "錯誤", MB_OK | MB_ICONEXCLAMATION);
+	}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>到目前為止,我們假定文件被正確打開,流被正確定位!然後用AVIStreamInfo(...)從AVI文件裡抓取一些信息.
+      <p>先前我們創建了叫psi的結構體來保存AVI流的信息.下面第一行,我們把AVI信息填入該結構體.從流的寬度(以像素計)到動畫的幀速等所有的信息都會存到psi中.那些想要精確控制播放速度的要記住我剛才說的.更多的信息參閱MSDN.</p>
+      <p>我們通過右邊位置減左邊位置算出幀寬.這個結果是以像素記的精確的幀寬.至於高度,可以用底邊位置減頂邊位置得到.這樣得到高度的像素值.</p>
+      <p>然後用AVIStreamLength(...)得到AVI文件最後一幀的序號.AVIStreamLength(...)返回動畫最後一幀的序號.結果存在lastframe裡.</p>
+      <p>計算幀速很簡單.每秒幀速(fps)= psi.dwRate/psi,dwScale.返回的值應該匹配顯示幀的速度(你在AVI動畫中右擊鼠標可以看到).你會問那麼這和mpf有什麼關係呢?第一次寫這個代碼時,我試著用fps來選擇動畫了正確的幀面.我遇到一個問題...視頻放的太快!於是我看了一下視頻屬性.face2.avi文件有3.36秒長.幀速是29.974fps.視頻動畫共有91幀.而3.36*29.974 
+        = 100.71.非常奇怪!!</p>
+      <p>所以我採用一些不同的方法.不是計算幀速,我計算每一幀播放所需時間.AVIStreamSampleToTime()把在動畫中的位置轉換位你到達該位置所需的時間(毫秒計).所以通過計算到達最後一幀的時間就得到整個動畫的播放時間.再拿這個結果除以動畫總幀數(lastframe).這樣就給出了每幀的顯示時間(毫秒計).結果存在mpf(milliseconds 
+        per frame)裡.你也能通過獲取動畫中一幀的時間來算每幀的毫秒數,代碼為:AVIStreamSampleToTime(pavi,1).兩種方法都不錯!非常感謝Albert 
+        Chaulk提供思路!</p>
+      <p>我說每幀的毫秒數不精確是因為mpf是一個整型值,所以所有的浮點數都會被取整.</p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	AVIStreamInfo(pavi, &psi, sizeof(psi));			<font color=#ffffaa>// 把流信息讀進psi</font>
+	width=psi.rcFrame.right-psi.rcFrame.left;			<font color=#ffffaa>// 寬度為右邊減左邊</font>
+	height=psi.rcFrame.bottom-psi.rcFrame.top;			<font color=#ffffaa>// 高為底邊減頂邊</font>
+
+	lastframe=AVIStreamLength(pavi);				<font color=#ffffaa>// 最後一幀的序號</font>
+
+	mpf=AVIStreamSampleToTime(pavi,lastframe)/lastframe;		<font color=#ffffaa>// mpf的不精確值</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>因為OpenGL需要紋理數據是2的冪,而大多視頻是160*120,320*240等等,所以需要一種把視頻格式重調整為能用作紋理的格式.我們可利用Windows 
+      Dib函數去做.
+      <p>首先要做的是描述我們想要的圖像的類型.於是我們要以所需參數填好bmih這個BitmapInfoHeader結構.<br>
+        首先設定該結構體的大小.再把位平面數設為1.3字節的數據有24比特(RGB).要使圖像位256像素寬,256像素高,最後要讓數據返回為UNCOMPRESSED(非壓縮)的RGB數據(BI_RGB). 
+      </p>
+      <p>CreateDIBSection創建一個可直接寫的設備無關位圖(dib).如果一切順利,hBitmap會指向該dib的比特值.hdc是設備上下文(DC)的句柄第二參數是BitmapInfo結構體的指針.該結構體包含了上述dib文件的信息.第三參數(DIB_RGB_COLORS)設定數據是RGB值.data是指向DIB比特值位置的指針的指針(嗚,真繞口).第五參數設為NULL,我們的DIB已被分配好內存.末了,最後一個參數可忽略(設為NULL).</p>
+      <p>引自MSDN:SelecObject函數選一個對像進入設備上下文(DC).</p>
+      <p>現在我們建好一個能直接寫的DIB,yeah:)</p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	bmih.biSize		= sizeof (BITMAPINFOHEADER);		<font color=#ffffaa>// BitmapInfoHeader的大小</font>
+	bmih.biPlanes		= 1;					<font color=#ffffaa>// 位平面</font>
+	bmih.biBitCount		= 24;					<font color=#ffffaa>//比特格式(24 Bit, 3 Bytes)</font>
+	bmih.biWidth		= 256;					<font color=#ffffaa>// 寬度(256 Pixels)</font>
+	bmih.biHeight		= 256;					<font color=#ffffaa>// 高度 (256 Pixels)</font>
+	bmih.biCompression	= BI_RGB;				<font color=#ffffaa>		// 申請的模式 = RGB</font>
+
+	hBitmap = CreateDIBSection (hdc, (BITMAPINFO*)(&bmih), DIB_RGB_COLORS, (void**)(&data), NULL, NULL);
+	SelectObject (hdc, hBitmap);					<font color=#ffffaa>// 選hBitmap進入設備上下文(hdc)</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在從AVI中讀取幀面前還有幾件事要做.接下來使程序做好從AVI文件中解出幀面的準備.用AVIStreamGetFrameOpen(...)函數做這一點.
+      <p>你能給這個函數傳一個結構體作為第二參數(它會返回一個特定的視頻格式).糟糕的是,你能改變的唯一數據是返回的圖像的寬度和高度.MSDN也提到能傳AVIGETFRAMEF_BESTDISPLAYFMT為參數來選擇一個最佳顯示格式.奇怪的是,我的編譯器沒有定義這玩藝兒.</p>
+      <p>如果一切順利,一個GETFRAME對像被返回(用來讀幀數據).有問題的話,提示框會出現在屏幕上告訴你有錯誤!</p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+	pgf=AVIStreamGetFrameOpen(pavi, NULL);				<font color=#ffffaa>// 用要求的模式建PGETFRAME</font>
+	if (pgf==NULL)
+	{
+		<font color=#ffffaa>// 解幀出錯</font>
+		MessageBox (HWND_DESKTOP, "不能打開AVI幀", "錯誤", MB_OK | MB_ICONEXCLAMATION);
+	}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼把視頻寬,高和幀數傳給window標題.用函數SetWindowText(...)在window頂部顯示標題.以窗口模式運行程序看看以下代碼的作用.</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+	<font color=#ffffaa>// bt標題欄信息(寬 / 高/ 幀數)</font>
+	wsprintf (title, "NeHe's AVI Player: Width: %d, Height: %d, Frames: %d", width, height, lastframe);
+	SetWindowText(g_window-&gt;hWnd, title);				<font color=#ffffaa>// 修改標題欄</font>
+}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面是有趣的東西...從AVI中抓取一幀,把它轉為大小和色深可用的圖像.lpbi包含一幀的BitmapInfoHeader信息.我們在下面第二行完成了幾件事.先是抓了動畫的一幀...我們需要的幀面由這些幀確定.這會讓動畫走掉這一幀,lpbi會指向這一幀的頭信息.
+      <p>下面是有趣的東西...我們要指向圖像數據了.要跳過頭信息(lpbi-&gt;biSize).一件事直到寫本文時我才意識到:也要跳過任何的色彩信息.所以要跳過biClrUsed*sizeof(RGBQUAD)(譯者:我想他是說要跳過調色板信息).做完這一切,我們就得到圖像數據的指針了(pdata).</p>
+      <p>也要把動畫的每一幀的大小轉為紋理能用的大小,還要把數據轉為RGB數據.這用到DrawDibDraw(...).</p>
+      <p>一個大概的解釋.我們能直接寫設定的DIB圖像.那就是DrawDibDraw(...)所做的.第一參數是DrawDib DC的句柄.第二參數是DC的句柄.接下來用左上角(0,0)和右下角(256,256)構成目標矩形.</p>
+      <p>lpbi指向剛讀的幀的bitmapinfoheader信息.pdata是剛讀的幀的圖像數據指針.</p>
+      <p>再把源圖像(剛讀的幀)的左上角設為(0,0),右下角設為(幀寬,幀高).最後的參數應設為0.</p>
+      <p>這個方法可把任何大小、色深的圖像轉為256*256*24bit的圖像.</p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void GrabAVIFrame(int frame)						<font color=#ffffaa>// 從流中抓取一幀</font>
+{
+	LPBITMAPINFOHEADER lpbi;					<font color=#ffffaa>	// 存位圖的頭信息</font>
+	lpbi = (LPBITMAPINFOHEADER)AVIStreamGetFrame(pgf, frame);	<font color=#ffffaa>	// 從AVI流中得到數據</font>
+	pdata=(char *)lpbi+lpbi-&gt;biSize+lpbi-&gt;biClrUsed * sizeof(RGBQUAD);	<font color=#ffffaa>// 數據指針,由AVIStreamGetFrame返回(跳過頭 
+//信息和色彩信息)</font>
+<font color=#ffffaa>// 把數據轉為所需格式</font>
+	DrawDibDraw (hdd, hdc, 0, 0, 256, 256, lpbi, pdata, 0, 0, width, height, 0);
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>我們得到動畫的每幀數據(紅藍數據顛倒的).為解決這個問題,我們的高速代碼flipIt(...).記住,data是指向DIB比特值位置的指針的指針變量.這意味著調用DrawDibDraw後,data指向一個調整過大小(256*256),修改過色深(24bits)的位圖數據.
+      <p>原來我通過重建動畫的每一幀來更新紋理.我收到幾封email建議我用glTexSubImage2D().翻閱了OpenGL紅寶書後,我磕磕絆絆的寫出下面註釋:&quot;創建紋理的計算消耗比修改紋理要大.在OpenGL1.1版本中,有幾條調用能更新全部或部分紋理圖像信息.這對某些應用程序有用,比如實時的抓取視頻圖像作紋理.對於這些程序,用glTexSubImage2D()根據新視頻圖像來創建單個紋理以代替舊的紋理數據是行得通的.&quot;</p>
+      <p>在我個人並沒有發現速度明顯加快,也許在低端顯卡上才會.glTexSubImage2D()的參數是:目標是一個二維紋理(GL_TEXTURE_2D).細節級別(0),mipmapping用.x(0),y(0)告訴OpenGL開始拷貝的位置(0,0是紋理的左下角).然後是圖像的寬度,我們要拷貝的圖像是256像素寬,256像素高.GL_RGB是我們的數據格式.我們在拷貝無符號byte.最後...圖像數據指針----data.非常簡單!</p>
+      <p>Kevin Rogers 另加:我想指出使用glTexSubImage2D()另一個重要原因.不僅因為在許多OpenGL實現中它很快,還因為目標區不必是2的冪.這對視頻重放很方便,因為一幀的維通常不是2的冪(而是像320*200之類的).這樣給了你很大機動性,你可以按視頻流原本的樣子播放,而不是扭曲或剪切每一幀來適應紋理的維.</p>
+      <p>重要的是你不能更新一個紋理如果你第一次沒有創建他!我們在Initialize()中創建紋理.</p>
+      <p>還要提到的是...如果你計劃在工程裡使用多個紋理,務必綁住你要更新的紋理.否則,更新出來的紋理也許不是你想要的!</p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+	flipIt(data);							<font color=#ffffaa>// 交換紅藍數據</font>
+
+	<font color=#ffffaa>// 更新紋理</font>
+	glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 256, 256, GL_RGB, GL_UNSIGNED_BYTE, data);
+}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來的部分當程序退出時調用,我們關掉DrawDib DC,釋放佔用的資源.然後釋放AVI GetFrame資源.最後釋放AVI流和文件.</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void CloseAVI(void)							<font color=#ffffaa>// 關掉AVI資源</font>
+{
+	DeleteObject(hBitmap);						<font color=#ffffaa>//釋放設備無關位圖信息</font>
+	DrawDibClose(hdd);						<font color=#ffffaa>	// 關掉DrawDib DC</font>
+	AVIStreamGetFrameClose(pgf);					<font color=#ffffaa>// 釋放AVI GetFrame資源</font>
+	AVIStreamRelease(pavi);						<font color=#ffffaa>// 釋放AVI流</font>
+	AVIFileExit();							<font color=#ffffaa>// 釋放AVI文件</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>初始化很簡明.設初始的angle為0.再打開DrawDib庫(得到一個DC).一切順利的話,hdd會是新創建的dc的句柄.
+      <p>以黑色清屏,開啟深度測試,等等.</p>
+      <p>然後建一個新的二次曲面.quadratic是這個新對象的指針.設置光滑的法線,允許紋理坐標的生成.</p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+BOOL Initialize (GL_Window* window, Keys* keys)
+{
+	g_window	= window;
+	g_keys		= keys;
+
+	<font color=#ffffaa>// 開始用戶的初始</font>
+	angle = 0.0f;							<font color=#ffffaa>// angle為0先</font>
+	hdd = DrawDibOpen();						<font color=#ffffaa>// 得到Dib的DC</font>
+	glClearColor (0.0f, 0.0f, 0.0f, 0.5f);				<font color=#ffffaa>// 黑色背景</font>
+	glClearDepth (1.0f);						<font color=#ffffaa>// 深度緩衝初始</font>
+	glDepthFunc (GL_LEQUAL);					<font color=#ffffaa>	// 深度測試的類型(小於或等於)</font>
+	glEnable(GL_DEPTH_TEST);					<font color=#ffffaa>	// 開啟深度測試</font>
+	glShadeModel (GL_SMOOTH);					<font color=#ffffaa>	// 平滑效果</font>
+	glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);			<font color=#ffffaa>// 透視圖計算設為 //最高精度</font>
+
+	quadratic=gluNewQuadric();						<font color=#ffffaa>// 建二次曲面的指針</font>
+	gluQuadricNormals(quadratic, GLU_SMOOTH);				<font color=#ffffaa>// 設置光滑的法線</font>
+	gluQuadricTexture(quadratic, GL_TRUE);				<font color=#ffffaa>// 創建紋理坐標</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼中,我們開啟2D紋理映射,紋理濾鏡設為GLNEAREST(最快,但看起來很糙),建立球面映射(為了實現環境映射效果).試試其它濾鏡,如果你有條件,可以試試GLLINEAR得到一個平滑的動畫效果.
+      <p>設完紋理和球面映射,我們打開.AVI文件.我盡量使事情簡單化...你能看出來麼:)我們要打開的文件叫作facec2.avi<br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	glEnable(GL_TEXTURE_2D);					<font color=#ffffaa>// 開啟2D紋理映射</font>
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);<font color=#ffffaa>// 設置紋理濾鏡</font>
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);		<font color=#ffffaa>// 設紋理坐標生成模式為s</font>
+	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);		<font color=#ffffaa>// 設紋理坐標生成模式為t</font>
+
+	OpenAVI("data/face2.avi");					<font color=#ffffaa>// 打開AVI文件</font>
+
+	<font color=#ffffaa>// 創建紋理</font>
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+	return TRUE;						<font color=#ffffaa>// 初始化成功返回TRUE</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>關閉時調用CloseAVI().他正確的關閉AVI文件,並釋放所有佔用資源.</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+void Deinitialize (void)						<font color=#ffffaa>// 做所有的釋放工作</font>
+{
+	CloseAVI();						<font color=#ffffaa>// 關閉AVI文件</font>
+}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>到了檢查按鍵和更新旋轉角度的地方了.我知道再沒有必要詳細解釋這些代碼了.我們檢查空格鍵是否按下,若是,則增加effect值.有3種效果(立方,球,圓柱)第四個效果被選時(effect 
+      = 3)不畫任何對像...僅顯示背景!如果選了第四效果,空格又按下了,就重設為第一個效果(effect = 0).Yeah,我本該叫他對像:) 
+      <p>然後檢查』b』鍵是否按下,若是,則改變背景(bg從ON到OFF或從OFF到ON).</p>
+      <p>環境映射的鍵設置也一樣.檢查』E』是否按下,若是則改變env從TRUE到FALSE或從FALSE到TRUE.僅僅是關閉或開啟環境映射!</p>
+      <p>每次調用Updata()時angle都加上一個小分數.我用經過的時間除以60.0f使速度降一點.<br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void Update (DWORD milliseconds)					<font color=#ffffaa>// 動畫更新</font>
+{
+	if (g_keys-&gt;keyDown [VK_ESCAPE] == TRUE)			<font color=#ffffaa>//ESC按下?</font>
+	{
+		TerminateApplication (g_window);			<font color=#ffffaa>// 關閉程序</font>
+	}
+
+	if (g_keys-&gt;keyDown [VK_F1] == TRUE)				<font color=#ffffaa>// F1按下?</font>
+	{
+		ToggleFullscreen (g_window);			<font color=#ffffaa>// 改變顯示模式</font>
+	}
+
+	if ((g_keys-&gt;keyDown [' ']) && !sp)				<font color=#ffffaa>// 空格按下並已鬆開</font>
+	{
+		sp=TRUE;						<font color=#ffffaa>// 設sp為True</font>
+		effect++;						<font color=#ffffaa>// 增加effect</font>
+		if (effect&gt;3)					<font color=#ffffaa>// 超出界限?</font>
+			effect=0;					<font color=#ffffaa>// 重設為0</font>
+	}
+
+	if (!g_keys-&gt;keyDown[' '])					<font color=#ffffaa>// 空格沒按下?</font>
+		sp=FALSE;						<font color=#ffffaa>// 設sp為False</font>
+
+	if ((g_keys-&gt;keyDown ['B']) && !bp)				<font color=#ffffaa>// 』B』按下並已鬆開</font>
+	{
+		bp=TRUE;						<font color=#ffffaa>// 設bp為True</font>
+		bg=!bg;						<font color=#ffffaa>// 改變背景 Off/On</font>
+	}
+
+	if (!g_keys-&gt;keyDown['B'])					<font color=#ffffaa>// 』B』沒按下?</font>
+		bp=FALSE;						<font color=#ffffaa>// 設bp為False</font>
+
+	if ((g_keys-&gt;keyDown ['E']) && !ep)				<font color=#ffffaa>//  』E』按下並已鬆開</font>
+	{
+		ep=TRUE;						<font color=#ffffaa>// 設ep為True</font>
+		env=!env;						<font color=#ffffaa>// 改變環境映射 Off/On</font>
+	}
+
+	if (!g_keys-&gt;keyDown['E'])					<font color=#ffffaa>//』E』沒按下</font>
+		ep=FALSE;						<font color=#ffffaa>// 設ep為False</font>
+
+	angle += (float)(milliseconds) / 60.0f;			<font color=#ffffaa>// 根據時間更新angle</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在原來的文章裡,所有的AVI文件都以相同的速度播放.於是,我重寫了本文讓視頻以正常的速度播放.next增加經過的毫秒數.如果你記得文章的前面,我們算出了顯示每幀的毫秒數(mpf).為了計算當前幀,我們拿經過的時間除以顯示每幀的毫秒數(mpf).
+      <p>還要檢查確定當前幀沒有超過視頻的最後幀.若超過了,則將frame設為0,動畫計時器設為0,於是動畫從頭開始.</p>
+      <p>下面的代碼會丟掉一些幀,若果你的計算機太慢的話,<br>
+        或者另一個程序佔用了CPU.如果想顯示每一幀而不管計算機有多慢的話,你要檢查next是否比mpf大,若是,你要把next設為0,frame增1.兩種方法都行,雖然下面的代碼更有利於跑的快的機器.</p>
+      <p>如果你有幹勁,試著加上循環,快速播放,暫停或倒放等功能.</p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	next+= milliseconds;						<font color=#ffffaa>// 根據時間增加next</font>
+	frame=next/mpf;							<font color=#ffffaa>// 計算當前幀號</font>
+
+	if (frame&gt;=lastframe)						<font color=#ffffaa>// 超過最後一幀?</font>
+	{
+		frame=0;							<font color=#ffffaa>// Frame設為0</font>
+		next=0;							<font color=#ffffaa>// 重設動畫計時器</font>
+	}
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面是畫屏代碼:)我們清屏和深度緩衝.再抓取動畫的一幀.我將使這更簡單!把你想要的幀數傳給GrabAVIFrame().非常簡單!當然,如果是多個AVI,你要傳一個紋理標號.(你要做更多的事)</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void Draw (void)							<font color=#ffffaa>// 繪製我們的屏幕</font>
+{
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		<font color=#ffffaa>// 清屏和深度緩衝</font>
+
+	GrabAVIFrame(frame);				<font color=#ffffaa>	// 抓取動畫的一幀</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面檢查我們是否想畫一個背景圖.若bg是TRUE,重設模型視角矩陣,畫一個單紋理映射的能蓋住整個屏幕的矩形(紋理是從AVI從得到的一幀).矩形距離屏面向裡20個單位,這樣它看起來在對像之後(距離更遠).</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	if (bg)							<font color=#ffffaa>// 背景可見?</font>
+	{
+		glLoadIdentity();					<font color=#ffffaa>// 重設模型視角矩陣</font>
+		glBegin(GL_QUADS);					<font color=#ffffaa>// 開始畫背景(一個矩形)</font>
+			<font color=#ffffaa>// 正面</font>
+			glTexCoord2f(1.0f, 1.0f); glVertex3f( 11.0f,  8.3f, -20.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(-11.0f,  8.3f, -20.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(-11.0f, -8.3f, -20.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f( 11.0f, -8.3f, -20.0f);
+		glEnd();						
+	}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>畫完背景(或沒有),重設模型視角矩陣(使視角中心回到屏幕中央).視角中心再向屏內移進10個單位.然後檢查env是否為TRUE.若是,開啟球面映射來實現環境映射效果.<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	glLoadIdentity ();						<font color=#ffffaa>// 重設模型視角矩陣</font>
+	glTranslatef (0.0f, 0.0f, -10.0f);				<font color=#ffffaa>// 視角中心再向屏內移進10個單位</font>
+
+	if (env)							<font color=#ffffaa>// 環境映射開啟?</font>
+	{
+		glEnable(GL_TEXTURE_GEN_S);				<font color=#ffffaa>// 開啟紋理坐標生成S坐標</font>
+		glEnable(GL_TEXTURE_GEN_T);				<font color=#ffffaa>// 開啟紋理坐標生成T坐標</font>
+	}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在最後關頭我加了以下代碼.他繞X軸和Y軸旋轉(根據angle的值)然後在Z軸方向移動2單位.這使我們離開了屏幕中心.如果刪掉下面三行,對像會在屏幕中心打轉.有了下面三行,對像旋轉時看起來離我們遠一些:)
+      <p>如果你不懂旋轉和平移...你就不該讀這一章:)<br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	glRotatef(angle*2.3f,1.0f,0.0f,0.0f);				<font color=#ffffaa>// 加旋轉讓東西動起來</font>
+	glRotatef(angle*1.8f,0.0f,1.0f,0.0f);				<font color=#ffffaa>// 加旋轉讓東西動起來</font>
+	glTranslatef(0.0f,0.0f,2.0f);					<font color=#ffffaa>// 旋轉後平移到新位置</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼檢查我們要畫哪一個對像.若effect為0,我們做一些旋轉在畫一個立方體.這個旋轉使立方體繞X,Y,Z軸旋轉.現在你腦中該烙下建一個立方體的方法了吧:)</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+	switch (effect)							<font color=#ffffaa>// 哪個效果?</font>
+	{
+	case 0:								<font color=#ffffaa>// 效果 0 - 立方體</font>
+		glRotatef (angle*1.3f, 1.0f, 0.0f, 0.0f);		
+		glRotatef (angle*1.1f, 0.0f, 1.0f, 0.0f);		
+		glRotatef (angle*1.2f, 0.0f, 0.0f, 1.0f);		
+		glBegin(GL_QUADS);				
+			glNormal3f( 0.0f, 0.0f, 0.5f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+			
+			glNormal3f( 0.0f, 0.0f,-0.5f);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+		
+			glNormal3f( 0.0f, 0.5f, 0.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+			
+			glNormal3f( 0.0f,-0.5f, 0.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+		
+			glNormal3f( 0.5f, 0.0f, 0.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+		
+			glNormal3f(-0.5f, 0.0f, 0.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+		glEnd();						
+		break;						</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面是畫球體的地方.開始先繞X,Y,Z軸旋轉,再畫球體.球體半徑為1.3f,20經線,20緯線.我用20是因為我沒打算讓球體非常光滑.少用些經緯數,使球看起來不那麼光滑,這樣球轉起來時就能看到球面映射的效果(當然球面映射必須開啟).試著嘗試其它值!要知道,使用更多的經緯數需要更強的計算能力!</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	case 1:								<font color=#ffffaa>// 效果1，球體</font>
+		glRotatef (angle*1.3f, 1.0f, 0.0f, 0.0f);		
+		glRotatef (angle*1.1f, 0.0f, 1.0f, 0.0f);		
+		glRotatef (angle*1.2f, 0.0f, 0.0f, 1.0f);		
+		gluSphere(quadratic,1.3f,20,20);			
+		break;							</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面畫圓柱.開始先繞X,Y,Z軸旋轉,圓柱頂和底的半徑都為1.0f.高3.0f,32經線,32緯線.若減少經緯數,圓柱的組成多邊形會減少,他看起來就沒那麼圓.</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	case 2:								<font color=#ffffaa>// 效果2，圓柱</font>
+		glRotatef (angle*1.3f, 1.0f, 0.0f, 0.0f);		
+		glRotatef (angle*1.1f, 0.0f, 1.0f, 0.0f);		
+		glRotatef (angle*1.2f, 0.0f, 0.0f, 1.0f);		
+		glTranslatef(0.0f,0.0f,-1.5f);				
+		gluCylinder(quadratic,1.0f,1.0f,3.0f,32,32);		
+		break;							
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面檢查env是否為TRUE,若是,關閉球面映射.調用glFlush()清空渲染流水線(使在下一幀開始前一切都渲染了).</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	if (env)								<font color=#ffffaa>// 是否開啟了環境渲染</font>
+	{
+		glDisable(GL_TEXTURE_GEN_S);				<font color=#ffffaa>// 關閉紋理坐標S</font>
+		glDisable(GL_TEXTURE_GEN_T);				<font color=#ffffaa>// 關閉紋理坐標T</font>
+	}
+
+	glFlush ();							<font color=#ffffaa>// 清空渲染流水線</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><FONT face=Tahoma,Verdana,sans-serif size=-1>希</font>望你們喜歡這一章.現在已經凌晨兩點了(譯者oak:譯到這時剛好也是2:00am!)...寫這章花了我6小時了.聽起來不可思議,可要把東西寫通不是件容易的事.本文我讀了三邊,我力圖使文章好懂.不管你信還是不信,對我最重要的是你們能明白代碼是怎樣運作的,它為什麼能行.那就是我喋喋不休並且加了過量註解的原因. 
+      <p>無論如何,我都想聽到本文的反饋.如果你找到文章的錯誤,並想幫我做一些改進,請聯繫我.就像我說的那樣,這是我第一次寫和AVI有關的代碼.通常我不會寫一個我才接觸到的主題,但我太興奮了,並且考慮到關於這方面的文章太少了.我所希望的是,我打開了編寫高質量AVI 
+        demo和代碼的一扇門!也許成功,也許沒有.不管怎樣,你可以任意處理我的代碼.</p>
+      <p>非常感謝 Fredster提供face AVI文件.Face是他發來的六個AVI動畫中的一個.他沒提出任何問題和條件.他以他的方式幫助了我,謝謝他!</p>
+      <p>更要感謝Jonathan de Blok,要沒要她,本文就不會有.他給我發來他的AVI播放器的代碼,這使我對AVI格式產生了興趣.他也回答了我問的關於他的代碼的問題.但重要的是我並沒有借鑒或抄襲他的代碼,他的代碼只是幫助我理解AVI播放器的運行機制.我的播放器的打開,解幀和播放AVI文件用的是不同的代碼!</p>
+      <p>感謝給予幫助的所有人,包括所有參觀者!若沒有你們,我的網站不值一文!!!</p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2035.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_35.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/35_avi.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+      <FONT face=Tahoma,Verdana,sans-serif size=-1>
+      <table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_34.htm">< 
+          第34課 </a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_36.html">第36課 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_35.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:03:15 GMT -->
+</html>

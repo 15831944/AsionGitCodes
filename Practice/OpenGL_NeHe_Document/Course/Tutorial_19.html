@@ -1,0 +1,1915 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn --><html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_19.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:37 GMT -->
+<head>
+<title>NeHe OpenGL教程第十九課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第19課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="30%"><img src="../Pic/lesson19.jpg" width="240" height="180"></td>
+            <td width="70%"><p><FONT class=head>粒子系統:</FONT></p>
+              <p><font size="3">你是否希望創建爆炸，噴泉，流星之類的效果。這一課將告訴你如何創建一個簡單的例子系統，並用它來創建一種噴射的效果。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>歡迎來到第十九課.你已經學習了很多知識,並且現在想自己來實踐.我將在這講解一個新命令... 三角形帶(我的理解就是畫很多三角形來組合成我們要的形狀),它非常容易使用,當畫很多三角形的時候能加快你程序的運行速度.在本課中,我將會教你該如何做一個半複雜的微粒程序.一旦您瞭解微粒程序的原理後,在創建例如:火,煙,噴泉等效果將是很輕鬆的事情.我必須警告你!直到今天我從未寫一個真正的粒子程序.我想寫一個&quot;出名&quot;的複雜的粒子程序.我嘗試過,但在我瞭解我不能控制所有點變瘋狂之後我放棄了!!!你也許不相信我要告訴你的,但這個課程從頭到尾都是我自己的想法.開始我沒有一點想法,並且沒有任何技術數據放在我的面前.我開始考慮粒子,突然我的腦袋裝滿想法(腦袋開啟了??):給予每個粒子生命,任意變化顏色,速度,重力影響等等.來適應環境的變化,把每個粒子看成單一的從這個點運動到另一個點的顆粒.很快我完成了這個項目.我看看時鐘然後有個想法突然出現.四個小時過去了!我偶爾記得已經停止喝咖啡,眨眼,但是4個小時...?儘管這個程序我覺得很棒,並像我想像的那麼嚴密的運行,但它不可能是最好的粒子引擎,這個我不關心,只要他運行好就可以.並且我能把它運行在我的項目中.如果你是那種想瞭解透徹的人,那麼你要花費很多時間在網絡上查找資料並弄明白它.在程序中有很多小的代碼會看起來很模糊:)本課教程所用的部分代碼來自於Lesson1.但有很多新的代碼,因此我將重寫一些發生代碼變化的部分(使它更容易瞭解).<br>
+      下面用到的代碼來自於Lesson6,我將會增加5行新的代碼在我們程序的前面.第一行&quot;stdio.h&quot;允許我們讀文件中的數據.它和我們以前用在紋理映射當中是一樣的.第二行定義了一些我們要在屏幕上顯示的粒子的數目.告訴程序MAX_PARTICLES在這裡的數值為1000.第三條行將不斷分離的彩色的粒子栓牢在一起,並設置為默認情況.sp和rp用來確定空格鍵和返回鍵是否有按住.<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>#define	MAX_PARTICLES	1000		<font
+color="#ffffaa">// 定義最大的粒子數</font>
+bool	rainbow=true;			<font
+color="#ffffaa">// 是否為彩虹模式</font>
+bool	sp;				<font color="#ffffaa">// 空格鍵是否被按下</font>
+bool	rp;				<font
+color="#ffffaa">// 回車鍵是否被按下</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">下面四行是複雜的變量.變量slowdown控制粒子移動的快慢.數值愈高,移動越慢.數值越底,移動越快.如果數值降低,粒子將快速的移動!粒子的速度影響它們在熒屏中移動的距離.記住速度慢的粒子不會射很遠的.變量xspeed和yspeed控制尾部的方向.xspeed將會增加粒子在x軸上速度.如果xspeed是正值粒子將會向右邊移動多.如果xspeed負價值,粒子將會向左邊移動多.那個值越高,就向那個方向移動比較多.yspeed工作相同的方法,但是在y軸上.因為有其它的因素影響粒子的運動,所以我要說&quot;多&quot;.xspeed和yspeed有助於在我們想要的方向上移動粒子.最後是變量zoom,我們用該變量移入或移出我們的屏幕.在粒子引擎裡,有時可看見更多的圖像,而且當接近你時很酷 
+      <br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+float	slowdown=2.0f;			<font color="#ffffaa">// 減速粒子</font>
+float	xspeed;				<font
+color="#ffffaa">// X方向的速度</font>
+float	yspeed;				<font
+color="#ffffaa">// Y方向的速度</font>
+float	zoom=-40.0f;			<font
+color="#ffffaa">// 沿Z軸縮放</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">我們定義了一個複雜的循環變量叫做Loop.我們用這變量預先定義粒子並在屏幕中畫粒子.col用來給予粒子不同的顏色.delay用來控制在彩虹模式中圓的顏色變化.最後,我們設定一個存儲空間(粒子紋理).我用紋理而不用點的重要原因是,點的速度慢,而且挺麻煩的.其次紋理很酷:)你用一個正方形的粒子,一張你臉的小圖片,一張星星的圖片等等.很好控制!</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+GLuint	loop;				<font color="#ffffaa">// 循環變量</font>
+GLuint	col;				<font
+color="#ffffaa">// 當前的顏色</font>
+GLuint	delay;				<font color="#ffffaa">// 彩虹效果延遲</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">好!現在是有趣的東西.下段程序描述單一粒子結構,這是我們給予粒子的屬性.我們用布爾型變量active開始,如果為true,我們的粒子為活躍的.如果為false則粒子為死的,此時我們就刪除它.在程序中我沒有使用活躍的,因為它很好的實現.變量life和fade來控制粒子顯示多久以及顯示時候的亮度.隨著life數值的降低fade的數值也相應降低.這將導致一些粒子比其他粒子燃燒的時間長.<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+typedef struct						<font color="#ffffaa">// 創建粒子數據結構</font>
+{
+	bool	active;					<font
+color="#ffffaa">// 是否激活</font>
+	float	life;					<font color="#ffffaa">// 粒子生命</font>
+	float	fade;					<font
+color="#ffffaa">// 衰減速度</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">變量r,g和b用來表示粒子的紅色強度,綠色強度和藍色強度.當r的值變成1.0f時粒子將會很紅,當三個變量全為1.0f時則粒子將變成白色.<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+	float	r;					<font color="#ffffaa">// 紅色值</font>
+	float	g;					<font
+color="#ffffaa">// 綠色值</font>
+	float	b;					<font color="#ffffaa">// 藍色值</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">變量x.y和z控制粒子在屏幕上顯示的位置.x表示粒子在x軸上的位置.y表示y軸上的位置.z表示粒子z軸上的位置 
+      <br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+	float	x;					<font color="#ffffaa">// X 位置</font>
+	float	y;					<font
+color="#ffffaa">// Y 位置</font>
+	float	z;					<font color="#ffffaa">// Z 位置</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 下面三個變量很重要.這三個變量控制粒子在每個軸上移動的快慢和方向.如果xi是負價粒子將會向左移動,正值將會向右移動.如果yi是負值粒子將會向下移動,正值將向上.最後,如果zi負值粒子將會向熒屏內部移動,正植將移向觀察者. 
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+	float	xi;					<font color="#ffffaa">// X 方向</font>
+	float	yi;					<font
+color="#ffffaa">// Y 方向</font>
+	float	zi;					<font color="#ffffaa">// Z 方向</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">最後,另外3個變量!每一個變量可被看成加速度.如果xg正值時,粒子將會被拉倒右邊,負值將拉向左邊.所以如果粒子向左移動(負的)而我們給它一個正的加速度,粒子速度將變慢.最後將向反方向移動(高中物理).yg拉下或拉上.zg拉進或拉出屏幕.<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+	float	xg;					<font color="#ffffaa">// X 方向重力加速度</font>
+	float	yg;					<font
+color="#ffffaa">// Y 方向重力加速度</font>
+	float	zg;					<font color="#ffffaa">// Z 方向重力加速度</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">結構的名字為particles.</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+}
+particles;						<font color="#ffffaa">// 粒子數據結構</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">下面我們創建一個數組叫particle.數組存儲MAX_PARTICLES個元素.也就是說我們創建1000(MAX_PARTICLES)個粒子,存儲空間為每個粒子提供相應的信息<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+particles particle[MAX_PARTICLES];				<font color="#ffffaa">// 保存1000個粒子的數組</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 在顏色數組上我們減少一些代碼來存儲12中不同的顏色.對每一個顏色從0到11我們存儲亮紅,亮綠,和亮藍.下面的顏色表裡包含12個漸變顏色從紅色到紫羅蘭色</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+static GLfloat colors[12][3]=				<font color="#ffffaa">// 彩虹顏色</font>
+{
+	{1.0f,0.5f,0.5f},{1.0f,0.75f,0.5f},{1.0f,1.0f,0.5f},{0.75f,1.0f,0.5f},
+	{0.5f,1.0f,0.5f},{0.5f,1.0f,0.75f},{0.5f,1.0f,1.0f},{0.5f,0.75f,1.0f},
+	{0.5f,0.5f,1.0f},{0.75f,0.5f,1.0f},{1.0f,0.5f,1.0f},{1.0f,0.5f,0.75f}
+};
+</pre>
+</font> <font color="#aaffaa" size="3"> </font> 
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 這段代碼調用前面的代碼載入位圖，與前面的代碼相同，只是位圖的名稱不同。載入一符名為Particle.bmp的位圖</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+	if (TextureImage[0]=LoadBMP(&quot;Data/Particle.bmp&quot;))	<font color="#ffffaa">// 載入粒子紋理</font>
+</pre>
+</font><font color="#aaffaa" size="3"> </font> 
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">窗口改變大小的代碼和前面一樣，不需要改變&nbsp;</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3"> </font> <font color="#aaffaa" size="3"> </font> 
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 我們使用光滑的陰影,清除背景為黑色,關閉深度測試,綁定並映射紋理.啟用映射位圖後我們選擇粒子紋理。唯一的改變就是禁用深度測試和初始化粒子</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+	glDisable(GL_DEPTH_TEST);						<font
+color="#ffffaa">//禁止深度測試</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">下面代碼初始化每個粒子.我們從活躍的粒子開始.如果粒子不活躍,它在熒屏上將不出現,無論它有多少life.當我們使粒子活躍之後,我們給它life.我懷疑給粒子生命和顏色漸變的是否是最好的方法,但當它運行一次後,效果很好!life滿值是1.0f.這也給粒子完整的光亮.<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+	for (loop=0;loop&lt;MAX_PARTICLES;loop++)				<font color="#ffffaa">//初始化所有的粒子</font>
+	{
+		particle[loop].active=true;					<font
+color="#ffffaa">// 使所有的粒子為激活狀態</font>
+		particle[loop].life=1.0f;					<font
+color="#ffffaa">// 所有的粒子生命值為最大</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 我們通過給定的值來設定粒子退色快慢.每次粒子被拉的時候life隨著fade而減小.結束的數值將是0~99中的任意一個,然後平分1000份來得到一個很小的浮點數.最後我們把結果加上0.003f來使fade速度值不為0<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+		particle[loop].fade=float(rand()%100)/1000.0f+0.003f;		<font color="#ffffaa">// 隨機生成衰減速率</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 既然粒子是活躍的,而且我們又給它生命,下面將給它顏色數值.一開始,我們就想每個粒子有不同的顏色.我怎麼做才能使每個粒子與前面顏色箱裡的顏色一一對應那?數學很簡單,我們用loop變量乘以箱子中顏色的數目與粒子最大值(MAX_PARTICLES)的餘數.這樣防止最後的顏色數值大於最大的顏色數值(12).舉例:900*(12/900)=12.1000*(12/1000)=12,等等<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+		particle[loop].r=colors[loop*(12/MAX_PARTICLES)][0];		<font color="#ffffaa">// 粒子的紅色顏色</font>
+		particle[loop].g=colors[loop*(12/MAX_PARTICLES)][1];		<font
+color="#ffffaa">// 粒子的綠色顏色</font>
+		particle[loop].b=colors[loop*(12/MAX_PARTICLES)][2];		<font
+color="#ffffaa">// 粒子的藍色顏色</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">現在設定每個粒子移動的方向和速度.我們通過將結果乘於10.0f來創造開始時的爆炸效果.我們將會以任意一個正或負值結束.這個數值將以任意速度,任意方向移動粒子.</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+		particle[loop].xi=float((rand()%50)-26.0f)*10.0f;		<font color="#ffffaa">// 隨機生成X軸方向速度</font>
+		particle[loop].yi=float((rand()%50)-25.0f)*10.0f;		<font
+color="#ffffaa">// 隨機生成Y軸方向速度</font>
+		particle[loop].zi=float((rand()%50)-25.0f)*10.0f;		<font
+color="#ffffaa">// 隨機生成Z軸方向速度</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">最後,我們設定加速度的數值.不像一般的加速度僅僅把事物拉下,我們的加速度能拉出,拉下,拉左,拉右,拉前和拉後粒子.開始我們需要強大的向下加速度.為了達到這樣的效果我們將xg設為0.0f.在x方向沒有拉力.我們設yg為-0.8f來產生一個向下的拉力.如果值為正則拉向上.我們不希望粒子拉近或遠離我們,所以將zg設為0.0f<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+		particle[loop].xg=0.0f;						<font color="#ffffaa">// 設置X軸方向加速度為0</font>
+		particle[loop].yg=-0.8f;					<font
+color="#ffffaa">	//  設置Y軸方向加速度為-0.8</font>
+		particle[loop].zg=0.0f;						<font
+color="#ffffaa">//  設置Z軸方向加速度為0</font>
+	}
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">現在為有趣的部分.下面的部分是我們從哪裡拉粒子,檢查加速度等等.你要明白它是怎麼實現的,因此仔細的看:)我們重置Modelview巨陣.在畫粒子位置的時候用glVertex3f()命令來代替tranlations,這樣在我們畫粒子的時候不會改變modelview巨陣 
+      <br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+int DrawGLScene(GLvoid)								<font color="#ffffaa">// 繪製粒子</font>
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				<font
+color="#ffffaa">// 以黑色背景清楚</font>
+	glLoadIdentity();								<font
+color="#ffffaa">// 重置模型變換矩陣</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">我們開始創建一個循環loop.這個環將會更新每一個粒子. </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+	for (loop=0;loop&lt;MAX_PARTICLES;loop++)					<font color="#ffffaa">// 循環所有的粒子</font>
+	{
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">首先我們做的事物是檢查粒子是否活躍.如果不活躍,則不被更新.在這個程序中,它們始終活躍.但是在你自己的程序中,你可能想要使某粒子不活躍 
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+		if (particle[loop].active)					<font color="#ffffaa">// 如果粒子為激活的</font>
+		{
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">下面三個變量是我們確定x,y和z位置的暫時變量.注意:在z的位置上我們加上zoom以便我們的場景在以前的基礎上再移入zoom個位置.particle[loop].x告訴我們要畫的x的位置.particle[loop].y告訴我們要畫的y的位置.particle[loop].z告訴我們要畫的z的位置 
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			float x=particle[loop].x;				<font color="#ffffaa">// 返回X軸的位置</font>
+			float y=particle[loop].y;				<font
+color="#ffffaa">// 返回Y軸的位置</font>
+			float z=particle[loop].z+zoom;			<font
+color="#ffffaa">// 返回Z軸的位置</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 既然知道粒子位置,就能給粒子上色.particle[loop].r保存粒子的亮紅,particle[loop].g保存粒子的亮綠,particle[loop].b保存粒子的亮藍.注意我用alpha為粒子生命.當粒子要燃盡時,它會越來越透明直到它最後消失.這就是為什麼粒子的生命不應該超過1.0f.如果你想粒子燃燒時間長,可降低fade減小的速度 
+      <br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			<font color="#ffffaa">// 設置粒子顏色</font>
+			glColor4f(particle[loop].r,particle[loop].g,particle[loop].b,particle[loop].life);
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 我們有粒子的位置,並設置顏色了.所以現在我們來畫我們的粒子.我們用一個三角形帶來代替一個四邊形這樣使程序運行快一點.很多3D 
+      card畫三角形帶比畫四邊形要快的多.有些3D card將四邊形分成兩個三角形,而有些不.所以我們按照我們自己的想法來,所以我們來畫一個生動的三角形帶 
+      <br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			glBegin(GL_TRIANGLE_STRIP);				<font color="#ffffaa">// 繪製三角形帶</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"><font face="arial" size="-1"><img src="../Pic/lesson19-1.jpg"
+    align="left" width="128" height="128" hspace="20" vspace="10"> </font><font face="arial">從紅寶書引述:三角形帶就是畫一連續的三角形(三個邊的多角形)使用vertices 
+      V0,V1,V2,然後V2,V1,V3(注意順序),然後V2,V3,V4等等.畫三角形的順序一樣才能保證三角形帶為相同的表面.要求方向是很重要的,例如:剔除,最少用三點來畫當第一個三角形使用vertices0,1和2被畫.如果你看圖片你將會理解用頂點0,1和2構造第一個三角形(頂端右邊,頂端左邊,底部的右邊).第二個三角形用點vertices2,1和3構造.再一次,如果你注意圖片,點vertices2,1和3構造第二個三角形(底部右邊,頂端左邊,底部左邊).注意:兩個三角形畫點順序相同.我看到很多的網站要求第二個三角形反方向畫.這是不對的.Opengl從新整理頂點來保證所有的三角形為同一方向!注意:你在屏幕上看見的三角形個數是你敘述的頂點的個數減2.在程序中在我們有4個頂點,所以我們看見二個三角形 
+      </font><font face="arial" size="-1"><br>
+      </font></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				glTexCoord2d(1,1); glVertex3f(x+0.5f,y+0.5f,z); 
+				glTexCoord2d(0,1); glVertex3f(x-0.5f,y+0.5f,z); 
+				glTexCoord2d(1,0); glVertex3f(x+0.5f,y-0.5f,z); 
+				glTexCoord2d(0,0); glVertex3f(x-0.5f,y-0.5f,z); </pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">最後我們告訴Opengl我們畫完三角形帶<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			glEnd();
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">現在我們能移動粒子.下面公式可能看起來很奇怪,其實很簡單.首先我們取得當前粒子的x位置.然後把x運動速度加上粒子被減速1000倍後的值.所以如果粒子在x軸(0)上屏幕中心的位置,運動值(xi)為x軸方向+10(移動我們為右),而slowdown等於1,我們移向右邊以10/(1*1000)或 
+      0.01f速度.如果增加slowdown值到2我們只移動0.005f.希望能幫助你瞭解slowdown如何工作.那也是為什麼用10.0f乘開始值來叫象素移動快速,創造一個爆發效果.y和z軸用相同的公式來計算附近移動粒子<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			particle[loop].x+=particle[loop].xi/(slowdown*1000);	<font color="#ffffaa">// 更新X坐標的位置</font>
+			particle[loop].y+=particle[loop].yi/(slowdown*1000);	<font
+color="#ffffaa">// 更新Y坐標的位置</font>
+			particle[loop].z+=particle[loop].zi/(slowdown*1000);	<font
+color="#ffffaa">// 更新Z坐標的位置</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 在計算出下一步粒子移到那裡,開始考慮重力和阻力.在下面的第一行,將阻力(xg)和移動速度(xi)相加.我們的移動速度是10和阻力是1.每時每刻粒子都在抵抗阻力.第二次畫粒子時,阻力開始作用,移動速度將會從10掉到9.第三次畫粒子時,阻力再一次作用,移動速度降低到8.如果粒子燃燒為超過10次重畫,它將會最後結束,並向相反方向移動.因為移動速度會變成負值.阻力同樣使用於y和z移動速度 
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			particle[loop].xi+=particle[loop].xg;			<font color="#ffffaa">// 更新X軸方向速度大小</font>
+			particle[loop].yi+=particle[loop].yg;			<font
+color="#ffffaa">// 更新Y軸方向速度大小</font>
+			particle[loop].zi+=particle[loop].zg;			<font
+color="#ffffaa">// 更新Z軸方向速度大小</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">下行將粒子的生命減少.如果我們不這麼做,粒子無法燒盡.我們用粒子當前的life減去當前的fade值.每粒子都有不同的fade值,因此他們全部將會以不同的速度燒盡 
+      <br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			particle[loop].life-=particle[loop].fade;		<font color="#ffffaa">// 減少粒子的生命值</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">現在我們檢查當生命為零的話粒子是否活著 </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			if (particle[loop].life&lt;0.0f)					<font color="#ffffaa">// 如果粒子生命值小於0</font>
+			{
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">如果粒子是小時(燒盡),我們將會使它復原.我們給它全值生命和新的衰弱速度.</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				particle[loop].life=1.0f;				<font color="#ffffaa">// 產生一個新的粒子</font>
+				particle[loop].fade=float(rand()%100)/1000.0f+0.003f;	<font
+color="#ffffaa">// 隨機生成衰減速率</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">我們也重新設定粒子在屏幕中心放置.我們重新設定粒子的x,y和z位置為零</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				particle[loop].x=0.0f;					<font color="#ffffaa">// 新粒子出現在屏幕的中央</font>
+				particle[loop].y=0.0f;					
+				particle[loop].z=0.0f;					</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">在粒子從新設置之後,將給它新的移動速度/方向.注意:我增加最大和最小值,粒子移動速度為從50到60的任意值,但是這次我們沒將移動速度乘10.我們這次不想要一個爆發的效果,而要比較慢地移動粒子.也注意我把xspeed和x軸移動速度相加,y軸移動速度和yspeed相加.這個控制粒子的移動方向.</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				particle[loop].xi=xspeed+float((rand()%60)-32.0f);	<font color="#ffffaa">// 隨機生成粒子速度</font>
+				particle[loop].yi=yspeed+float((rand()%60)-30.0f);	
+				particle[loop].zi=float((rand()%60)-30.0f);		</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 最後我們分配粒子一種新的顏色.變量col保存一個數字從1到11(12種顏色),我們用這個變量去找紅,綠,藍亮度在顏色箱裡面.下面第一行表示紅色的強度,數值保存在colors[col][0].所以如果col是0,紅色的亮度就是1.0f.綠色的和藍色的值用相同的方法讀取.如果你不瞭解為什麼紅色亮度為1.0f那col就為0.我將一點點的解釋.看著程序的最前面.找到那行:static 
+      GLfloat colors[12][3].注意:12行3列.三個數字的第一行是紅色強度.第二行是綠色強度而且第三行是藍色強度.[0],[1]和[2]下面描述的1st,2nd和3rd就是我剛提及的.如果col等於0,我們要看第一個組.11 
+      是最後一個組(第12種顏色).<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				particle[loop].r=colors[col][0];			<font color="#ffffaa">// 設置粒子顏色</font>
+				particle[loop].g=colors[col][1];			
+				particle[loop].b=colors[col][2];			
+			}
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">下行描述加速度的數值是多少.通過小鍵盤8號鍵,我們增加yg(y 地心引力)值.這引起向上的力.如果這個程序在循環外面,那麼我們必須生成另一個循環做相同的工作,因此我們最好放在這裡<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			<font color="#ffffaa">// 如果小鍵盤8被按住，增加Y軸方向的加速度</font>
+			if (keys[VK_NUMPAD8] &amp;&amp; (particle[loop].yg&lt;1.5f)) particle[loop].yg+=0.01f;
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">這行是產生相反的效果.通過2號鍵,減小yg值,引起向下的力<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			<font color="#ffffaa">// 如果小鍵盤2被按住，減少Y軸方向的加速度</font>
+			if (keys[VK_NUMPAD2] &amp;&amp; (particle[loop].yg&gt;-1.5f)) particle[loop].yg-=0.01f;
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">現在更改向右的拉力.如果按下6號鍵時增加向右的拉力.<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			<font color="#ffffaa">// 如果小鍵盤6被按住，增加X軸方向的加速度</font>
+			if (keys[VK_NUMPAD6] &amp;&amp; (particle[loop].xg&lt;1.5f)) particle[loop].xg+=0.01f;
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">最後如果4號鍵被按下則增加向左的拉力.這些按鍵給了我們很酷的結果.舉例來說:你可以用粒子造一條向上設的水流.通過增加向下的引力可以形成泉水<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			<font color="#ffffaa">// 如果小鍵盤4被按住，減少X軸方向的加速度</font>
+			if (keys[VK_NUMPAD4] &amp;&amp; (particle[loop].xg&gt;-1.5f)) particle[loop].xg-=0.01f;
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">我僅僅為樂趣增加了一些代碼.我的兄弟產生很棒的效果:)通過按住tab鍵所有粒子都回到屏幕中心.所有的粒子在從新開始運動,再產生一個大的爆發.在粒子變弱之後,你最初的效果會再一次出現 
+      <br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+			if (keys[VK_TAB])						<font color="#ffffaa">// 按Tab鍵，使粒子回到原點</font>
+			{
+				particle[loop].x=0.0f;					
+				particle[loop].y=0.0f;					
+				particle[loop].z=0.0f;					
+				particle[loop].xi=float((rand()%50)-26.0f)*10.0f;	<font
+color="#ffffaa">// 隨機生成速度</font>
+				particle[loop].yi=float((rand()%50)-25.0f)*10.0f;	
+				particle[loop].zi=float((rand()%50)-25.0f)*10.0f;	
+			}
+		}
+    }
+	return TRUE;									<font
+color="#ffffaa">// 繪製完畢成功返回</font>
+}
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">代碼KillGLWindow(),CreateGLWindow()和WndProc()中沒有改變,所以我們直接跳到WinMain().我將重寫代碼</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3"> </font><font color="#aaffaa" size="3"> </font> 
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">我喜歡簡單的代碼.在一行上不想包含很多東西,所以使代碼像一個清潔工:)下面的代碼檢查&quot;+&quot;是否被按下.如果它和slowdown一起實現則slowdown減少0.01f.粒子就可以較快速地移動.<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				if (keys[VK_ADD] &amp;&amp; (slowdown&gt;1.0f)) slowdown-=0.01f;		<font
+color="#ffffaa">// 按+號，加速粒子</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">下面的代碼檢查&quot;-&quot;是否被按下.如果它和slowdown一起實現則slowdown增加0.01f.粒子就可以較慢速地移動.我實質的極限是4.0f,我不想它太慢的運動,你可以隨你的要求改變最大最小值</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				if (keys[VK_SUBTRACT] &amp;&amp; (slowdown&lt;4.0f)) slowdown+=0.01f;	<font
+color="#ffffaa">// 按-號，減速粒子</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 下面的代碼檢測Page Up是否被按下.如果是,則zoom增加.從而導致粒子靠近我們</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				if (keys[VK_PRIOR]) zoom+=0.1f;		<font color="#ffffaa">// 按Page Up鍵，讓粒子靠近視點</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">下行代碼檢測Page Down是否別按下,如果是,則zoom減小.從而導師粒子離開我們<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				if (keys[VK_NEXT]) zoom-=0.1f;		<font color="#ffffaa">// 按Page Down，讓粒子遠離視點</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">下面的代碼檢驗enter鍵是否被按下.如果是,並且沒有被一直按著,我們將讓計算機把rp變為true,然後我們固定彩虹模式.如果彩虹模式為true,將其變成false.如果為false,將其變成true.最後一行檢測enter是否被釋放,如果釋放rp為false並告訴計算機該鍵不被按下<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				if (keys[VK_RETURN] &amp;&amp; !rp)		<font color="#ffffaa">// 按住回車鍵，切換彩虹模式</font>
+				{
+					rp=true;			
+					rainbow=!rainbow;		
+				}
+				if (!keys[VK_RETURN]) rp=false;		</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">下面程序有點亂.第一行檢查space鍵是否被按下並沒有沒一直按著.並檢查彩虹模式是否開始運行,如果是,檢查delay是否大於25.delay是我創建的顯示彩虹效果的數值.如果你曾經改變顏色結構,粒子將顯示不同顏色.通過創建一個delay,在顏色改變之前,一組粒子將是一種顏色.如果space按下,彩虹運行,delay值大於25則顏色改變<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				if ((keys[' '] &amp;&amp; !sp) || (rainbow &amp;&amp; (delay&gt;25)))	<font
+color="#ffffaa">// 空格鍵，變換顏色</font>
+				{
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">下面行是為了當space按下則彩虹關掉而設置的.如果我們不關掉彩虹模式,顏色會繼續變化直到enter再被按下.也就是說人們按下space來代替enter是想叫粒子顏色自己變化</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+					if (keys[' ']) rainbow=false;	
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 如果space鍵被按下,或者彩虹模式已開始,並且delay大於25,我們叫計算機知道space鍵被按下通過叫sp為true.然後我們將delay設定回0以便它能在到25.最後我們增加col的值以便它通過顏色箱裡面改變成另一個顏色.</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+					sp=true;			
+					delay=0;			
+					col++;				</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">如果顏色值大於11,我們把它重新設為零.如果我們不重新設定為零,程序將去找第13顏色.而我們只有12種顏色!尋找不存在的顏色將會導致程序癱瘓</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+					if (col&gt;11) col=0;
+				}
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">最後如果space鍵不被按下,我們將sp設為false。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				if (!keys[' '])	sp=false;		<font color="#ffffaa">// 如果釋放空格鍵，記錄這個狀態</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 現在對粒子增加一些控制.還記得我們從開始定義的2變量麼?一個xspeed,一個yspeed.在粒子燃盡之後,我們給它新的移動速度且把新的速度加入到xspeed和yspeed中.這樣當粒子被創建時將影響粒子的速度. 
+      舉例來說:粒子在x軸上的速度為5在y軸上的速度為0.當我們減少xspeed到-10,我們將以-10(xspeed)+5(最初的移動速度)的速度移動.這樣我們將以5的速度向左移動.明白了麼??無論如何,下面的代碼檢測UP是否被按下.如果它,yspeed將增加這將引起粒子向上運動.最大速度不超過200.速度在快就不好看了<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				<font color="#ffffaa">// 按上增加粒子Y軸正方向的速度</font>
+				if (keys[VK_UP] &amp;&amp; (yspeed&lt;200)) yspeed+=1.0f;
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">這行檢查Down鍵是否被按下,如果它是,yspeed將減少.這將引起粒子向下運動.再一次,最大速度為200</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				<font color="#ffffaa">// 按下減少粒子Y軸正方向的速度</font>
+				if (keys[VK_DOWN] &amp;&amp; (yspeed&gt;-200)) yspeed-=1.0f;
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">現在我們檢查Right鍵是否被按下.如果它是..xspeed將被增加.粒子將移到右邊.最大速度為200</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				<font color="#ffffaa">// 按右增加粒子X軸正方向的速度</font>
+				if (keys[VK_RIGHT] &amp;&amp; (xspeed&lt;200)) xspeed+=1.0f;
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">最後我們檢查Left鍵是否被按下.如果是...你猜....xspeed被減小,粒子開始向左移動.最大速度為200</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				<font color="#ffffaa">// 按左減少粒子X軸正方向的速度</font>
+				if (keys[VK_LEFT] &amp;&amp; (xspeed&gt;-200)) xspeed-=1.0f;
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">最後我們要增加delay的數值.像我在前面所說,delay是控制彩色變化的</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>
+				delay++;			<font color="#ffffaa">// 增加彩虹模式的顏色切換延遲</font>
+</pre>
+</font> <font color="#aaffaa" size="3"> </font> 
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"><p>在課程中,我試著把所有細節都講清楚,並且簡單的瞭解粒子系統.這個粒子系統能在遊戲產生例如火,水,雪,爆炸,流行等效果.程序能簡單的修改參數來實現新的效果(例:煙花效果) 
+      </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2019.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_19.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/19_Particles.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+      <table border="0" width="100%">
+      <tr>
+          <td width="50%" align="left"><a href="Tutorial_18.html"><b><font size="-1">&lt; 第18課</font></b></a></td>
+          <td width="50%" align="right"><a href="Tutorial_20.html"><b><font size="-1">第20課 
+            &gt;</font></b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_19.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:00:17 GMT -->
+</html>

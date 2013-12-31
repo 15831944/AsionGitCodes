@@ -1,0 +1,855 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn --><html>
+
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_14.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+<head>
+<title>NeHe OpenGL教程第十四課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type="text/css">A:link {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #ffccaa; TEXT-DECORATION: none
+}
+</style>
+<meta content="Microsoft FrontPage 3.0" name="GENERATOR">
+</head>
+
+<body bgColor="#000000" text="#ffffff">
+<CENTER><BR>
+  <table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td height="130" width="326"><img height="130" src="../Pic/logo.png" width="326"></td>
+      <td align="middle" vAlign="center" width="75%"><div align="center"><font color="#ffccaa" size="+3"><b><i>第14課</i></b></font></div></td>
+  </tr>
+</TBODY>
+</table>
+<!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+              <td width="33%"><img src="../Pic/lesson14.jpg" width="240" height="180"></td>
+              <td width="67%"><p><FONT class=head>圖形字體:</FONT></p>
+                <p><font size="3">在一課我們將教你繪製3D的圖形字體，它們可像一般的3D模型一樣被變換。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">這節課繼續上一節課課的內容。在第13課我們學習了如何使用位圖字體，這節課，我們將學習如何使用輪廓字體。
+        <p>創建輪廓字體的方法類似於在第13課中我們創建位圖字體的方法。但是，輪廓字體看起來要酷100倍！你可以指定輪廓字體的大小。輪廓字體可以在屏幕中以3D方式運動，而且輪廓字體還可以有一定的厚度！而不是平面的2D字符。使用輪廓字體，你可以將你的計算機中的任何字體轉換為OpenGL中的3D字體，加上合適的法線，在有光照的時候，字符就會被很好的照亮了。</p>
+        <p>一個小註釋，這段代碼是專門針對Windows寫的，它使用了Windows的wgl函數來創建字體，顯然，Apple機系統有agl，X系統有glx來支持做同樣事情的，不幸的是，我不能保證這些代碼也是容易使用的。如果哪位有能在屏幕上顯示文字且獨立於平台的代碼，請告訴我，我將重寫一個有關字體的教程。</p>
+        <p>我們從第一課的典型代碼開始，添加上stdio.h頭文件以便進行標準輸入/輸出操作，另外，stdarg.h頭文件用來解析文字以及把變量轉換為文字。最後加上math.h頭文件，這樣我們就可以使用SIN和COS函數在屏幕中移動文字了。</p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> </font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">另外，我們還要添加2個變量。base將保存我們創建的第一個顯示列表的編號。每個字符都需要有自己的顯示列表。例如，字符『A』在顯示列表中是65，『B』是66，『C』是67，等等。所以，字符『A』應保存在顯示列表中的base 
+        + 65這個位置。
+        <p>我們再添加一個叫做rot的變量。用它配合SIN和COS函數在屏幕上旋轉文字。我們同時用它來改變文字的顏色。<br>
+        </p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>GLuint	base;			<font color="#ffffaa">// 繪製字體的顯示列表的開始位置</font>
+GLfloat	rot;			<font
+color="#ffffaa">// 旋轉字體</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">GLYPHMETRICSFLOAT gmf[256]用來保存256個輪廓字體顯示列表中對應的每一個列表的位置和方向的信息。我們通過gmf[num]來選擇字母。num就是我們想要瞭解的顯示列表的編號。在稍後的代碼中，我將說明如何如何檢查每個字符的寬度，以便自動將文字定位在屏幕中心。切記，每個字符的寬度可以不相同。Glyphmetrics會大大簡化我們的工作。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>GLYPHMETRICSFLOAT gmf[256];	<font color="#ffffaa">// 記錄256個字符的信息</font>
+</pre>
+</font>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面這段用來構建真正的字體的代碼類似於我們創建位圖字體的方法。和13課一樣，只是使用wglUseFontOutlines函數替換wglUseFontBitmaps函數。<br>
+        </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> </font><font color="#aaffaa" size="3"> 
+<pre><font color="#aaffaa" size="3">base = glGenLists(256);</font>					<font color="#ffffaa">	// 創建256個顯示列表</font><br>	
+wglUseFontOutlines(	hDC,				<font color="#ffffaa">	// 設置當前窗口設備描述表的句柄</font>
+				0,				<font
+color="#ffffaa">// 用於創建顯示列表字體的第一個字符的ASCII值</font>
+				255,				<font color="#ffffaa">// 字符數</font>
+				base,				<font
+color="#ffffaa">// 第一個顯示列表的名稱</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td vAlign="top" width="100%"><font face="arial" size="-1">That's not all however. We then
+    set the deviation level. The closer to 0.0f, the smooth the font will look. After we set
+    the deviation, we get to set the font thickness. This describes how thick the font is on
+    the Z axis. 0.0f will produce a flat 2D looking font and 1.0f will produce a font with
+    some depth. <br>
+    <br>
+    The parameter WGL_FONT_POLYGONS tells OpenGL to create a solid font using polygons. If we
+    use WGL_FONT_LINES instead, the font will be wireframe (made of lines). It's also
+    important to note that if you use GL_FONT_LINES, normals will not be generated so lighting
+    will not work properly. <br>
+    <br>
+    The last parameter gmf points to the address buffer for the display list data. </font></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>				0.0f,				<font color="#ffffaa">// 字體的光滑度，越小越光滑，0.0為最光滑的狀態</font>
+				0.2f,				<font
+color="#ffffaa">// 在z方向突出的距離</font>
+				WGL_FONT_POLYGONS,		<font
+color="#ffffaa">	// 使用多邊形來生成字符，每個頂點具有獨立的法線</font>
+				gmf);				<font color="#ffffaa">//一個接收字形度量數據的數組的地址，每個數組元素用它對應的顯示列表字符的數據填充 </font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td vAlign="top" width="100%"><font face="arial" size="-1">The following code is pretty
+    simple. It deletes the 256 display lists from memory starting at the first list specified
+    by base. I'm not sure if Windows would do this for you, but it's better to be safe than
+    sorry :) </font></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>GLvoid KillFont(GLvoid)						<font color="#ffffaa">// 刪除顯示列表</font>
+{
+ 	glDeleteLists(base, 256);				<font
+color="#ffffaa">	// 刪除256個顯示列表</font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面就是我優異的GL文字程序了。你可以通過調用glPrint(「需要寫的文字」)來調用這段代碼。文字被存儲在字符串text[]中。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>GLvoid glPrint(const char *fmt, ...)				<font color="#ffffaa">	// 自定義GL輸出字體函數</font>
+{
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面的第一行定義了一個叫做length的變量。我們使用這個變量來查詢字符串的長度。第二行創建了一個大小為256個字符的字符數組，裡面保存我們想要的文字串。第三行創建了一個指向一個變量列表的指針，我們在傳遞字符串的同時也傳遞了這個變量列表。如果我們傳遞文字時也傳遞了變量，這個指針將指向它們。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	float		length=0;				<font color="#ffffaa">	// 查詢字符串的長度</font>
+	char		text[256];				<font
+color="#ffffaa">// 保存我們想要的文字串</font>
+	va_list		ap;					<font color="#ffffaa">// 指向一個變量列表的指針</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面兩行代碼檢查是否有需要顯示的內容，如果什麼也沒有，屏幕上也就什麼都沒有。<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	if (fmt == NULL)						<font color="#ffffaa">// 如果無輸入則返回</font>
+		return;					</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">接下來三行代碼將文字中的所有符號轉換為它們的字符編號。最後，文字和轉換的符號被存儲在一個叫做「text」的字符串中。以後我會多解釋一些有關字符的細節。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	va_start(ap, fmt);						<font color="#ffffaa">// 分析可變參數</font>
+	    vsprintf(text, fmt, ap);				<font
+color="#ffffaa">// 把參數值寫入字符串</font>
+	va_end(ap);						<font
+color="#ffffaa">// 結束分析</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">感謝Jim Williams對下面一段代碼的建議。以前我是用手工將文字置於中心的，而他的辦法要好的多。
+        <p>我們從一個循環開始，它將逐個檢查文本中的字符。我們通過strlen(text)得到文本的長度。設置好了循環以後，我們將通過加上每個字符的長度來增加length的值。當循環結束以後，被保存在length中的值就是整個字符串的長度。所以，如果我們要寫的是「hello」，假設每個字符的長度都為10個單位，我們先給length的值加上第一個字母的長度10。然後，我們檢查第二個字母的長度，它的長度也是10，所以length就變成10 
+          + 10（20）。當我們檢查完所有5個字母以後，length的值就會等於50（5 *10）。</p>
+        <p>給出我們每個字符的長度的代碼是gmf[text[loop]].gmfCellIncX。記住，gmf存儲了我們每個顯示列表的信息。如果loop等於0，text[loop]就是我們的字符串中的第一個字符。如果loop等於1，text[loop]就是我們的字符串中的第二個字符。gmfCellIncX告訴我們被選擇的字符的長度。GmfCellIncX表示顯示位置從已繪製上的上一個字符向右移動的真正距離，這樣，字符之間就不會重疊在一起。同時，這個距離就是我們想得到的字符的寬度。你還可以通過gmfCelllncY命令來得到字符的高度。如果你是在垂直方向繪製文本而不是在水平方向時，這會很方便。<br>
+        </p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	for (unsigned int loop=0;loop&lt;(strlen(text));loop++)	<font color="#ffffaa">// 查找整個字符串的長度</font>
+	{
+		length+=gmf[text[loop]].gmfCellIncX;		
+	}
+</pre>
+</font>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">最後我們取出計算後得到的length，並把它變成負數（因為我們要將文本從屏幕中心左移從而把整個文本置於屏幕中間）。然後我們把length除以2。我們並不想移動整個文本的長度，只需要一半！</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	glTranslatef(-length/2,0.0f,0.0f);			<font color="#ffffaa">// 把字符串置於最左邊</font>
+</pre>
+</font>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">然後我們將GL_LIST_BIT壓入屬性堆棧，它會防止glListBase影響到我們的程序中的其它顯示列表</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	glPushAttrib(GL_LIST_BIT);				<font color="#ffffaa">// 把顯示列表屬性壓入屬性堆棧</font>
+	glListBase(base);					<font
+color="#ffffaa">// 設置顯示列表的基礎值為0</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">現在OpenGL知道字符的存放位置了，我們就可以讓它在屏幕上顯示文字了。GlCallLists會調用多個顯示列表從而把整個文字的內容同時顯示在屏幕上。
+        <p>下面的代碼做後續工作。首先，它告訴OpenGL我們將要在屏幕上顯示出顯示列表中的內容。Strlen(text)函數用來計算我們將要顯示在屏幕上的文字的長度。然後，OpenGL需要知道我們允許發送給它的列表的最大值。我們依然不能發送長度大於255的字符串。所以我們使用UNSIGNED_BYTE。（用0 
+          - 255來表示我們需要的字符）。最後，我們通過傳遞字符串文字告訴OpenGL顯示什麼內容。</p>
+        <p>也許你想知道為什麼字符不會彼此重疊堆積在一起。那時因為每個字符的顯示列表都知道字符的右邊緣在那裡，在寫完一個字符後，OpenGL自動移動到剛寫過的字符的右邊，在寫下一個字或畫下一個物體時就會從GL移動到的最後的位置開始，也就是最後一個字符的右邊。</p>
+        <p>最後，我們將GL_LIST_BIT屬性彈出堆棧，將GL恢復到我們使用glListBase(base)設置base之前的狀態。<br>
+        </p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);	<font color="#ffffaa">// 調用顯示列表繪製字符串</font>
+	glPopAttrib();					<font
+color="#ffffaa">// 彈出屬性堆棧</font>
+}</pre>
+</font><font color="#aaffaa" size="3"> </font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面就是畫圖的代碼了。我們從清除屏幕和深度緩存開始。我們調用glLoadIdentity()來重置所有東西。然後我們將坐標系向屏幕裡移動十個單位。輪廓字體在透視圖模式下表現非常好。你將文字移入屏幕越深，文字開起來就更小。文字離你越近，它看起來就更大。
+        <p>也可以使用glScalef(x,y,z)命令來操作輪廓字體。如果你想把字體放大兩倍，可以使用glScalef(1.0f,2.0f,1.0f). 
+          2.0f 作用在y軸， 它告訴OpenGL將顯示列表的高度繪製為原來的兩倍。如果2.0f作用在x軸，那麼文本的寬度將變成原來的兩倍。<br>
+        </p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>int DrawGLScene(GLvoid)					<font color="#ffffaa">// 此過程中包括所有的繪製代碼</font>
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	<font
+color="#ffffaa">// 清除屏幕及深度緩存</font>
+	glLoadIdentity();					<font
+color="#ffffaa">// 重置當前的模型觀察矩陣</font>
+	glTranslatef(0.0f,0.0f,-10.0f);			<font
+color="#ffffaa">// 移入屏幕一個單位</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">在向屏幕裡移動以後，我們希望文本能旋轉起來。下面3行代碼用來在3個軸上旋轉屏幕。我將rot乘以不同的數，以便每個方向上的旋轉速度不同。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	glRotatef(rot,1.0f,0.0f,0.0f);			<font color="#ffffaa">// 沿X軸旋轉</font>
+	glRotatef(rot*1.5f,0.0f,1.0f,0.0f);			<font
+color="#ffffaa">// </font><font color="#aaffaa" size="3"><font color="#ffffaa">沿Y軸旋轉</font></font>
+	glRotatef(rot*1.4f,0.0f,0.0f,1.0f);			<font
+color="#ffffaa">// </font><font color="#aaffaa" size="3"><font color="#ffffaa">沿Z軸旋轉</font></font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">下面是令人興奮的顏色循環了。照常，我們使用唯一遞增的變量（rot）。顏色通過使用COS和SIN來循環變化。我將rot除以不同的數，這樣每種顏色會以不同的速度遞增。最終的效果非常好。<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	<font color="#ffffaa">// 根據字體位置設置顏色</font>
+	glColor3f(1.0f*float(cos(rot/20.0f)),1.0f*float(sin(rot/25.0f)),1.0f-0.5f*float(cos(rot/17.0f)));
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">我最喜歡的部分，將文字寫到屏幕上。我使用同將位圖字體寫到屏幕上相同的函數。將文字寫在屏幕上，所有你要做的就是glPrint(「你想寫的文字」)。很簡單。
+        <p>在下面的代碼中，我們要寫的是NeHe，空格，破折號，空格，然後是rot的值除以50後的結果（為了減慢計數器）。如果這個數大於999.99,左邊第四個數將被去掉（我們要求只顯示小數點左邊3位數字）。只顯示小數點右邊的兩位數字。</p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>&nbsp;	glPrint(&quot;NeHe - %3.2f&quot;,rot/50);				<font color="#ffffaa">// 輸出文字到屏幕</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">然後增大旋轉變量從而改變顏色並旋轉文字。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	rot+=0.5f;						<font color="#ffffaa">// 增加旋轉變量</font>
+	return TRUE;						<font
+color="#ffffaa">// 成功返回</font>
+}</pre>
+</font><font color="#aaffaa" size="3"> </font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"><p>在這節課結束的時候，你應該已經學會在你的OpenGL程序中使用輪廓字體了。就像第13課，我曾在網上尋找一篇與這一課相似的教程，但是也沒有找到。或許我的網站是第一個涉及這個主題同時又把它解釋的簡單易懂的C代碼的網站吧。享用這篇教程，快樂編碼！ 
+          </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+                <p>感謝<br>
+                  感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+                  感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+                <p>資源下載: <br>
+                  文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2014.mht">網頁格式</a> 
+                  <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_14.pdf">PDF格式</a><br>
+                  源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/14_3DFont.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+          <table border="0" width="100%">
+<TBODY>
+      <tr>
+              <td align="left" width="50%"><a href="Tutorial_13.html"><b><font size="-1">&lt; 
+                第13課</font></b></a></td>
+              <td align="right" width="50%"><a href="Tutorial_15.html"><b><font size="-1">第15課 
+                &gt;</font></b></a></td>
+      </tr>
+</TBODY>
+    </table>
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+  <TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+</center></body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_14.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+</html>

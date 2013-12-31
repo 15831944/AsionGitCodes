@@ -1,0 +1,490 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_36.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:03:15 GMT -->
+<head>
+<title>NeHe OpenGL教程第三十六課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第36課 
+      </i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="32%"><img src="../Pic/lesson36.jpg" width="240" height="180"></td>
+            <td width="68%"><p><FONT class=head>放射模糊和渲染到紋理:</FONT></p>
+              <p><font size="3">如何實現放射狀的濾鏡效果呢，看上去很難，其實很簡單。把渲染得圖像作為紋理提取出來，在利用OpenGL本身自帶的紋理過濾，就能實現這種效果，不信，你試試。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>嗨，我是Dario Corno,也因SpinningKids的rIo而為大家所知。首先，我想要解釋我為什麼決定寫這點指南。我自1989年以來就從事scener的工作。我想要你們去下載一些demo(示例程序，也就是演示——譯者)以幫助你理解什麼是Demo並且demo的效果是什麼。
+      <p>Demos是被用來展示恰似風雅的技術一樣無限並且時而嚴酷的譯碼。在今天的演示中你通常總可以發現一些真正迷人的效果。這不是一本迷人的效果指南，但結果將非常的酷！你能夠從http://www.pouet.net和 
+        http://ftp.scene.org. 發現大量的演示收集。<br>
+        既然緒論超出了我們探討的範圍，我們可以繼續我們的指南了。 <br>
+        我將解釋如何做一個看起來像徑向模糊的eye candy 效果。有時它以測定體積的光線被提到。不要相信，它僅僅是一個冒牌的輻射狀模糊;D<br>
+        輻射狀模糊效果通常借助於模糊在一個方向上相對於模糊物的中心原始圖像的每一個象素來做的。<br>
+        借助於現今的硬件用色彩緩衝器來手工作模糊處理是極其困難的（至少在某種程度上它被所有的gfx卡所支持），因此我們需要一些竅門來達到同樣的效果。<br>
+        作為一個獎勵當學習徑向模糊效果時，你同樣將學到如何輕鬆地提供材料的紋理。<br>
+        我決定在這篇指南中使用彈簧作為外形因為它是一個酷的外形，另外還因為我對立方體感到厭煩：}<br>
+        多留意這篇指南關於如何創建那個效果的指導方針是重要的。我不研究解釋那些代碼的詳情。你應當用心記下它們中的大部分：}<br>
+        下面是變量的定義和用到的頭文件。<br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+#include &lt;math.h&gt;								<font color=#ffffaa>// 數學庫</font>
+
+float		angle;							<font color=#ffffaa>// 用來旋轉那個螺旋</font>
+float		vertexes[3][3];						<font color=#ffffaa>// 為3個設置的頂點保存浮點信息</font>
+float		normal[3];						<font color=#ffffaa>// 存放法線數據的數組</font>
+GLuint		BlurTexture;						<font color=#ffffaa>// 存放紋理編號的一個無符號整型</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>函數EmptyTexture()創建了一個空的紋理並返回紋理的編號。我們剛分配了一些自由空間（準確的是128*128*4無符號整數）。<br>
+      128*128是紋理的大小（128象素寬和高），4意味著為每一個象素我們想用4byte來存儲紅，綠，藍和ALPHA組件。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+GLuint EmptyTexture()							<font color=#ffffaa>// 創建一個空的紋理</font>
+{
+	GLuint txtnumber;						<font color=#ffffaa>	// 紋理ID</font>
+	unsigned int* data;						<font color=#ffffaa>// 存儲數據</font>
+
+	<font color=#ffffaa>// 為紋理數據（128*128*4）建立存儲區</font>
+	data = (unsigned int*)new GLuint[((128 * 128)* 4 * sizeof(unsigned int))];
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在分配完空間之後我們用ZeroMemory函數清0，返回指針（數據）和被清0的存貯區的大小。<br>
+      另一半需注意的重要的事情是我們設置GL_LINEAR的放大率和縮放率的方法。因為我們將被我們的紋理要求投入全部的精力並且如果被濫用，GL_NEAREST會看起來非常糟糕。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	ZeroMemory(data,((128 * 128)* 4 * sizeof(unsigned int)));	<font color=#ffffaa>// 清除存儲區</font>
+
+	glGenTextures(1, &txtnumber);				<font color=#ffffaa>// 創建一個紋理</font>
+	glBindTexture(GL_TEXTURE_2D, txtnumber);			<font color=#ffffaa>// 構造紋理</font>
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, 128, 128, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, data);			<font color=#ffffaa>// 用數據中的信息構造紋理</font>
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+	delete [] data;						<font color=#ffffaa>// 釋放數據</font>
+
+	return txtnumber;						<font color=#ffffaa>// 返回紋理ID</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這個函數簡單規格化法線向量的長度。向量被當作有3個浮點類型的元素的數組來表示，第一個元素表示X軸，第二個表示Y，第三個表示Z。一個規格化的向量[Nv]被Vn表達為Vn=[Vox/|Vo|，Voy/|Vo|，Voz/|Vo|]，這裡Vo是最初的向量，|Vo|是該向量的係數（或長度），X，Y，Z它的組件。之後由向量的長度區分每一個法線向量組件。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void ReduceToUnit(float vector[3])					<font color=#ffffaa>// 歸一化一個法向量</font>
+{								<font color=#ffffaa>// 一定長度的單位法線向量</font>
+	float length;						<font color=#ffffaa>// 保存長度</font>
+	<font color=#ffffaa>// 計算向量</font>
+	length = (float)sqrt((vector[0]*vector[0]) + (vector[1]*vector[1]) + (vector[2]*vector[2]));
+
+	if(length == 0.0f)						<font color=#ffffaa>// 避免除0錯誤</font>
+		length = 1.0f;					<font color=#ffffaa>// 如果為0設置為1</font>
+
+	vector[0] /= length;					<font color=#ffffaa>// 歸一化向量</font>
+	vector[1] /= length;						
+	vector[2] /= length;						
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面各項計算所給的3個頂點向量（總在3個浮點數組中）。我們有兩個參數：v[3][3]和out[3]。當然第一個參數是一個m=3，n=3每一行代表三角形一個頂點的浮點矩陣。Out是我們要放置作為結果的法線向量的位置。<br>
+      相當簡單的數學。我們將使用著名的交叉乘積運算。理論上說交叉乘積是兩個向量——它返回另一個直交向量到兩個原始向量——之間的操作。法線向量是一個垂直物體表面的直交向量，是與該表面相對的（通常一個規格化的長度）。設想兩個向量是在一個三角形的一側的上方，那麼這個三角形兩邊的直交向量（由交叉乘積計算）就是那個三角形的法線。<br>
+      解釋比實行還難。<br>
+      我們將著手從現存的頂點0到頂點1，從頂點1到頂點2找到那個向量。這是基本上通過減法——下一個頂點的每個組件減一個頂點的每個組件——作好了的。現在我們已經為我們的三角形的邊找到了那個向量。通過交叉相乘我們為那個三角形找到了法線向量。<br>
+      看代碼。<br>
+      V[0][ ]是第一個頂點，v[1][ ]是第二個頂點，v[2][ ]是第三個頂點。每個頂點包括：v[ ][0]是頂點的x坐標，v[ ][1]是頂點的y坐標，v[ 
+      ][2]是頂點的z坐標。<br>
+      通過簡單的減法從一個頂點的每個坐標到另一個頂點每個坐標我們得到了那個VECTOR。v1[0] = v[0][0] - v[1][0]，這計算現存的從一個頂點到另一個頂點的向量的X組件，v1[1] 
+      = v[0][1] - v[1][1]將計算Y組件，v1[2] = v[0][2] - v[1][2] 計算Z組件等等。<br>
+      現在我們有了兩個向量，所以我們計算它們的交叉乘積得到那個三角形的法線。 <p>交叉相乘的規則是：<br>
+        out[x] = v1[y] * v2[z] - v1[z] * v2[y] </p>
+      <p>out[y] = v1[z] * v2[x] - v1[x] * v2[z] </p>
+      <p>out[z] = v1[x] * v2[y] - v1[y] * v2[x] </p>
+      <p><br>
+        我們最終得到了這個三角形的法線in out[ ]。<br>
+      </p>
+      </td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void calcNormal(float v[3][3], float out[3])				<font color=#ffffaa>// 用三點計算一個立方體法線</font>
+{
+	float v1[3],v2[3];						<font color=#ffffaa>// 向量 1 (x,y,z) 和向量 2 (x,y,z)</font>
+	static const int x = 0;					<font color=#ffffaa>// 定義 X坐標</font>
+	static const int y = 1;					<font color=#ffffaa>// 定義 Y 坐標</font>
+	static const int z = 2;					<font color=#ffffaa>// 定義 Z 坐標</font>
+
+<font color=#ffffaa>// 用減法在兩點之間得到向量<br>// 從一點到另一點的X，Y，Z坐標<br>// 計算點1到點0的向量</font>
+	v1[x] = v[0][x] - v[1][x];					
+	v1[y] = v[0][y] - v[1][y];					
+	v1[z] = v[0][z] - v[1][z];					
+	<font color=#ffffaa>// 計算點2到點1的向量</font>
+	v2[x] = v[1][x] - v[2][x];					
+	v2[y] = v[1][y] - v[2][y];					
+	v2[z] = v[1][z] - v[2][z];					
+	<font color=#ffffaa>// 計算交叉乘積為我們提供一個表面的法線</font>
+	out[x] = v1[y]*v2[z] - v1[z]*v2[y];				
+	out[y] = v1[z]*v2[x] - v1[x]*v2[z];				
+	out[z] = v1[x]*v2[y] - v1[y]*v2[x];				
+
+	ReduceToUnit(out);						<font color=#ffffaa>//  規格化向量</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的例子正好用gluLookAt設立了一個觀察點。我們設置一個觀察點放置在0，5，50位置——正照看0，0，0並且所屬的向上的向量正仰望（0，1，0）！：D</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void ProcessHelix()							<font color=#ffffaa>// 繪製一個螺旋</font>
+{
+	GLfloat x;							<font color=#ffffaa>// 螺旋x坐標</font>
+	GLfloat y;							<font color=#ffffaa>// 螺旋y坐標</font>
+	GLfloat z;							<font color=#ffffaa>// 螺旋z坐標</font>
+	GLfloat phi;							<font color=#ffffaa>// 角</font>
+	GLfloat theta;							<font color=#ffffaa>// 角</font>
+	GLfloat v,u;							<font color=#ffffaa>// 角</font>
+	GLfloat r;							<font color=#ffffaa>// 螺旋半徑</font>
+	int twists = 5;							<font color=#ffffaa>// 5個螺旋</font>
+
+	GLfloat glfMaterialColor[]={0.4f,0.2f,0.8f,1.0f};		<font color=#ffffaa>	// 設置材料色彩</font>
+	GLfloat specular[]={1.0f,1.0f,1.0f,1.0f};				<font color=#ffffaa>// 設置鏡象燈光</font>
+
+	glLoadIdentity();						<font color=#ffffaa>	// 重置Modelview矩陣</font>
+	gluLookAt(0, 5, 50, 0, 0, 0, 0, 1, 0);				<font color=#ffffaa>// 場景（0，0，0）的視點中心 (0,5,50)，Y軸向上</font>
+									
+	glPushMatrix();							<font color=#ffffaa>// 保存Modelview矩陣</font>
+
+	glTranslatef(0,0,-50);						<font color=#ffffaa>// 移入屏幕50個單位</font>
+	glRotatef(angle/2.0f,1,0,0);					<font color=#ffffaa>// 在X軸上以1/2角度旋轉</font>
+	glRotatef(angle/3.0f,0,1,0);					<font color=#ffffaa>// 在Y軸上以1/3角度旋轉</font>
+
+	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,glfMaterialColor);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,specular);
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>然後我們計算螺旋的公式並給彈簧著色。十分簡單，我就不再解釋了，因為它不是這篇指南的主要目的。這段螺旋代碼經過軟件贊助者的許可被借用（並作了一點優化）。這是寫作的簡單的方法，但不是最塊的方法。使用頂點數組可以使它更快！</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	r=1.5f;							<font color=#ffffaa>// 半徑</font>
+
+	glBegin(GL_QUADS);						<font color=#ffffaa>// 開始繪製立方體</font>
+	for(phi=0; phi &lt;= 360; phi+=20.0)				<font color=#ffffaa>// 以20度的間隔繪製</font>
+	{
+		for(theta=0; theta&lt;=360*twists; theta+=20.0)		
+		{
+			v=(phi/180.0f*3.142f);			<font color=#ffffaa>// 計算第一個點 ( 0 )的角度</font>
+			u=(theta/180.0f*3.142f);			<font color=#ffffaa>// 計算第一個點 ( 0 )的角度</font>
+
+			x=float(cos(u)*(2.0f+cos(v) ))*r;		<font color=#ffffaa>// 計算x的位置（第一個點）</font>
+			y=float(sin(u)*(2.0f+cos(v) ))*r;		<font color=#ffffaa>// 計算y的位置（第一個位置）</font>
+			z=float((( u-(2.0f*3.142f)) + sin(v) ) * r);	<font color=#ffffaa>// 計算z的位置（第一個位置）</font>
+
+			vertexes[0][0]=x;				<font color=#ffffaa>// 設置第一個頂點的x值</font>
+			vertexes[0][1]=y;				<font color=#ffffaa>// 設置第一個頂點的y值</font>
+			vertexes[0][2]=z;				<font color=#ffffaa>// 設置第一個頂點的z值 </font>
+
+			v=(phi/180.0f*3.142f);			<font color=#ffffaa>// 計算第二個點（ 0 ）的角度</font>
+			u=((theta+20)/180.0f*3.142f);		<font color=#ffffaa>// 計算第二個點（ 20 ）的角度</font>
+
+			x=float(cos(u)*(2.0f+cos(v) ))*r;		<font color=#ffffaa>// 計算x位置（第二個點)</font>
+			y=float(sin(u)*(2.0f+cos(v) ))*r;		<font color=#ffffaa>// 計算y位置（第二個點)</font>
+			z=float((( u-(2.0f*3.142f)) + sin(v) ) * r);	<font color=#ffffaa>// 計算z位置（第二個點)</font>
+
+			vertexes[1][0]=x;				<font color=#ffffaa>// 設置第二個頂點的x值</font>
+			vertexes[1][1]=y;				<font color=#ffffaa>// 設置第二個頂點的y值</font>
+			vertexes[1][2]=z;				<font color=#ffffaa>// 設置第二個頂點的z值</font>
+
+			v=((phi+20)/180.0f*3.142f);			<font color=#ffffaa>// 計算第三個點 ( 20 )的角度</font>
+			u=((theta+20)/180.0f*3.142f);		<font color=#ffffaa>// 計算第三個點 ( 20 )的角度</font>
+
+			x=float(cos(u)*(2.0f+cos(v) ))*r;		<font color=#ffffaa>// 計算x位置 (第三個點)</font>
+			y=float(sin(u)*(2.0f+cos(v) ))*r;		<font color=#ffffaa>// 計算y位置 (第三個點)</font>
+			z=float((( u-(2.0f*3.142f)) + sin(v) ) * r);	<font color=#ffffaa>// 計算z位置 (第三個點)</font>
+
+			vertexes[2][0]=x;				<font color=#ffffaa>// 設置第三個頂點的x值</font>
+			vertexes[2][1]=y;				<font color=#ffffaa>// 設置第三個頂點的y值</font>
+			vertexes[2][2]=z;				<font color=#ffffaa>// 設置第三個頂點的z值</font>
+
+			v=((phi+20)/180.0f*3.142f);			<font color=#ffffaa>// 計算第四個點( 20 )的角度</font>
+			u=((theta)/180.0f*3.142f);			<font color=#ffffaa>// 計算第四個點( 0 )的角度</font>
+
+			x=float(cos(u)*(2.0f+cos(v) ))*r;		<font color=#ffffaa>// 計算x位置 (第四個點)</font>
+			y=float(sin(u)*(2.0f+cos(v) ))*r;		<font color=#ffffaa>// 計算y位置 (第四個點)</font>
+			z=float((( u-(2.0f*3.142f)) + sin(v) ) * r);	<font color=#ffffaa>// 計算z位置 (第四個點))</font>
+
+			vertexes[3][0]=x;				<font color=#ffffaa>// 設置第四個頂點的x值</font>
+			vertexes[3][1]=y;				<font color=#ffffaa>// 設置第四個頂點的y值</font>
+			vertexes[3][2]=z;				<font color=#ffffaa>// 設置第四個頂點的z值</font>
+
+			calcNormal(vertexes,normal);		<font color=#ffffaa>// 計算立方體的法線</font>
+
+			glNormal3f(normal[0],normal[1],normal[2]);	<font color=#ffffaa>// 設置法線</font>
+
+			<font color=#ffffaa>// 渲染四邊形</font>
+			glVertex3f(vertexes[0][0],vertexes[0][1],vertexes[0][2]);
+			glVertex3f(vertexes[1][0],vertexes[1][1],vertexes[1][2]);
+			glVertex3f(vertexes[2][0],vertexes[2][1],vertexes[2][2]);
+			glVertex3f(vertexes[3][0],vertexes[3][1],vertexes[3][2]);
+		}
+	}
+	glEnd();							<font color=#ffffaa>// 繪製結束</font>
+
+	glPopMatrix();						<font color=#ffffaa>// 取出矩陣</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這兩個事例（ViewOrtho and ViewPerspective）被編碼以使它變得很容易地在一個直交的情形下繪製並且不費力的返回透視圖。<br>
+      ViewOrtho簡單地設立了這個射影矩陣，然後增加一份現行射影矩陣的拷貝到OpenGL棧上。這個恆等矩陣然後被裝載並且當前屏幕正投影觀察決議被提出。<br>
+      利用2維坐標以屏幕左上角0，0和屏幕右下角639，479來繪製是可能的。<br>
+      最後，modelview矩陣為透視材料激活。<br>
+      ViewPerspective設置射影矩陣模式取回ViewOrtho在堆棧上推進的非正交矩陣。然後樣本視圖被選擇因此我們可以透視材料。<br>
+      我建議你保留這兩個過程，能夠著色2D而不需擔心射影矩陣很不錯。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void ViewOrtho()							<font color=#ffffaa>// 設置一個z正視圖</font>
+{
+	glMatrixMode(GL_PROJECTION);				<font color=#ffffaa>// 選擇投影矩陣</font>
+	glPushMatrix();						<font color=#ffffaa>// 保存當前矩陣</font>
+	glLoadIdentity();						<font color=#ffffaa>// 重置矩陣</font>
+	glOrtho( 0, 640 , 480 , 0, -1, 1 );				<font color=#ffffaa>// 選擇標準模式</font>
+	glMatrixMode(GL_MODELVIEW);					<font color=#ffffaa>// 選擇樣本視圖矩陣</font>
+	glPushMatrix();						<font color=#ffffaa>// 保存當前矩陣</font>
+	glLoadIdentity();						<font color=#ffffaa>// 重置矩陣</font>
+}
+
+void ViewPerspective()							<font color=#ffffaa>// 設置透視視圖</font>
+{
+	glMatrixMode( GL_PROJECTION );					<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>選擇投影矩陣</font></font>
+	glPopMatrix();							<font color=#ffffaa>// 取出矩陣</font>
+	glMatrixMode( GL_MODELVIEW );					<font color=#ffffaa>// 選擇模型變換矩陣</font>
+	glPopMatrix();							<font color=#ffffaa>//彈出矩陣</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在是解釋那個冒牌的輻射狀的模糊效果是如何作的時候了。<br>
+      我們需要繪製這個場景——它從中心開始在所有方向上模糊出現。竅門是在沒有主要的性能瓶頸的情況下做出的。我們不能讀寫象素，並且如果我們想和非kick-butt視頻卡兼容，我們不能使用擴展名何驅動程序特殊命令。<br>
+      沒辦法了嗎？<br>
+      不，解決方法非常簡單，OpenGL賦予我們「模糊」紋理的能力。OK……並非真正的模糊，但我們利用線性過濾去依比例決定一個紋理，結果（有些想像成分）看起來像高斯模糊。<br>
+      因此如果我們正確地在3D場景中放了大量的被拉伸的紋理並依比例決定會有什麼發生？<br>
+      答案比你想像的還簡單。<br>
+      問題一：透視一個紋理<br>
+      有一個後緩衝器在象素格式下問題容易解決。在沒有後緩衝器的情況下透視一個紋理在眼睛看來是一個真正的痛苦。<br>
+      透視紋理剛好借助一個函數來完成。我們需要繪製我們的實體然後利用glCopytexImage函數複製這個結果（在交換前，後緩衝器之前）後到紋理。<br>
+      問題二：在3D實體前精確地協調紋理。<br>
+      我們知道：如果我們在沒有設置正確的透視的情況下改變了視口，我們就得到一個我們的實體的一個被拉伸的透視圖。例如如果我們設置一個是視口足夠寬我們就得到一個垂直地被拉伸的透視圖。<br>
+      解決方法是首先設置一個視口正如我們的紋理（128×128）。透視我們的實體到這個紋理之後，我們利用當前屏幕決議著色這個紋理到屏幕。這種方法OpenGL縮減這個實體去適應紋理，並且我們拉伸紋理到全屏大小時，OpenGL重新調整紋理的大小去完美的適應在我們的3d實體頂端。希望我沒有丟掉任何一點。另一個靈活的例子是，如果你取一個640×480大小screenshot，然後調整成為256x256的位圖，你可以以一個紋理裝載這個位圖，並拉伸它使之適合640x480的屏幕。這個質量可能不會以前一樣好，但是這個紋理排列起的效果應當接近最初的640x480圖像。<br>
+      On to the fun stuff! 這個函數相當簡單，並且是我的首選的「設計竅門」之一。它設置一個與我們的BlurTexture度數相匹配的大小的視口。然後它被彈簧的著色程序調用。彈簧將由於視口被拉伸適應128*128的紋理。<br>
+      在彈簧被拉伸至128x128視口大小之後，我們約定BlurTexture 且用glCopyTexImage2D從視口拷貝色彩緩衝器到BlurTexture。<br>
+      參數如下：<br>
+      GL_TEXTURE_2D指出我們正使用一個2Dimensional紋理，0是我們想要拷貝緩衝器到mip的繪圖等級，默認等級是0。GL_LUMINANCE指出被拷貝的數據格式。我之所以使用GL_LUMINANCE因為最終結果看起來比較好。這種情形緩衝器的亮度部分將被拷貝到紋理。其它參數可以是GL_ALPHA, 
+      GL_RGB, GL_INTENSITY等等。<br>
+      其次的兩個參數告訴OpenGL從（0，0）開始拷貝到哪裡。寬度和高度(128,128)是從左到右有多少象素要拷貝並且上下拷貝多少。最後一個參數僅用來指出我們是否想要一個邊界——哪個不想要。<br>
+      既然在我們的BlurTexture我們已經有了一個色彩緩衝器的副本（和被拉伸的彈簧一致），我們可以清除那個緩衝器，向後設置那個視口到適當的度數（640x480全屏）。<br>
+      重要：<br>
+      這個竅門能用在只有雙緩衝器象素格式的情況下。原因是所有這些操作從觀察者面前被隱藏起來。（在後緩衝器完成）。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void RenderToTexture()						<font color=#ffffaa>// 著色到一個紋理</font>
+{
+	glViewport(0,0,128,128);					<font color=#ffffaa>// 設置我們的視口</font>
+
+	ProcessHelix();						<font color=#ffffaa>// 著色螺旋</font>
+
+	glBindTexture(GL_TEXTURE_2D,BlurTexture);			<font color=#ffffaa>// 綁定模糊紋理</font>
+
+	<font color=#ffffaa>// 拷貝我們的視口到模糊紋理 (從 0,0 到 128,128... 無邊界)</font>
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 0, 0, 128, 128, 0);
+
+	glClearColor(0.0f, 0.0f, 0.5f, 0.5);				<font color=#ffffaa>//調整清晰的色彩到中等藍色</font>
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		<font color=#ffffaa>// 清屏和深度緩衝</font>
+
+	glViewport(0 , 0,640 ,480);					<font color=#ffffaa>// 調整視口 (0,0 to 640x480)</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>DrawBlur函數僅在我們的3D場景前繪製一些混合的方塊——用BlurTexture我們以前已實現。這樣，借由阿爾發和縮放這個紋理，我們得到了真正看起來像輻射狀的模糊的效果。<br>
+      我首先禁用GEN_S 和 GEN_T（我沉溺於球體影射，因此我的程序通常啟用這些指令：P）。<br>
+      我們啟用2D紋理，禁用深度測試，調整正確的函數，起用混合然後約束BlurTexture。<br>
+      下一件我們要作的事情是轉換到標準視圖，那樣比較容易繪製一些完美適應屏幕大小的方塊。這是我們在3D實體頂端排列紋理的方法（通過拉伸紋理匹配屏幕比例）。這是問題二要解決的地方。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void DrawBlur(int times, float inc)					<font color=#ffffaa>// 繪製模糊的圖像</font>
+{
+	float spost = 0.0f;					<font color=#ffffaa>// 紋理坐標偏移量</font>
+	float alphainc = 0.9f / times;				<font color=#ffffaa>// alpha混合的衰減量</font>
+	float alpha = 0.2f;					<font color=#ffffaa>// Alpha初值
+
+// 禁用自動生成紋理坐標</font>
+	glDisable(GL_TEXTURE_GEN_S);
+	glDisable(GL_TEXTURE_GEN_T);
+
+	glEnable(GL_TEXTURE_2D);					<font color=#ffffaa>// 啟用 2D 紋理映射</font>
+	glDisable(GL_DEPTH_TEST);					<font color=#ffffaa>// 深度測試不可用</font>
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE);				<font color=#ffffaa>// 設置混合模式</font>
+	glEnable(GL_BLEND);					<font color=#ffffaa>// 啟用混合</font>
+	glBindTexture(GL_TEXTURE_2D,BlurTexture);			<font color=#ffffaa>// 綁定混合紋理</font>
+	ViewOrtho();						<font color=#ffffaa>// 切換到標準視圖</font>
+
+	alphainc = alpha / times;					<font color=#ffffaa>// 減少alpha值</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>我們多次繪製這個紋理用於創建那個輻射效果， 縮放這個紋理坐標並且每次我們做另一個關口時增大混合因數 
+      。我們繪製25個方塊，每次按照0.015f拉伸這個紋理。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	glBegin(GL_QUADS);						<font color=#ffffaa>// 開始繪製方塊</font>
+		for (int num = 0;num < times;num++)			<font color=#ffffaa>// 著色模糊物的次數</font>
+		{
+			glColor4f(1.0f, 1.0f, 1.0f, alpha);		<font color=#ffffaa>// 調整alpha值</font>
+			glTexCoord2f(0+spost,1-spost);			
+			glVertex2f(0,0);				
+
+			glTexCoord2f(0+spost,0+spost);			
+			glVertex2f(0,480);			
+
+			glTexCoord2f(1-spost,0+spost);		
+			glVertex2f(640,480);				
+
+			glTexCoord2f(1-spost,1-spost);			
+			glVertex2f(640,0);			
+
+			spost += inc;				<font color=#ffffaa>// 逐漸增加 spost (快速靠近紋理中心)</font>
+			alpha = alpha - alphainc;			<font color=#ffffaa>// 逐漸增加 alpha (逐漸淡出紋理)</font>
+		}
+	glEnd();							<font color=#ffffaa>// 完成繪製方塊</font>
+
+	ViewPerspective();						<font color=#ffffaa>// 轉換到一個透視視圖</font>
+
+	glEnable(GL_DEPTH_TEST);					<font color=#ffffaa>// 深度測試可用</font>
+	glDisable(GL_TEXTURE_2D);					<font color=#ffffaa>// 2D紋理映射不可用</font>
+	glDisable(GL_BLEND);					<font color=#ffffaa>// 混合不可用</font>
+	glBindTexture(GL_TEXTURE_2D,0);				<font color=#ffffaa>// 釋放模糊紋理</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>瞧，這是以前從未見過的最短的繪製程序，有很棒的視覺效果！<br>
+      我們調用RenderToTexture 函數。幸虧我們視口改變這個函數才著色被拉伸的彈簧。 對於我們的紋理拉伸的彈簧被著色，並且這些緩衝器被清除。<br>
+      我們之後繪製「真正的」彈簧 (你在屏幕上看到的3D實體) 通過調用 ProcessHelix( )。
+      <p>最後我們在彈簧前面繪製一些混合的方塊。有織紋的方塊將被拉伸以適應在真正的3D彈簧<br>
+        上面。<br>
+      </p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void Draw (void)							<font color=#ffffaa>// 繪製場景</font>
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5);				<font color=#ffffaa>// 將清晰的顏色設定為黑色</font>
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		<font color=#ffffaa>// 清除屏幕和深度緩衝器</font>
+	glLoadIdentity();						<font color=#ffffaa>// 重置視圖</font>
+	RenderToTexture();						<font color=#ffffaa>// 著色紋理</font>
+	ProcessHelix();						<font color=#ffffaa>// 繪製我們的螺旋</font>
+	DrawBlur(25,0.02f);					<font color=#ffffaa>// 繪製模糊效果</font>
+	glFlush ();						<font color=#ffffaa>// 強制OpenGL繪製我們所有的圖形</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>我希望你滿意這篇指南，它實在沒有比透視一個紋理講授更多其它內容，但它是一個乾脆地添加到你的3D應用程序中有趣的效果。 
+        <br>
+        如果你有任何的註釋建議或者如果你知道一種更好的方法執行這個效果聯繫我rio@spinningkids.org。<br>
+        我也想要委託你去做一列事情（家庭作業）：D<br>
+        1） 更改DrawBlur程序變為一個水平的模糊之物，垂直的模糊之物和一些更好的效果。（轉動模糊之物！）。<br>
+        2） 玩轉DrawBlur參數（添加，刪除）變為一個好的程序和你的音樂同步。<br>
+        3） 用GL_LUMINANCE玩弄DrawBlur參數和一個SMALL紋理（驚人的光亮！）。<br>
+        4） 用暗色紋理代替亮色嘗試大騙（哈哈，自己造的）測定體積的陰影。<br>
+        好了，這應該是所有的了（到此為止）。<br>
+        訪問我的站點http://www.spinningkids.org/rio. <br>
+        獲得更多的最新指南。</p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2036.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_36.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/36_Blur.rar">RAR格式</a></p></td>
+  </tr>
+</table><table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_35.html">< 
+          第35課 </a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_37.html">第37課 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_36.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:03:17 GMT -->
+</html>

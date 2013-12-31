@@ -1,0 +1,1898 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<HTML>
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_42.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:05:00 GMT -->
+<HEAD><TITLE>NeHe OpenGL教程第四十二課，DancingWind翻譯</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:active {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:link {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:visited {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:hover {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #ffda6a; TEXT-DECORATION: none
+}
+BODY {
+	COLOR: #ffffff; BACKGROUND-COLOR: #000000
+}
+TD IMG {
+	DISPLAY: block
+}
+.back {
+	BACKGROUND: #000022; COLOR: #ffffff
+}
+.back2 {
+	BACKGROUND: #000000; COLOR: #ffffff
+}
+.back3 {
+	BACKGROUND: #000022; COLOR: #ffffff
+}
+.copy {
+	FONT-SIZE: 11px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.head {
+	FONT: bold 13px Tahoma, Verdana, sans-serif; TEXT-DECORATION: none
+}
+.link {
+	FONT-SIZE: 14px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.menu {
+	FONT: bold 17px Tahoma, Verdana, sans-serif; TEXT-DECORATION: none
+}
+.news {
+	BACKGROUND: #00008b; COLOR: #ffffff
+}
+.tab {
+	PADDING-LEFT: 35px
+}
+.text {
+	FONT-SIZE: 12px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.theme {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff
+}
+.dotted {
+	BORDER-RIGHT: #00008b 2px dotted; BORDER-TOP: #00008b 2px dotted; BORDER-LEFT: #00008b 2px dotted; BORDER-BOTTOM: #00008b 2px dotted
+}
+.solid {
+	BORDER-RIGHT: #ffffff 1px solid; BORDER-TOP: #ffffff 1px solid; BORDER-LEFT: #ffffff 1px solid; BORDER-BOTTOM: #ffffff 1px solid
+}
+.logo {
+	BACKGROUND-IMAGE: url(../graphics/rgb/logo.html)
+}
+.menubar {
+	BACKGROUND-IMAGE: url(../graphics/rgb/menubar.html)
+}
+.menubg {
+	BACKGROUND-IMAGE: url(../graphics/rgb/menubg.html)
+}
+.menuheading {
+	BACKGROUND-IMAGE: url(../graphics/rgb/menuheading.html)
+}
+.nehebutton {
+	BACKGROUND-IMAGE: url(../graphics/rgb/nehebutton.html)
+}
+.newslogo {
+	BACKGROUND-IMAGE: url(../graphics/rgb/newslogo.html)
+}
+.tinylogo {
+	BACKGROUND-IMAGE: url(../graphics/rgb/border/tinylogo.html)
+}
+.bc {
+	BACKGROUND-IMAGE:  url(../Pic/bc.png)
+}
+.bl {
+	BACKGROUND-IMAGE:  url(../Pic/bl.png)
+}
+.br {
+	BACKGROUND-IMAGE:  url(../Pic/br.png)
+}
+.c {
+	BACKGROUND-IMAGE: url(../Picc.html)
+}
+.l {
+	BACKGROUND-IMAGE:  url(../Pic/l.png)
+}
+.lc {
+	BACKGROUND-IMAGE: url(../Piclc.html)
+}
+.r {
+	BACKGROUND-IMAGE:  url(../Pic/r.png)
+}
+.rc {
+	BACKGROUND-IMAGE: url(../Picrc.html)
+}
+.tc {
+	BACKGROUND-IMAGE:  url(../Pic/tc.png)
+}
+.tl {
+	BACKGROUND-IMAGE:  url(../Pic/tl.png)
+}
+.tr {
+	BACKGROUND-IMAGE:  url(../Pic/tr.png)
+}
+
+</style>
+</head>
+<BODY text=white vLink=#aaccff link=#aaccff bgColor=black>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tinylogo width=326 height=130><IMG height=130 
+      alt="NeHe Productions" 
+      src="../Pic/logo.png" width=326></TD>
+      <TD vAlign=center align=middle><div align="center"><FONT class=text><FONT class=theme 
+      size=+3><B><I>第 42課</I></B></FONT></FONT></div></TD>
+    </TR></TBODY></TABLE>
+<!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="21%"><img src="../Pic/lesson42.jpg" width="160" height="120"></td>
+            <td width="79%"><p><font ><b>多重視口</b></font></p>
+              <p><font >畫中畫效果，很酷吧。使用視口它變得很簡單，但渲染四次可會大大降低你的顯示速度哦：）</font></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>	
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">歡迎來到充滿趣味的另一課。這次我將向你展示怎樣在單個窗口內顯示多個視口。這些視口在窗口模式下能正確的調整大小。其中有兩個窗口起用了光照。窗口之一用的是正交投影而其他三個則是透視投影。為了保持教程的趣味性，在本例子中我們同樣需要學習迷宮代碼，怎麼渲染到一張紋理以及怎麼得到當前窗口的分辨率。<br>
+        一旦你明白了本教程，製作分屏遊戲以及多視圖的3D程序就很簡單了。接下來，讓我們投入到代碼中來吧！！！<br>
+        你可以利用最近的NeHeGL或者IPicture代碼作為主要基本代碼。我們需要看的第一個文件就是NeHeGL.cpp,其中有三節代碼已經被修改了。我將只列出那些被修改了的代碼。<br>
+        第一個且最重要的被修改了的代碼就是ReshapeGL()函數。這是我們設置屏幕(主視口)分辨率的地方。現在所有的主視口設置都在畫循環裡完成了。因此這兒所有我們能做的就是設置我們的主窗口。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>void ReshapeGL (int width, int height)								<FONT class=theme>// 當窗口移動或者大小改變時重新調整窗口</FONT>
+{
+	glViewport (0, 0, (GLsizei)(width), (GLsizei)(height));					<FONT class=theme>// 重置當前視口</FONT>
+}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下一步我們添加一些代碼用於監視擦除窗口背景的Windows消息(WM_ERASEBKGND).如果它被調用，我們截取它並返回0,這樣就阻止了窗口背景被擦除，並讓我們自己來調整主窗口大小，這樣就沒有了我們以前常見的那種惱人的閃爍。如果你還不明白我的意思，刪掉 
+        case WM_ERASEBKGND: 和 return 0; 你自己比較就能知道有何不同。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>
+LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	DWORD		tickCount;								<FONT class=theme>// 保存當前的時間</FONT>
+	__int64		timer;									<FONT class=theme>// 記錄時間</FONT>
+
+	<FONT class=theme>// 返回窗口結構</FONT>
+	GL_Window* window = (GL_Window*)(GetWindowLong (hWnd, GWL_USERDATA));
+
+	switch (uMsg)										<FONT class=theme>// 處理消息</FONT>
+	{
+		case WM_ERASEBKGND:								<FONT class=theme>// 檢測Windows是否去擦除背景</FONT>
+			return 0;								<FONT class=theme>// 跳過直接返回</FONT>
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">在WinMain函數中，我們需要修改窗口標題並設置分辨率至1024x768.如果由於某種原因你的顯示器不能支持到1024x768,你可以設置低一點的分辨率，但是犧牲了一些細節。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>
+	window.init.width		= 1024;							<FONT class=theme>// 寬</FONT>
+	window.init.height		= 768;							<FONT class=theme>// 高</FONT>
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">現在該是對lesson42.cpp文件動手術的時候了（主要代碼）...<br>
+        我們以包含標準頭文件和庫文件作為開始吧.</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>#include &lt;windows.h&gt;										
+#include &lt;gl\gl.h&gt;										
+#include &lt;gl\glu.h&gt;										
+
+#include "NeHeGL.h"									
+
+#pragma comment( lib, "opengl32.lib" )							
+#pragma comment( lib, "glu32.lib" )							
+
+GL_Window*	g_window;									
+Keys*		g_keys;								</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">然後我們聲明一些我們打算在整個程序中都要用到的全局變量。<br>
+        mx和my紀錄了當前所在迷宮中的房間。每個房間都被牆隔開(因此房間都是2個單元大小的部分）。<br>
+        with和height是用來建立紋理需要的。它也是迷宮的寬和高。讓迷宮和貼圖的大小一致的原因是使迷宮中的象素和紋理中的象素一一對應。我傾向於把寬和高都設成256,儘管這要花更長的時間來建立迷宮。<br>
+        如果你的顯卡能支持處理大型貼圖。可以試著以2次冪增加這個值(256, 512, 1023）。確保這個值不至於太大。如果這個主窗口的寬度有1024個像素，並且每個視口的大小都是主窗口的一半，相應的你應該設置你的貼圖寬度也是窗口寬度的一半。如果你使貼圖寬度為1024象素，但你的視口大小只有512,空間不足於容納貼圖中所有得像素，這樣每兩個象素就會重疊在一起。貼圖的高度也作同樣處理:高度是窗口高度的1/2. 
+        當然你還必須四捨五入到2的冪。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>
+int	mx,my;											<FONT class=theme>// 循環變量</FONT>
+
+const	width	= 128;										<FONT class=theme>// 迷宮大小</FONT>
+const	height	= 128;										</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">dong用來跟蹤迷宮是否被建完，後面有這個更詳細的解釋。<br>
+        sp用來確認空格鍵是否處於按下狀態。通過按空格健，迷宮就會被重置，然後程序將重新開始畫一個新的迷宮。如果我們不去檢測空格鍵是否處於按下狀態，迷宮會在空格鍵按下的瞬間被重置很多次。這個值確保迷宮只被重置一次。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>BOOL	done;											<FONT class=theme>// 迷宮是否被建完</FONT>
+BOOL	sp;										</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">r[4]保存了4個隨機的紅色份量值，g[4]保存了4個隨機的綠色份量值，b[4]保存了4個隨機的蘭色份量值。這些值賦給各個視口不同的顏色。第一個視口顏色為r[0],g[0],b[0]。請注意每一個顏色都是一個字節的值，而不是常用的浮點值。我這裡用字節是因為產生0-255的隨機值比產生0.0f-1.0f的浮點值更容易。<br>
+        tex_data指向我們的貼圖數據。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>BYTE	r[4], g[4], b[4];										<FONT class=theme>// 隨機的顏色</FONT>
+BYTE	*tex_data;										<FONT class=theme>// 保存紋理數據</FONT>
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">xrot,yrot和zrot是旋轉3d物體用到的變量。<br>
+        最後，我們聲明一個二次曲面物體，這樣我們可以用gluCylinder和gluSphere來畫圓柱和球體，這比手工繪製這些物體容易多了。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>GLfloat	xrot, yrot, zrot;									<FONT class=theme>// 旋轉物體</FONT>
+
+GLUquadricObj *quadric;									<FONT class=theme>// 二次幾何體對像</FONT></PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面的小段代碼設置紋理中位置dmx,dmy的顏色值為純白色。tex_data是指向我們的紋理數據的指針。每一個象素都由3字節組成(1字節紅色份量，1字節綠色份量，一字節蘭色份量). 
+        紅色份量的偏移為0，我們要修改的象素的在紋理數據中的偏移為dmx(象素的x坐標）加上dmy(象素y坐標)與貼圖寬度的乘積,最後的結果乘3(3字節每象素)。<br>
+        下面第一行代碼設置red(0)顏色份量為255, 第二行設置green(1)顏色份量為255,最後一行設置blue(2)顏色份量為255,最後的結果為在dmx,dmy處的象素顏色為白色。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>void UpdateTex(int dmx, int dmy)								<FONT class=theme>// 更新紋理</FONT>
+{
+	tex_data[0+((dmx+(width*dmy))*3)]=255;						<FONT class=theme>// 設置顏色為白色</FONT>
+	tex_data[1+((dmx+(width*dmy))*3)]=255;							
+	tex_data[2+((dmx+(width*dmy))*3)]=255;							
+}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">重置有相當多的工作量。它清空紋理，給每一個視口設置隨機顏色，刪除迷宮中的牆並為迷宮的生成設置新的隨機起點。<br>
+        第一行代碼清空tex_data指向的貼圖數據。我們需要清空width(貼圖寬）*height(貼圖高)*3(紅，綠，蘭)。 （代碼已經夠清楚了，嗚呼，幹嗎要翻譯這段？） 
+        清空內存空間就是設置所有的字節為0。如果3個顏色份量都清零，那麼整個貼圖就完全變黑了！</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>void Reset (void)										
+{
+	ZeroMemory(tex_data, width * height *3);						<FONT class=theme>// 清空紋理數據</FONT>
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">現在我們來給每一個視口設置隨機的顏色。對於不瞭解這些的人來說，這裡的隨機並不是真正那種隨機！ 
+        如果你寫了一個簡單的程序來打印出10個隨機數字，每次你運行程序，你都會得到同樣的10個數字。為了使事情（看起來）更加隨機，我們可以設置隨機數種子。同樣的，如果你設置種子為1,你總是會得到同樣的結果。然而，如果我們設置srand為開機後當前時鐘計數(這可能是任意的數)，我們的程序每次運行都會有不同的結果。<br>
+        我們有四個視口，因此我們需要從0-3的循環來處理。我們給每一個顏色(red,green,blue)從128-255中間的隨機值。要加128的目的是需要更亮的顏色。最小值為0，最大值為255,而128則表示大約有50%的亮度。 
+      </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	srand(GetTickCount());									<FONT class=theme>// 初始化隨機向量</FONT>
+
+	for (int loop=0; loop&lt;4; loop++)							<FONT class=theme>// 循環隨機生成顏色</FONT>
+	{
+		r[loop]=rand()%128+128;								
+		g[loop]=rand()%128+128;								
+		b[loop]=rand()%128+128;							
+	}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下一步，我們設置一個隨機的起點。我們的起點必須是一個房間。在紋理中每兩個象素就是一個房間。為確保起點是房間而不是牆，我們在0至貼圖寬度一半的範圍內挑選一個數，並和2相乘。通過這種方法我們只能得到如0,2,6,8之類的數，也就是說我們總是得到一個隨機的房間，決不會著陸到一堵牆上如1,3,5,7,9等等。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	mx=int(rand()%(width/2))*2;								
+	my=int(rand()%(height/2))*2;								
+}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">初始化的第一行代碼非常重要。它分配了足夠的內存來保存我們的紋理(width*height*3). 
+        如果你不分配內存，你很可能使你的系統崩潰。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>BOOL Initialize (GL_Window* window, Keys* keys)							<FONT class=theme>//初始化</FONT>
+{
+	tex_data=new BYTE[width*height*3];							<FONT class=theme>// 分配保存紋理的空間</FONT>
+
+	g_window	= window;								
+	g_keys		= keys;								</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">一分配完內存，我們就調用Reset()函數，Reset會清空貼圖，設置所需顏色，並為迷宮選取隨機起點。<br>
+        一旦所有的東西都設置好了。我們建立我們的初始紋理。前兩個紋理參數將紋理坐標截斷在 [0,1]範圍內，當把一個單獨的圖像映射到一個物體上時，這種方式可以避免纏繞時人為因素的影響(?本句翻譯不爽，請指正). 
+        為了看到CLAMP參數的重要性，可以移掉這兩行代碼看看。如果沒有Clamping,你會注意到在紋理的頂部和右邊的細小線條。這些線條的出現是因為線性過濾想使整個紋理平滑，包括紋理邊界。如果一個靠近邊界的點被畫了，在紋理的對邊上就會出現一條線。<br>
+        我們打算用線性過濾來使紋理變的更平滑一點。 用什麼類型的過濾是由你來決定的。如果它使程序跑起來很慢，那就換成過濾類型為GL_NEAREST<br>
+        最後，我們利用tex_data數據（並沒有利用alpha通道）建立了一個二維的RGB紋理。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	Reset();										<FONT class=theme>// 重置紋理貼圖</FONT>
+
+	<FONT class=theme>// 設置紋理參數</FONT>
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex_data);
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">我們設置用於清空顏色緩衝區的顏色為黑色，清空深度緩衝區的值為1.0f. 
+        設置深度函數為less than或者equal to, 然後激活深度測試。<br>
+        激活GL_COLOR_MATERIAL可以讓你在激活光照的情況下用glColor函數給物體上色。這個方法又稱為顏色追蹤, 常常是性能殺手的glMaterial的代替品。我收到?�篴F鄀mail問如何修改物體的顏色...,希望這些信息對這個有幫助！對於那些發email問我為什麼紋理的顏色如此怪異或者問紋理顏色受當前glColor影響的人，請確認一下你沒有激活GL_COLOR_MATERIAL.<br>
+        *多謝James Trotter對GL_COLOR_MATERIAL功能的解釋。我曾說過它會對你的紋理上色...實際上，它是對你的物體上色。<br>
+        最後我們激活2維紋理映射。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	glClearColor (0.0f, 0.0f, 0.0f, 0.0f);							
+	glClearDepth (1.0f);									
+
+	glDepthFunc (GL_LEQUAL);								
+	glEnable (GL_DEPTH_TEST);								
+
+	glEnable(GL_COLOR_MATERIAL);
+
+	glEnable(GL_TEXTURE_2D);
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面的代碼建立了一個二次曲面物體並得到指向它的指針。一旦我們有這個指針後，我們設置它的法線類型為平滑類型，然後要求生成紋理坐標。這樣我們的光照才能正確的工作，並且我們的紋理能自動的映射到二次曲面物體。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	quadric=gluNewQuadric();								
+	gluQuadricNormals(quadric, GLU_SMOOTH);					
+	gluQuadricTexture(quadric, GL_TRUE);						</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">Light0被激活，但是如果我們不激活光照，它不會起任何作用。Light0是預定義的燈光，方向指向屏幕內。如果你不喜歡的話，可以手工自己設置</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	glEnable(GL_LIGHT0);								
+
+	return TRUE;
+}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">只要你分配了內存，記住釋放它是很重要的。不管你在全屏切換或者程序退出時，下面的代碼都將釋放了tex_data的內存空間。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>void Deinitialize (void)									
+{
+	delete [] tex_data;								
+}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">大部分迷宮建設，以及鍵盤檢測，旋轉處理等工作都是在Update()函數中完成的。<br>
+        我們需要設置一個變量dir, 用它來表示記錄隨機的向上，向右，向下或向左值。<br>
+        我們需要檢測空格鍵是否被按下，如果是，並且不處於按下狀態，我們就重置迷宮。如果按鍵被釋放，我們設置sp為false,這樣程序就知道它不再是按下狀態。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>void Update (float milliseconds)								<FONT class=theme>// 更新各個參數</FONT>
+{
+	int	dir;									<FONT class=theme>// 保存當前的方向</FONT>
+
+	if (g_keys-&gt;keyDown [VK_ESCAPE])							<FONT class=theme>// 處理鍵盤信息</FONT>
+		TerminateApplication (g_window);						
+
+	if (g_keys-&gt;keyDown [VK_F1])							
+		ToggleFullscreen (g_window);							
+
+	if (g_keys-&gt;keyDown [' '] &amp;&amp; !sp)							
+	{
+		sp=TRUE;									
+		Reset();									
+	}
+
+	if (!g_keys-&gt;keyDown [' '])								
+		sp=FALSE;									</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">xrot,yrot和zrot通過和一些小浮點數相乘而隨著時間的消逝而增加。這樣我們可以讓物體繞x軸，y軸和z軸旋轉。每個變量都增加不同的值使旋轉好看一點</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	xrot+=(float)(milliseconds)*0.02f;							
+	yrot+=(float)(milliseconds)*0.03f;							
+	zrot+=(float)(milliseconds)*0.015f;							</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面的代碼用來檢測我們是否畫完了迷宮。我們開始設置done值為true, 
+        然後循環檢查每一個房間去看是否需要增加一面牆，如果有一間房還有被訪問到，我們設置done為false.<br>
+        如果tex_data[(x + (width*y))*3]的值為0, 我們就明白這個房間還沒被訪問到，而且沒有在裡面沒有畫一個象素。如果這兒有一個象素,那麼它的值為255。我們只需要檢查它的顏色紅色份量值。因為我們知道這個值只能為0(空)或者255(更新過)</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	done=TRUE;										<FONT class=theme>// 循環所有的紋理素，如果為0則表示沒有繪製完所有的迷宮，返回</FONT>
+	for (int x=0; x&lt;width; x+=2)								
+	{
+		for (int y=0; y&lt;height; y+=2)							
+		{
+			if (tex_data[((x+(width*y))*3)]==0)					
+				done=FALSE;						
+		}
+	}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">檢查完所有的房間之後，如果done為true.那麼迷宮就算建完了，SetWindowsText就會改變窗口的標題。我們改變標題為&quot;迷宮建造完成！&quot;。然後我們停頓5000毫秒使看這個例子的人有時間來看標題欄上的字(如果在全屏狀態，他們會看到動畫停頓了)。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	if (done)										<FONT class=theme>//如果完成停止五秒後重置</FONT>
+	{
+		SetWindowText(g_window-&gt;hWnd,"Lesson 42: Multiple Viewports... 2003 NeHe Productions... Maze Complete!");
+		Sleep(5000);
+		SetWindowText(g_window-&gt;hWnd,"Lesson 42: Multiple Viewports... 2003 NeHe Productions... Building Maze!");
+		Reset();
+	}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面的代碼也許讓人看著糊塗，但其實並不難懂。我們檢查當前房間的右邊房間是否被訪問過或者是否當前位置的右邊是迷宮的右邊界（當前房間右邊的房間就不存在），同樣檢查左邊的房間是否訪問過或者是否達到左邊界。其它方向也作如此檢查。<br>
+        如果房間顏色的紅色份量的值為255,就表示這個房間已經被訪問過了(因為它已經被函數UpdateTex更新過)。如果mx(當前x坐標）小於2, 
+        就表示我們已經到了迷宮最左邊不能再左了。<br>
+        如果往四個方向都不能移動了或以已經到了邊界，就給mx和my一個隨機值，然後檢查這個值對應點是否被訪問，如果沒有，我們就重新尋找一個新的隨機變量，直到該變量對應的單元早已經被訪問。因為需要從舊的路徑中分叉出新的路徑，所以我們必須保持搜素知道發覺有一老的路徑可以從那裡開始新的路徑。<br>
+        為了使代碼盡量簡短，我沒有打算去檢查mx-2是否小於0。如果你想有100%的錯誤檢測，你可以修改這段代碼阻止訪問不屬於當前貼圖的內存。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	<FONT class=theme>// 檢測是否走過這裡</FONT>
+	if (((tex_data[(((mx+2)+(width*my))*3)]==255) || mx&gt;(width-4)) &amp;&amp; ((tex_data[(((mx-2)+(width*my))*3)]==255) || mx&lt;2) &amp;&amp;
+		((tex_data[((mx+(width*(my+2)))*3)]==255) || my&gt;(height-4)) &amp;&amp; ((tex_data[((mx+(width*(my-2)))*3)]==255) || my&lt;2))
+	{
+		do									
+		{
+			mx=int(rand()%(width/2))*2;						
+			my=int(rand()%(height/2))*2;					
+		}
+		while (tex_data[((mx+(width*my))*3)]==0);					
+	}											</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面這行代碼賦給dir變量0-3之間的隨機值，這個值告訴我們該往右，往上，往左還是往下畫迷宮。<br>
+        在得到隨機的方向之後，我們檢查dir的值是否為0(往右移)，如果是並且我們不在迷宮的右邊界，然後檢查當前房間的右邊房間，如果沒被訪問，我們就調用UpdateTex(mx+1,my)在兩個房間之間建立一堵牆，然後mx增加2移到新的房間.</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	dir=int(rand()%4);									<FONT class=theme>// 隨機一個走向</FONT>
+
+	if ((dir==0) &amp;&amp; (mx&lt;=(width-4)))							<FONT class=theme>// 向右走，更新數據</FONT>
+	{
+		if (tex_data[(((mx+2)+(width*my))*3)]==0)					
+		{
+			UpdateTex(mx+1,my);							
+			mx+=2;									
+		}
+	}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">如果dir的值為1(往下)，並且我們不在迷宮底部，我們檢查當前房間的下面房間是否被訪問過。如果沒被訪問過，我們就在兩個房間(當前房間和當前房間下面的房間)建立一堵牆。然後my增加2移到新的房間.</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	if ((dir==1) &amp;&amp; (my&lt;=(height-4)))							<FONT class=theme>//  向下走，更新數據</FONT>
+	{
+		if (tex_data[((mx+(width*(my+2)))*3)]==0)					
+		{
+			UpdateTex(mx,my+1);						
+			my+=2;								
+		}
+	}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">如果dir的值為2(向左)並且我們不在左邊界，我們就檢查左邊的房間是否被訪問，如果沒被訪問，我們也在兩個房間(當前房間和左邊的房間)之間建立一堵牆，然後mx減2移到新的房間.</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	if ((dir==2) &amp;&amp; (mx&gt;=2))								<FONT class=theme>// 向左走，更新數據</FONT>
+	{
+		if (tex_data[(((mx-2)+(width*my))*3)]==0)					
+		{
+			UpdateTex(mx-1,my);						
+			mx-=2;									
+		}
+	}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">如果dir的值為3並且不在迷宮的最頂部，我們檢?櫚鼻胺考淶納廈媸欠癖環夢剩�具e�蟈妙淕斯錣埡G齜考?(當前房間和當前房間上面個房間)之間建立一堵牆，然後my增加2移到新的房間。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	if ((dir==3) &amp;&amp; (my&gt;=2))								<FONT class=theme>// 向上走，更新數據</FONT>
+	{
+		if (tex_data[((mx+(width*(my-2)))*3)]==0)					<FONT class=theme> </FONT>
+		{
+			UpdateTex(mx,my-1);							
+			my-=2;									
+		}
+	}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">移到新的房間後，我們必須標誌當前房間為正在訪問狀態。我們通過調用以當前位置mx, 
+        my為參數的UpdateTex()函數來達到這個目的。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	UpdateTex(mx,my);									<FONT class=theme>// 更新紋理</FONT>
+}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">這段代碼我們開始講一些新的東西...我們必須知道當前窗口的大小以便正確的調整視口的大小。為了的到當前窗口的寬和高，我們需要獲取窗口上下左右坐標值。得到這些值後我們通過窗口右邊的坐標減去左邊的坐標得到寬度值。底部坐標減去頂部坐標得到窗口的高度值。<br>
+        我們用RECT結構來得到窗口的那些值。RECT保存了一個矩形的坐標。也即矩形的左，右，頂部，底部的坐標。<br>
+        為獲取窗口的屏幕坐標，我們用GetClientRect()函數。我們傳進去的第一個參數是當前窗口的句柄。第二個參數是一個結構用於保存返回的窗口位置信息.</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>void Draw (void)										<FONT class=theme>// 繪製</FONT>
+{
+	RECT	rect;										<FONT class=theme>// 保存長方形坐標</FONT>
+
+	GetClientRect(g_window-&gt;hWnd, &amp;rect);							<FONT class=theme>// 獲得窗口大小</FONT>
+	int window_width=rect.right-rect.left;							
+	int window_height=rect.bottom-rect.top;						</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">我們在每一幀都需要更新紋理並且要在映射紋理之前更新。更新紋理最快的方法是用命令glTexSubImage2D(). 
+        它能把內存中的紋理的全部或部分和屏幕中的物體建立映射。下面的代碼我們表明用的??2維紋理，紋理細節級別為0，沒有x方向(0)或y方向(0)的偏移，我們需要利用整張紋理的每一部分，圖像為GL_RGB類型，對應的數據類型為GL_UNSIGNED_BYTE. 
+        tex_data是我們需要映射的具體數據。<br>
+        這是一個非非常快的不用重建紋理而更新紋理的方法。同樣需要注意的是這個命令不會為你建立一個紋理。你必須在更新紋理前把紋理建立好。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	<FONT class=theme>// 設置更新的紋理</FONT>
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, tex_data);
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">這行代碼非常重要，它將清空整個屏幕。<br>
+        ……<br>
+        一次性清空整個屏幕，然後在畫每一個視口前清空它們的深度存非常重要。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	glClear (GL_COLOR_BUFFER_BIT);								</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">現在是主畫循環。我們要畫四個視口，所以建立了一個0到3的循環。<br>
+        首先要做的事是設置用glColor3ub(r,g,b)設置當前視口的顏色。這對某些人來說不太熟悉，它跟glColor3f(r,g,b)幾乎一樣但是用無符號字節代替浮點數為參數。記住早些時候我說過參省一個0-255的隨機顏色值會更容易。好在已經有了該命令設置正確顏色所需要的值。<br>
+        glColor3f(0.5f,0.5f,0.5f)是指顏色中紅，綠，藍具有50%的亮度值。glColor3ub(127,127,127)同樣也表示同樣的意思。<br>
+        如果loop的值為0,我們將選擇r[0],b[0],b[[0]，如果loop指為1, 我們選用r[1],g[1],b[1]. 這樣，每個場景都有自個的隨機顏色。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	for (int loop=0; loop&lt;4; loop++)							<FONT class=theme>// 循環繪製4個視口</FONT>
+	{
+		glColor3ub(r[loop],g[loop],b[loop]);						</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%"><p>在畫之前首先要做的是設置當前視口，如果loop值為0,我們畫第一個視口。我們想把第一個視口放在屏幕的左半部分(0),並且在屏幕的上半部分(window_height/2).視口的寬度為當前主窗口的一半(window_width/2), 
+          高度也為主窗口高度的一半(window_height/2). <BR>
+          <BR>
+          如果主窗口為1024x768, 結果就是一個起點坐標為0,384,寬512，高384的視口。 <BR>
+          <BR>
+          這個視口看起來像下面這張圖 <br>
+          <BR>
+          <BR>
+          <IMG src="../Pic/viewport1.jpg" border=0> <BR>
+          <BR>
+          設置完視口後，我們選擇當前矩陣為投影矩陣，重置它並設置為2D平行投影視圖。我們需要以平行投影視圖來填充整個視口，因此我們給左邊的值為0,右邊的值為window_width/2(跟視口一樣)，同樣給底部的值賦為window_height/2，頂部的值為0. 
+          這樣給了視口同樣的高度。 </p>
+        這個平行投影視圖的左上角的坐標為0,0,右下角坐標為window_width/2,window_height/2.<p></p></TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>		if (loop==0)									<FONT class=theme>// 繪製左上角的視口</FONT>
+		{
+			<FONT class=theme>// 設置視口區域</FONT>
+			glViewport (0, window_height/2, window_width/2, window_height/2);
+			glMatrixMode (GL_PROJECTION);						
+			glLoadIdentity ();							
+			gluOrtho2D(0, window_width/2, window_height/2, 0);
+		}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">如果loop的值為1, 我們是在畫第二個視口了。它在屏幕的右上部分。寬度和高度都跟前一個視圖一樣。唯一不同的是glViewport()函數的第一個參數為window_width/2.這告訴程序視口起點是從窗口左起一半的地方。<BR>
+        <BR>
+        第二個視口看起來像下面這樣:<BR>
+        <BR>
+        <IMG 
+      src="../Pic/viewport2.jpg" border=0> <BR>
+        <BR>
+        同樣的，我們設置當前矩陣為投影矩陣並重置它。但這次我們設置透視投影參數為FOV為45度，並且近截面值為0.1f，遠截面值為500.0f</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>		if (loop==1)									<FONT class=theme>// 繪製右上角視口</FONT>
+		{
+			
+			glViewport (window_width/2, window_height/2, window_width/2, window_height/2);
+			glMatrixMode (GL_PROJECTION);					
+			glLoadIdentity ();					
+			gluPerspective( 45.0, (GLfloat)(width)/(GLfloat)(height), 0.1f, 500.0 ); 
+		}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">I如果loop值為2,我們畫第三個視口。它將在主窗口的右下部分。寬度和高度與第二個視口一樣。跟第二個視口不同的是glViewport()函數的第二個參數為0.這告訴程序我們想讓視口位於主窗口的右下部分。 
+        <BR>
+        <BR>
+        第三個視口看起來如下: <br>
+        <BR>
+        <BR>
+        <IMG 
+      src="../Pic/viewport3.jpg" border=0> <BR>
+        <BR>
+        透視視圖的設置同第二個視圖。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>		if (loop==2)									<FONT class=theme>// 繪製右下角視口</FONT>
+		{
+			glViewport (window_width/2, 0, window_width/2, window_height/2);
+			glMatrixMode (GL_PROJECTION);						
+			glLoadIdentity ();						
+			gluPerspective( 45.0, (GLfloat)(width)/(GLfloat)(height), 0.1f, 500.0 ); 
+		}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">如果loop等於3,我們就畫最後一個視口(第四個視口)。它將位於窗口的左下部分。寬度和高度跟前幾次設置一樣。唯一跟第三個視口不同的是glViewport()的第一個參數為0.這告訴程序視口將在主窗口的左下部分。<BR>
+        <BR>
+        第四個視口看起來如下:<BR>
+        <BR>
+        <IMG src="../Pic/viewport4.jpg" border=0> <BR>
+        <BR>
+        透視投影視圖設置同第二個視口。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>		if (loop==3)									<FONT class=theme>// 繪製右下角視口</FONT>
+		{
+			glViewport (0, 0, window_width/2, window_height/2);
+			glMatrixMode (GL_PROJECTION);						
+			glLoadIdentity ();							
+			gluPerspective( 45.0, (GLfloat)(width)/(GLfloat)(height), 0.1f, 500.0 ); 
+		}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面的代碼選擇模型視圖矩陣為當前矩陣真，並重置它。然後清空深度緩存。我們在每個視口畫之前清空深度緩存。注意到我們沒有清除屏幕顏色，只是深度緩存！如果你沒有清除深度緩存，你將看到物體的部分消失了，等等，很明顯不美觀！</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>		glMatrixMode (GL_MODELVIEW);							
+		glLoadIdentity ();							
+
+		glClear (GL_DEPTH_BUFFER_BIT);
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">我們要畫的第一副圖為一個平坦的2維紋理方塊。這個方塊是在平行投影模式下畫的，並且將會覆蓋整個視口。因為我們用了平行投影投影模式，這兒沒有第三維了，因此沒必要在z軸進行變換。<br>
+        記住我們第一個視口的左上角坐標維0,0,右下部分坐標為window_width/2,window_height/2.這意味我們的四邊形的右上坐標為window_width/2,0,左上坐標為0,0,左下坐標為0,window_height/2.右下坐標為window_width/2,window_height/2. 
+        請注意在平行投影投影模式下，我們能在象素級別上處理而不是單元級別(決定於我們的視口設置)</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>		if (loop==0)									<FONT class=theme>// 繪製左上角的視圖</FONT>
+		{
+			glBegin(GL_QUADS);							
+				glTexCoord2f(1.0f, 0.0f); glVertex2i(window_width/2, 0              );
+				glTexCoord2f(0.0f, 0.0f); glVertex2i(0,              0              );
+				glTexCoord2f(0.0f, 1.0f); glVertex2i(0,              window_height/2);
+				glTexCoord2f(1.0f, 1.0f); glVertex2i(window_width/2, window_height/2);
+			glEnd();							
+		}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">第二個要畫的圖像是一個帶光照的平滑球體。第二個視圖是帶透視的，因此我們首先必須做的是往屏幕裡平移14個單位，然後在x，y，z軸旋轉物體。<br>
+        我們激活光照，畫球體，然後關閉光照。這個球體半徑為4個單元長度，圍繞z軸的細分度為32,沿z軸的細分度也為32. 如果你還在犯迷糊，可以試著改變stacks或者slices的值為更小。通過減小stacks/slices的值，你就減少了球體的平滑度。<br>
+        紋理坐標是自動產生的！</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>		if (loop==1)									<FONT class=theme>// 繪製右上角的視圖</FONT>
+		{
+			glTranslatef(0.0f,0.0f,-14.0f);						
+
+			glRotatef(xrot,1.0f,0.0f,0.0f);					
+			glRotatef(yrot,0.0f,1.0f,0.0f);						
+			glRotatef(zrot,0.0f,0.0f,1.0f);				
+
+			glEnable(GL_LIGHTING);							
+			gluSphere(quadric,4.0f,32,32);					
+			glDisable(GL_LIGHTING);						
+		}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">要畫的第三幅圖跟第一幅一樣。但是是帶透視的。它貼到屏幕有一定的角度並且有旋轉。<br>
+        我們把它往屏幕裡移動2個單位。然後往後傾斜那個方塊45度角。這讓方塊的頂部遠離我們，而方塊的底部則更靠近我們。<br>
+        然後在z軸方向上旋轉方塊。畫方塊時，我們需要手工設置貼圖坐標。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>		if (loop==2)									<FONT class=theme>// 繪製右下角的視圖</FONT>
+		{
+			glTranslatef(0.0f,0.0f,-2.0f);						
+			glRotatef(-45.0f,1.0f,0.0f,0.0f);					
+			glRotatef(zrot/1.5f,0.0f,0.0f,1.0f);					
+
+			glBegin(GL_QUADS);							
+				glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, 0.0f);
+				glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, 0.0f);
+				glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, 0.0f);
+				glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, 0.0f);
+			glEnd();							
+		}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">如果我們在畫第四副圖，我們往屏幕裡移動7個單位。然後把物體繞x,y,z軸旋轉。<br>
+        我們激活光照給物體一些不錯的陰影效果，然後在z軸上平移-2個單位。我們這樣做的原因是讓物體繞自己的中心旋轉而不是繞某一端。這圓柱體兩端寬1.5個單位。長度為4個單位並且繞軸上細分32個面片，沿軸細分16個面片。<br>
+        為了能繞中心旋轉，我們需要平移柱體長度的一半，4的一半也即是2。<br>
+        在平移，旋轉，然後再平移之後，我們畫圓柱體，之後關閉光照。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>		if (loop==3)									<FONT class=theme>// 繪製左下角的視圖</FONT>
+		{
+			glTranslatef(0.0f,0.0f,-7.0f);						
+			glRotatef(-xrot/2,1.0f,0.0f,0.0f);					
+			glRotatef(-yrot/2,0.0f,1.0f,0.0f);					
+			glRotatef(-zrot/2,0.0f,0.0f,1.0f);					
+
+			glEnable(GL_LIGHTING);							
+			glTranslatef(0.0f,0.0f,-2.0f);						
+			gluCylinder(quadric,1.5f,1.5f,4.0f,32,16);			
+			glDisable(GL_LIGHTING);							
+		}
+	}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">最後要做的事就是清空渲染管道。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	glFlush ();									
+}
+</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">希望這個教程能解答所有你在做多視口中碰到的任何問題。代碼並不難懂。它幾乎跟標準的基本代碼沒什麼區別。我們唯一真正修改的是視口設置是在畫的主循環中。在所有視口畫之前清空一次屏幕，然後清空各自深度緩存。
+        <p>你可以用這些代碼來在各自的視口中顯示各種各樣的圖片，或在多視圖中顯示特定的物體。要做什麼起決於你自己</p>
+        <p>我希望你們喜歡這個教程...如果你發現代碼中的任何錯誤，或者你感覺你能讓這個教程更好，請通知我(同樣的，如果你看過我的翻譯，發現有不當之處，請通知我) 
+        </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+              <p>感謝<br>
+                感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+                感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+              <p>資源下載: <br>
+                文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2042.mht">網頁格式</a> 
+                <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_42.pdf">PDF格式</a><br>
+                源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/42_MultiViewport.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+        <FONT class=text><TABLE width="100%" border=0>
+          <TBODY>
+            <TR> 
+              <TD align=left width="50%"><B><FONT size=-1><A 
+            href="Tutorial_41.html">&lt; 第41課</A></FONT></B></TD>
+              <TD align=right width="50%"><B><FONT 
+        size=-1><a href="Tutorial_43.html">第43課 &gt;&nbsp;</a></FONT></B></TD>
+            </TR>
+          </TBODY>
+        </TABLE>
+        </FONT></TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE></BODY>
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_42.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:05:04 GMT -->
+</HTML>

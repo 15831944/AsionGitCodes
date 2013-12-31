@@ -1,0 +1,306 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn --><html>
+
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_16.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+<head>
+<title>NeHe OpenGL教程第十六課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type="text/css">A:link {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #ccaaff; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #ffccaa; TEXT-DECORATION: none
+}
+</style>
+<meta content="Microsoft FrontPage 3.0" name="GENERATOR">
+</head>
+
+<body bgColor="#000000" text="#ffffff">
+<BR>
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td height="130" width="326"><img height="130" src="../Pic/logo.png" width="326"></td>
+      <td align="middle" vAlign="center" width="75%"><div align="center"><font color="#ffccaa" size="+3"><b><i>第16課</i></b></font></div></td>
+  </tr>
+</TBODY>
+</table>
+<!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="29%"><img src="../Pic/lesson16.jpg" width="240" height="180"></td>
+            <td width="71%"><p><FONT class=head>霧:</FONT></p>
+              <p><font size="3">這一課是基於第7課的代碼的，你將學會三種不同的霧的計算方法，以及怎樣設置霧的顏色和霧的範圍。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">這篇教程由Chris Aliotta編寫。
+        <p>你想給你的OpenGL程序添加霧效?我將在這篇教程中教你如何去做。這是我第一次寫教程，我也只是OpenGL/C++編程的新手，所以如果你發現了什麼錯誤請告訴我而不是叱責我。本課的代碼基於第七課的代碼編寫。</p>
+        <p>Data Setup:</p>
+        <p>我們將從設置保存霧的信息的變量開始。變量fogMode用來保存三種類型的霧:GL_EXP,GL_EXP2和GL_LINEAR。我將在稍後解釋這三種類型的區別。這些變量位於程序開頭GLuint 
+          texture[3]這行後。變量fogfilter將用來表示我們使用的是哪種霧類型。變量fogColor保存霧的顏色。在程序的頂部我還加了一個布爾類型的變量gp用來記錄'g'鍵是否被按下。<br>
+        </p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>bool   gp;						<font color="#ffffaa">// G健是否按下</font>
+GLuint filter;						<font
+color="#ffffaa">// 使用哪一個紋理過濾器</font>
+GLuint fogMode[]= { GL_EXP, GL_EXP2, GL_LINEAR };	<font
+color="#ffffaa">	// 霧氣的模式</font>
+GLuint fogfilter= 0;					<font
+color="#ffffaa">// 使用哪一種霧氣</font>
+GLfloat fogColor[4]= {0.5f, 0.5f, 0.5f, 1.0f};		<font
+color="#ffffaa">// 霧的顏色設為白色</font>
+</pre>
+</font>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">現在我們已經設置了變量，接下來我們來看InitGL函數。為了獲得更好的效果，glClearColor()這行已經被修改為將屏幕清為同霧相同的顏色。使用霧效只需很少的代碼。總之你將發現這很容易。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>glClearColor(0.5f,0.5f,0.5f,1.0f);			<font color="#ffffaa">// 設置背景的顏色為霧氣的顏色</font>
+
+glFogi(GL_FOG_MODE, fogMode[fogfilter]);		<font
+color="#ffffaa">// 設置霧氣的模式</font>
+glFogfv(GL_FOG_COLOR, fogColor);			<font color="#ffffaa">// 設置霧的顏色</font>
+glFogf(GL_FOG_DENSITY, 0.35f);			<font
+color="#ffffaa">// 設置霧的密度</font>
+glHint(GL_FOG_HINT, GL_DONT_CARE);			<font
+color="#ffffaa">// 設置系統如何計算霧氣</font>
+glFogf(GL_FOG_START, 1.0f);				<font
+color="#ffffaa">// 霧氣的開始位置</font>
+glFogf(GL_FOG_END, 5.0f);				<font
+color="#ffffaa">// 霧氣的結束位置</font>
+glEnable(GL_FOG);					<font color="#ffffaa">// 使用霧氣</font></pre>
+</font>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"><p><font face="arial">讓我們先看看這段代碼的頭三行。第一行glEnable(GL_FOG);(?這應該是最後一行)不用再解釋了吧，主要是初始化霧效。</font> 
+        <p>第二行glFogi(GL_FOG_MODE, fogMode[fogfilter]);建立霧的過濾模式。之前我們聲明了數組fogMode，它保存了值GL_EXP, 
+          GL_EXP2, and GL_LINEAR。現在是使用他們的時候了。我來解釋它們（具體見紅皮書，其實這是計算霧效混合因子的三種方式）：<br>
+          GL_EXP - 充滿整個屏幕的基本渲染的霧。它能在較老的PC上工作，因此並不是特別像霧。 <br>
+          GL_EXP2 - 比GL_EXP更進一步。它也是充滿整個屏幕，但它使屏幕看起來更有深度。 <br>
+          GL_LINEAR - 最好的渲染模式。物體淡入淡出的效果更自然。</p>
+        <p>第三行glFogfv(GL_FOG_COLOR, fogcolor);設置霧的顏色。之前我們已將變量fogcolor設為(0.5f,0.5f,0.5f,1.0f)，這是一個很棒的灰色。</p>
+        <p>接下來我們看看最後的四行。glFogf(GL_FOG_DENSITY, 0.35f);這行設置霧的密度。增加數字會讓霧更密，減少它則霧更稀。</p>
+        <p>glHint (GL_FOG_HINT, GL_DONT_CARE); 設置修正。我使用了GL_DONT_CARE因為我不關心它的值。</p>
+        <p>Eric Desrosiers Adds:關於glHint(GL_FOG_HINT, hintval);的解釋</p>
+        <p>gl_dont_care - 由OpenGL決定使用何種霧效（對每個頂點還是每個像素執行霧效計算）和一個未知的公式（?）<br>
+          gl_nicest - 對每個像素執行霧效計算（效果好）<br>
+          gl_fastest - 對每個頂點執行霧效計算 （更快，但效果不如上面的好）</p>
+        <p>下一行glFogf(GL_FOG_START, 1.0f);設定霧效距屏幕多近開始。你可以根據你的需要隨意改變這個值。下一行類似，glFogf(GL_FOG_END, 
+          5.0f);告訴OpenGL程序霧效持續到距屏幕多遠。</p>
+        <p>現在我們建立了繪製霧的代碼，我們將加入鍵盤指令在不同的霧效模式間循環。這段代碼及其它的按鍵處理代碼在程序的最後。<br>
+        </p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>if (keys['G'] &amp;&amp; !gp)					<font color="#ffffaa">// G鍵是否 按下</font>
+{
+	gp=TRUE;						<font
+color="#ffffaa">// 是<font color="#aaffaa"></font></font>
+	fogfilter+=1;					<font color="#ffffaa">// 變換霧氣模式</font>
+	if (fogfilter&gt;2)					<font
+color="#ffffaa">// 模式是否大</font><font color="#aaffaa" size="3"><font
+color="#ffffaa">於</font></font><font
+color="#ffffaa">2</font>
+	{
+		fogfilter=0;				<font
+color="#ffffaa">// 置零</font>
+	}
+	glFogi (GL_FOG_MODE, fogMode[fogfilter]);	<font
+color="#ffffaa">	// 設置霧氣模式</font>
+}
+if (!keys['G'])						<font color="#ffffaa">// G鍵是否釋放</font>
+{
+	gp=FALSE;						<font
+color="#ffffaa">// 是，設置為釋放</font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"><p>就是這樣！大功告成！現在你的OpenGl程序有了霧效。 </p>
+ <table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+              <p>感謝<br>
+                感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+                感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+              <p>資源下載: <br>
+                文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2016.mht">網頁格式</a> 
+                <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_16.pdf">PDF格式</a><br>
+                源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/16_Fog.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+        <table border="0" width="100%">
+<TBODY>
+      <tr>
+              <td align="left" width="50%"><a href="Tutorial_15.html"><b><font size="-1">&lt; 
+                第15課</font></b></a></td>
+              <td align="right" width="50%"><a href="Tutorial_17.html"><b><font size="-1">第17課 
+                &gt;</font></b></a></td>
+      </tr>
+</TBODY>
+    </table>
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+  <TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_16.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+</html>

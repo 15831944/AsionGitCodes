@@ -1,0 +1,580 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_37.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:03:17 GMT -->
+<head>
+<title>NeHe OpenGL教程第三十七課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第37課 
+      </i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="25%"><img src="../Pic/lesson37.jpg" width="240" height="180"></td>
+            <td width="75%"><p><FONT 
+                  class=head>卡通映射:</FONT></p>
+              <p><font size="3">什麼是卡通了，一個輪廓加上少量的幾種顏色。使用一維紋理映射，你也可以實現這種效果。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>看到人們仍然e-mail我請求在文章中使用我方才在GameDev.net上寫的源代碼，還看到文章的第二版（在那每一個API附帶源碼）不是在中途完成之前連貫的結束。我已經把這篇指南一併出租給了NeHe（這實際上是寫文章的最初意圖）因此你們所有的OpenGL領袖可以玩轉它。對模型的選擇表示抱歉，但是我最近一直在玩Quake 
+      2。<br>
+      註釋：這篇文章的源代碼可以在這裡找到：<br>
+      http://www.gamedev.net/reference/programming/features/celshading. <br>
+      這篇指南實際上並不解釋原理，僅僅解釋代碼。在上面的連接中可以發現為什麼它能工作。現在不斷地大聲抱怨STOP E-MAILING ME REQUESTS 
+      FOR SOURCE CODE!!!! <br>
+      首先，我們需要包含一些額外的頭文件。第一個（math.h）我們可以使用sqrtf (square root)函數，第二個用來訪問文件。 <br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+#include &lt;math.h&gt;						
+#include &lt;stdio.h&gt;						
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在我們將定義一些結構體來幫助我們存貯我們的數據（保存好幾百浮點數組）。第一個是tagMATRIX結構體。如果你仔細地看，你將看到我們正像包含一個十六個浮點數的1維數組~一個2維4×4數族一樣存儲那個矩陣。這下至OpenGL存儲它的矩陣的方式。如果我們使用4x4數組，這些值將發生錯誤的順序。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+typedef struct tagMATRIX					<font color=#ffffaa>// 保存OpenGL矩陣的結構體</font>
+{
+	float Data[16];					<font color=#ffffaa>// 由於OpenGL的矩陣的格式我們使用[16</font>
+}
+MATRIX;
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>第二是向量的類。 僅存儲X，Y和Z的值</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+typedef struct tagVECTOR					<font color=#ffffaa>// 存儲一個單精度向量的結構體</font>
+{
+	float X, Y, Z;					<font color=#ffffaa>// 向量的份量</font>
+}
+VECTOR;
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>第三，我們持有頂點的結構。每一個頂點僅需要它的法線和位置（沒有紋理的現行縱坐標）信息。它們必須以這樣的次序被存放，否則當它停止裝載文件的事件將發生嚴重的錯誤（我發現艱難的情形：（教我分塊出租我的代碼。）。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+typedef struct tagVERTEX					<font color=#ffffaa>// 存放單一頂點的結構</font>
+{
+	VECTOR Nor;					<font color=#ffffaa>// 頂點法線</font>
+	VECTOR Pos;					<font color=#ffffaa>// 頂點位置</font>
+}
+VERTEX;
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>最後是多邊形的結構。我知道這是存儲頂點的愚蠢的方法，要不是它完美工作的簡單的緣故。通常我願意使用一個頂點數組，一個多邊形數組，和包括一個在多邊形中的3個頂點的指數，但這比較容易顯示你想幹什麼。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+typedef struct tagPOLYGON					<font color=#ffffaa>// 存儲單一多邊形的結構</font>
+{
+	VERTEX Verts[3];					<font color=#ffffaa>// 3個頂點結構數組</font>
+}
+POLYGON;
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>優美簡單的材料也在這裡了。為每一個變量的一個解釋考慮那個註釋。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+bool		outlineDraw	= true;				<font color=#ffffaa>// 繪製輪廓的標記</font>
+bool		outlineSmooth	= false;				<font color=#ffffaa>// Anti-Alias 線段的標記</font>
+float		outlineColor[3]	= { 0.0f, 0.0f, 0.0f };		<font color=#ffffaa>// 線段的顏色</font>
+float		outlineWidth	= 3.0f;				<font color=#ffffaa>// 線段的寬度</font>
+
+VECTOR		lightAngle;					<font color=#ffffaa>// 燈光的方向</font>
+bool		lightRotate	= false;			<font color=#ffffaa>	// 是否我們旋轉燈光的標記</font>
+
+float		modelAngle	= 0.0f;				<font color=#ffffaa>// 模型的Y軸角度</font>
+bool    	modelRotate	= false;					<font color=#ffffaa>// 旋轉模型的標記</font>
+
+POLYGON		*polyData	= NULL;					<font color=#ffffaa>// 多邊形數據</font>
+int		polyNum		= 0;				<font color=#ffffaa>// 多邊形的編號</font>
+
+GLuint		shaderTexture[1];					<font color=#ffffaa>// 存儲紋理ID</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這是得到的再簡單不過的模型文件格式。 最初的少量字節存儲在場景中的多邊形的編號，文件的其餘是tagPOLYGON結構體的一個數組。正因如此，數據在沒有任何需要去分類到詳細的順序的情況下被讀出。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+BOOL ReadMesh ()						<font color=#ffffaa>// 讀「model.txt」 文件</font>
+{
+	FILE *In = fopen ("Data\\model.txt", "rb");		<font color=#ffffaa>// 打開文件</font>
+
+	if (!In)
+		return FALSE;				<font color=#ffffaa>// 如果文件沒有打開返回 FALSE</font>
+
+	fread (&amp;polyNum, sizeof (int), 1, In);		<font color=#ffffaa>// 讀文件頭，多邊形的個數</font>
+
+	polyData = new POLYGON [polyNum];			<font color=#ffffaa>// 分配內存</font>
+
+	fread (&amp;polyData[0], sizeof (POLYGON) * polyNum, 1, In);<font color=#ffffaa>// 把所有多邊形的數據讀入</font>
+
+	fclose (In);					<font color=#ffffaa>// 關閉文件</font>
+
+	return TRUE;					<font color=#ffffaa>// 工作完成</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>一些基本的數學函數而已。DotProduct計算2個向量或平面之間的角，Magnitude函數計算向量的長度，Normalize函數縮放向量到一個單位長度。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+inline float DotProduct (VECTOR &amp;V1, VECTOR &amp;V2)		<font color=#ffffaa>//計算兩個向量之間的角度</font>
+{
+	return V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z;		
+}
+
+inline float Magnitude (VECTOR &amp;V)				<font color=#ffffaa>// 計算向量的長度</font>
+{
+	return sqrtf (V.X * V.X + V.Y * V.Y + V.Z * V.Z);	
+}
+
+void Normalize (VECTOR &amp;V)					<font color=#ffffaa>// 創建一個單位長度的向量</font>
+{
+	float M = Magnitude (V);				
+
+	if (M != 0.0f)					<font color=#ffffaa>// 確保我們沒有被0隔開</font>
+	{
+		V.X /= M;					
+		V.Y /= M;
+		V.Z /= M;
+	}
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這個函數利用給定的矩陣旋轉一個向量。請注意它僅旋轉這個向量——與向量的位置相比它算不了什麼。它用來當旋轉法線確保當我們在計算燈光時它們停留在正確的方向上。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void RotateVector (MATRIX &amp;M, VECTOR &amp;V, VECTOR &amp;D)		<font color=#ffffaa>// 利用提供的矩陣旋轉一個向量</font>
+{
+	D.X = (M.Data[0] * V.X) + (M.Data[4] * V.Y) + (M.Data[8]  * V.Z);	
+	D.Y = (M.Data[1] * V.X) + (M.Data[5] * V.Y) + (M.Data[9]  * V.Z);	
+	D.Z = (M.Data[2] * V.X) + (M.Data[6] * V.Y) + (M.Data[10] * V.Z);	
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>引擎的第一個主要的函數…… 初始化，按所說的精確地做。我已經砍掉了在註釋中不再需要的代碼段。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+<font color=#ffffaa>// 一些GL 初始代碼和用戶初始化從這裡開始</font>
+BOOL Initialize (GL_Window* window, Keys* keys)
+{
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這3個變量用來裝載著色文件。在文本文件中為了單一的線段線段包含了空間，雖然shaderData存儲了真實的著色值。你可能奇怪為什麼我們的96個值被32個代替了。好了，我們需要轉換greyscale 
+      值為RGB以便OpenGL能使用它們。我們仍然可以以greyscale存儲這些值，但向上負載紋理時我們至於R，G和B成分僅僅使用同一值。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	char Line[255];						<font color=#ffffaa>// 255個字符的存儲量</font>
+	float shaderData[32][3];					<font color=#ffffaa>// 96個著色值的存儲量</font>
+	g_window	= window;<br>	g_keys		= keys;
+	FILE *In = NULL;						<font color=#ffffaa>// 文件指針</font>
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>當繪製線條時，我們想要確保很平滑。初值被關閉，但是按「2」鍵，它可以被toggled on/off。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	glShadeModel (GL_SMOOTH);				<font color=#ffffaa>// 使用色彩陰影平滑</font>
+	glDisable (GL_LINE_SMOOTH);				<font color=#ffffaa>// 線條平滑初始化不可用</font>
+
+	glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	<font color=#ffffaa>// 提高計算精度	</font>	
+	glClearColor (0.7f, 0.7f, 0.7f, 0.0f);		<font color=#ffffaa>// 設置為灰色背景</font>	
+	glClearDepth (1.0f);				<font color=#ffffaa>// 設置深度緩存值</font>
+  	glEnable (GL_DEPTH_TEST); 	<font color=#ffffaa>// 啟用深度測試</font>
+  	glDepthFunc (GL_LESS); <font color=#ffffaa>	// 設置深度比較函數</font>
+	glShadeModel (GL_SMOOTH); <font color=#ffffaa>	// 啟用反走樣</font>
+  	glDisable (GL_LINE_SMOOTH); 
+</pre>
+<pre>
+glEnable (GL_CULL_FACE);				<font color=#ffffaa>// 啟用剔除多邊形功能</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>我們使 OpenGL燈光不可用因為我們自己做所以的燈光計算。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	glDisable (GL_LIGHTING);				<font color=#ffffaa>// 使 OpenGL 燈光不可用</font>
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這裡是我們裝載陰影文件的地方。它簡單地以32個浮點值ASCII碼存放（為了輕鬆修改），每一個在separate線上。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	In = fopen ("Data\\shader.txt", "r");			<font color=#ffffaa>// 打開陰影文件</font>
+
+	if (In)							<font color=#ffffaa>// 檢查文件是否打開</font>
+	{
+		for (i = 0; i &lt; 32; i++)			<font color=#ffffaa>	// 循環32次</font>
+		{
+			if (feof (In))				<font color=#ffffaa>// 檢查文件是否結束</font>
+				break;
+
+			fgets (Line, 255, In);			<font color=#ffffaa>// 獲得當前線條</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這裡我們轉換 greyscale 值為 RGB, 正像上面所描述的。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+			<font color=#ffffaa>// 從頭到尾複製這個值</font>
+			shaderData[i][0] = shaderData[i][1] = shaderData[i][2] = atof (Line);
+		}
+
+		fclose (In);					<font color=#ffffaa>// 關閉文件</font>
+	}
+
+	else
+		return FALSE;					</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在我們向上裝載這個紋理。同樣它清楚地規定，不要使用任何一種過濾在紋理上否則它看起來奇怪，至少可以這樣說。GL_TEXTURE_1D被使用因為它是值的一維數組。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+	glGenTextures (1, &amp;shaderTexture[0]);			<font color=#ffffaa>// 獲得一個自由的紋理ID</font>
+
+	glBindTexture (GL_TEXTURE_1D, shaderTexture[0]);	<font color=#ffffaa>	// 綁定這個紋理。 從現在開始它變為一維</font>
+
+	<font color=#ffffaa>// 使用鄰近點過濾</font>
+	glTexParameteri (GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri (GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	<font color=#ffffaa>// 設置紋理</font>
+	glTexImage1D (GL_TEXTURE_1D, 0, GL_RGB, 32, 0, GL_RGB , GL_FLOAT, shaderData);
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在調整燈光方向。我已經使得它向下指向Z軸正方向，這意味著它將正面碰撞模型</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	lightAngle.X = 0.0f;					
+	lightAngle.Y = 0.0f;					
+	lightAngle.Z = 1.0f;				
+
+	Normalize (lightAngle);
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>讀取Mesh文件,並返回</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	return ReadMesh ();					<font color=#ffffaa>// 讀取Mesh文件,並返回</font>
+}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>與上面的函數相對應…… 卸載，刪除由Initalize 和 ReadMesh 創建的紋理和多邊形數據。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void Deinitialize (void)
+{
+	glDeleteTextures (1, &amp;shaderTexture[0]);		<font color=#ffffaa>// 刪除陰影紋理</font>
+
+	delete [] polyData;				<font color=#ffffaa>// 刪除多邊形數據</font>
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>主要的演示循環。所有這些用來處理輸入和更新角度。控制如下： 
+      <p>&lt;SPACE&gt; =鎖定旋轉</p>
+      <p>1 = 鎖定輪廓繪製<br>
+        2 = 鎖定輪廓 anti-aliasing </p>
+      <p>&lt;UP&gt; =增加線寬<br>
+        &lt;DOWN&gt; = 減小線寬</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+void Update (DWORD milliseconds)				<font color=#ffffaa>// 這裡執行動作更新</font>
+{
+	if (g_keys-&gt;keyDown [' '] == TRUE)			<font color=#ffffaa>// 空格是否被按下</font>
+	{
+		modelRotate = !modelRotate;			<font color=#ffffaa>// 鎖定模型旋轉開/關</font>
+
+		g_keys-&gt;keyDown [' '] = FALSE;
+	}
+
+	if (g_keys-&gt;keyDown ['1'] == TRUE)			<font color=#ffffaa>// 1是否被按下</font>
+	{
+		outlineDraw = !outlineDraw;			<font color=#ffffaa>// 切換是否繪製輪廓線</font>
+
+		g_keys-&gt;keyDown ['1'] = FALSE;
+	}
+
+	if (g_keys-&gt;keyDown ['2'] == TRUE)			<font color=#ffffaa>// 2是否被按下</font>
+	{
+		outlineSmooth = !outlineSmooth;		<font color=#ffffaa>// 切換是否使用反走樣</font>
+
+		g_keys-&gt;keyDown ['2'] = FALSE;
+	}
+
+	if (g_keys-&gt;keyDown [VK_UP] == TRUE)			<font color=#ffffaa>// 上鍵增加線的寬度</font>
+	{
+		outlineWidth++;					
+
+		g_keys-&gt;keyDown [VK_UP] = FALSE;
+	}
+
+	if (g_keys-&gt;keyDown [VK_DOWN] == TRUE)		<font color=#ffffaa>// 下減少線的寬度</font>
+	{
+		outlineWidth--;					
+
+		g_keys-&gt;keyDown [VK_DOWN] = FALSE;
+	}
+
+	if (modelRotate)					<font color=#ffffaa>// 是否旋轉</font>
+		modelAngle += (float) (milliseconds) / 10.0f;	<font color=#ffffaa>// 更新旋轉角度</font>
+}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>你一直在等待的函數。Draw 函數做每一件事情——計算陰影的值，著色網孔，著色輪廓，等等，這是它作的。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+void Draw (void)
+{
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>TmpShade用來存儲當前頂點的色度值。所有頂點數據同時被計算，意味著我們只需使用我們能繼續使用的單個的變量。<br>
+      TmpMatrix, TmpVector 和 TmpNormal同樣被用來計算頂點數據，TmpMatrix在函數開始時被調整一次並一直保持到Draw函數被再次調用。TmpVector 
+      和 TmpNormal則相反，當另一個頂點被處理時改變。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	float TmpShade;						<font color=#ffffaa>// 臨時色度值</font>
+
+	MATRIX TmpMatrix;						<font color=#ffffaa>// 臨時 MATRIX 結構體</font>
+	VECTOR TmpVector, TmpNormal;				<font color=#ffffaa>// 臨時 VECTOR結構體</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>清除緩衝區矩陣數據</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	<font color=#ffffaa>//  清除緩衝區</font>
+	glLoadIdentity ();					<font color=#ffffaa>// 重置矩陣</font>
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>首先檢查我們是否想擁有平滑的輪廓。如果是，我們就打開anti-alaising 。否則把它關閉。簡單！</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	if (outlineSmooth)					<font color=#ffffaa>// 檢查我們是否想要 Anti-Aliased 線條</font>
+	{
+		glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);	<font color=#ffffaa>// 啟用它們</font>
+		glEnable (GL_LINE_SMOOTH);			
+	}
+
+	else						<font color=#ffffaa>// 否則不啟用</font>
+		glDisable (GL_LINE_SMOOTH);		</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>然後我們設置視口。我們反向移動攝像機2個單元，之後以一定角度旋轉模型。註：由於我們首先移動攝像機，這個模型將在現場旋轉。如果我們以另一種方法做，模型將繞攝像機旋轉。<br>
+      我們之後從OpenGL中取最新創建的矩陣並把它存儲在 TmpMatrix。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+	glTranslatef (0.0f, 0.0f, -2.0f);			<font color=#ffffaa>// 移入屏幕兩個單位</font>
+	glRotatef (modelAngle, 0.0f, 1.0f, 0.0f);		<font color=#ffffaa>// 繞Y軸旋轉這個模型</font>
+
+	glGetFloatv (GL_MODELVIEW_MATRIX, TmpMatrix.Data);	<font color=#ffffaa>// 獲得產生的矩陣</font>
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>戲法開始了。首先我們啟用一維紋理，然後啟用著色紋理。這被OpenGL用來當作一個look-up表格。我們之後調整模型的顏色（白色）我選擇白色是因為它亮度高並且描影法比其它顏色好。我建議你不要使用黑色：）<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	<font color=#ffffaa>// 卡通渲染代碼</font>
+	glEnable (GL_TEXTURE_1D);				<font color=#ffffaa>// 啟用一維紋理</font>
+	glBindTexture (GL_TEXTURE_1D, shaderTexture[0]);	<font color=#ffffaa>// 鎖定我們的紋理</font>
+
+	glColor3f (1.0f, 1.0f, 1.0f);				<font color=#ffffaa>// 調整模型的顏色</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在我們開始繪製那些三角形。儘管我們看到在數組中的每一個多邊形，然後旋轉它的每一個頂點。第一步是拷貝法線信息到一個臨時的結構中。因此我們能旋轉法線，但仍然保留原來保存的值（沒有精確降級）。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	glBegin (GL_TRIANGLES);					<font color=#ffffaa>// 告訴 OpenGL 我們即將繪製三角形</font>
+
+		for (i = 0; i &lt; polyNum; i++)			<font color=#ffffaa>// 從頭到尾循環每一個多邊形</font>
+		{
+			for (j = 0; j &lt; 3; j++)			<font color=#ffffaa>// 從頭到尾循環每一個頂點 </font>
+			{
+				TmpNormal.X = polyData[i].Verts[j].Nor.X;	<font color=#ffffaa>// 用當前頂點的法線值填充TmpNormal結構</font>
+				TmpNormal.Y = polyData[i].Verts[j].Nor.Y;	
+				TmpNormal.Z = polyData[i].Verts[j].Nor.Z;
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>第二，我們通過初期從OpenGL中攫取的矩陣來旋轉這個法線。我們之後規格化因此它並不全部變為螺旋形。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+				<font color=#ffffaa>// 通過矩陣旋轉</font>
+				RotateVector (TmpMatrix, TmpNormal, TmpVector);
+
+				Normalize (TmpVector);		<font color=#ffffaa>// 規格化這個新法線</font>
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>第三，我們獲得那個旋轉的法線的點積燈光方向（稱為lightAngle，因為我忘了從我的舊的light類中改變它）。我們之後約束這個值在0——1的範圍。（從-1到+1）</p>
+      </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+				<font color=#ffffaa>// 計算色度值</font>
+				TmpShade = DotProduct (TmpVector, lightAngle);
+
+				if (TmpShade &lt; 0.0f)
+					TmpShade = 0.0f;	<font color=#ffffaa>// 如果負值約束這個值到0</font>
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>第四，對於OpenGL我們象忽略紋理坐標一樣忽略這個值。陰影紋理與一個查找表一樣來表現（色度值正成為指數），這是（我認為）為什麼1D紋理被創造主要原因。對於OpenGL我們之後忽略這個頂點位置，並不斷重複，重複。至此我認為你已經抓到了概念。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+				glTexCoord1f (TmpShade);	<font color=#ffffaa>// 規定紋理的縱坐標當作這個色度值</font>
+				<font color=#ffffaa>// 送頂點</font>
+				glVertex3fv (&amp;polyData[i].Verts[j].Pos.X);
+		    }
+		}
+
+	glEnd ();						<font color=#ffffaa>// 告訴OpenGL 完成繪製</font>
+
+	glDisable (GL_TEXTURE_1D);				<font color=#ffffaa>// 1D 紋理不可用</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在我們轉移到輪廓之上。一個輪廓能以「它的相鄰的邊，一邊為可見，另一邊為不可見」定義。在OpenGL中，這是深度測試被規定小於或等於(GL_LEQUAL)當前值的地方，並且就在那時所有前面的面被精選。我們同樣也要混合線條，以使它看起來不錯：）<br>
+      那麼，我們使混合可用並規定混合模式。我們告訴OpenGL與著色線條一樣著色backfacing多邊形，並且規定這些線條的寬度。我們精選所有前面多邊形，並規定測試深度小於或等於當前的Z值。在這個線條的的顏色被規定後，我們從頭到尾循環每一個多邊形，繪製它的頂點。我們僅需忽略頂點位置，而不是法線或著色值因為我們需要的僅僅是輪廓。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	<font color=#ffffaa>// 輪廓代碼</font>
+	if (outlineDraw)						<font color=#ffffaa>// 檢查看是否我們需要繪製輪廓</font>
+	{
+		glEnable (GL_BLEND);				<font color=#ffffaa>// 使混合可用</font>
+		<font color=#ffffaa>// 調整混合模式</font>
+		glBlendFunc (GL_SRC_ALPHA ,GL_ONE_MINUS_SRC_ALPHA);
+
+		glPolygonMode (GL_BACK, GL_LINE);			<font color=#ffffaa>// 繪製輪廓線</font>
+		glLineWidth (outlineWidth);			<font color=#ffffaa>	// 調整線寬</font>
+
+		glCullFace (GL_FRONT);				<font color=#ffffaa>// 剔出前面的多邊形</font>
+
+		glDepthFunc (GL_LEQUAL);				<font color=#ffffaa>// 改變深度模式</font>
+
+		glColor3fv (&amp;outlineColor[0]);			<font color=#ffffaa>// 規定輪廓顏色</font>
+
+		glBegin (GL_TRIANGLES);				<font color=#ffffaa>// 告訴OpenGL我們想要繪製什麼</font>
+
+			for (i = 0; i &lt; polyNum; i++)		<font color=#ffffaa>// 從頭到尾循環每一個多邊形</font>
+			{
+				for (j = 0; j &lt; 3; j++)		<font color=#ffffaa>// 從頭到尾循環每一個頂點</font>
+				{
+					<font color=#ffffaa>// 送頂點</font>
+					glVertex3fv (&amp;polyData[i].Verts[j].Pos.X);
+				}
+			}
+
+		glEnd ();						<font color=#ffffaa>// 告訴 OpenGL我們已經完成</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這樣以後，我們就把它規定為以前的狀態，然後退出</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+		glDepthFunc (GL_LESS);				<font color=#ffffaa>// 重置深度測試模式</font>
+
+		glCullFace (GL_BACK);				<font color=#ffffaa>// 重置剔出背面多邊形</font>
+
+		glPolygonMode (GL_BACK, GL_FILL);			<font color=#ffffaa>// 重置背面多邊形繪製方式</font>
+
+		glDisable (GL_BLEND);				<font color=#ffffaa>//  混合不可用</font>
+	}
+}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>你現在看到Cel-Shading並非那樣難。當然技術可以提高非常多。一個好的例子是遊戲XIII 
+        http://www.nvidia.com/object/game_xiii.html，它使你認為你在一個卡通世界裡。如果你想在卡通透視技術裡達到更深層次，你可以瀏覽這本書實時透視這一章「Non-Photorealistic 
+        Rendering」。如果你更喜歡在WEB上讀論文，在這裡可以發現一大堆聯接列表：http://www.red3d.com/cwr/npr/ 
+      </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2037.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_37.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/37_CellRender.rar">RAR格式</a></p></td>
+  </tr>
+</table><table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_36.html">< 
+          第36課 </a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_38.html">第38課 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_37.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:03:22 GMT -->
+</html>

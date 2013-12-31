@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_08.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+<head>
+<title>NeHe OpenGL教程第八課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第08課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="22%"><img src="../Pic/lesson08.jpg" width="240" height="180"></td>
+            <td width="78%"><p><FONT 
+                class=head>混合:</FONT></p>
+              <p><font size="3">在這一課裡，我們在紋理的基礎上加上了混合，它看起具有透明的效果，當然解釋它不是那麼容易，當希望你喜歡它。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>簡單的透明<br>
+      OpenGL中的絕大多數特效都與某些類型的(色彩)混合有關。混色的定義為，將某個像素的顏色和已繪製在屏幕上與其對應的象素顏色相互結合。至於如何結合這兩個顏色則依賴於顏色的alpha通道的份量值，以及/或者所使用的混色函數。Alpha通常是位於顏色值末尾的第4個顏色組成份量。前面這些課我們都是用GL_RGB來指定顏色的三個份量。相應的GL_RGBA可以指定alpha份量的值。更進一步，我們可以使用glColor4f()來代替glColor3f()。<br>
+      絕大多數人都認為Alpha份量代表材料的透明度。這就是說，alpha值為0.0時所代表的材料是完全透明的。alpha值為1.0時所代表的材料則是完全不透明的。
+      <p>混色的公式<br>
+        若您對數學不感冒，而只想看看如何實現透明，請跳過這一節。若您想深入理解(色彩)混合的工作原理，這一節應該適合您吧。『譯者注:其實並不難^-^。原文中的公式如下，CKER再嘮叨一下吧。其實混合的基本原理是就將要分色的圖像各象素的顏色以及背景顏色均按照RGB規則各自分離之後，根據－圖像的RGB顏色份量*alpha值+背景的RGB顏色份量*(1-alpha值)－這樣一個簡單公式來混合之後，最後將混合得到的RGB份量重新合併。』<br>
+        公式如下：<br>
+        (Rs Sr + Rd Dr, Gs Sg + Gd Dg, Bs Sb + Bd Db, As Sa + Ad Da)<br>
+        OpenGL按照上面的公式計算這兩個象素的混色結果。小寫的s和r分別代表源象素和目標象素。大寫的S和D則是相應的混色因子。這些決定了您如何對這些像素混色。絕大多數情況下，各顏色通道的alpha混色值大小相同，這樣對源象素就有 
+        (As, As, As, As)，目標象素則有1, 1, 1, 1) - (As, As, As, As)。上面的公式就成了下面的模樣:<br>
+        (Rs As + Rd (1 - As), Gs As + Gd (1 - As), Bs As + Bs (1 - As), As As 
+        + Ad (1 - As))<br>
+        這個公式會生成透明/半透明的效果。</p>
+      <p>OpenGL中的混色<br>
+        在OpenGL中實現混色的步驟類似於我們以前提到的OpenGL過程。接著設置公式，並在繪製透明對像時關閉寫深度緩存。因為我們想在半透明的圖形背後繪製 
+        對象。這不是正確的混色方法，但絕大多數時候這種做法在簡單的項目中都工作的很好。<br>
+        Rui Martins 的補充： 正確的混色過程應該是先繪製全部的場景之後再繪製透明的圖形。並且要按照與深度緩存相反的次序來繪製(先畫最遠的物體)。<br>
+        考慮對兩個多邊形(1和2)進行alpha混合，不同的繪製次序會得到不同的結果。(這裡假定多邊形1離觀察者最近，那麼正確的過程應該先畫多邊形2，再畫多邊形1。正如您再現實中所見到的那樣，從這兩個&lt;透明的&gt;多邊形背後照射來的光線總是先穿過多邊形2，再穿過多邊形1，最後才到達觀察者的眼睛。)<br>
+        在深度緩存啟用時，您應該將透明圖形按照深度進行排序，並在全部場景繪製完畢之後再繪製這些透明物體。否則您將得到不正確的結果。我知道某些時候這樣做是很令人痛苦的，但這是正確的方法。<br>
+        我們將使用第七課的代碼。一開始先在代碼開始處增加兩個新的變量。出於清晰起見，我重寫了整段代碼。<br>
+      </p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>bool    blend;						<font color="#ffffaa">// 是否混合</font><font color="#aaffaa" size="3"><font color="#ffffaa">?</font></font>
+bool	bp;						<font
+color="#ffffaa">// B 鍵按下了麼?</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">然後往下移動到 LoadGLTextures() 這裡。找到&quot; if (TextureImage[0]=LoadBMP(&quot;Data/Crate.bmp&quot;)) 
+        &quot;這一行。我們現在使用有色玻璃紋理來代替上一課中的木箱紋理。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	if (TextureImage[0]=LoadBMP(&quot;Data/glass.bmp&quot;))	<font color="#ffffaa">// 載入玻璃位圖</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">在InitGL()代碼段加入以下兩行。第一行以全亮度繪製此物體，並對其進行50%的alpha混合(半透明)。當混合選項打開時，此物體將會產生50%的透明效果。第二行設置所採用的混合類型。<br>
+        Rui Martins 的補充: alpha通道的值為 0.0意味著物體材質是完全透明的。1.0 則意味著完全不透明。 </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	glColor4f(1.0f,1.0f,1.0f,0.5f);			<font color="#ffffaa">// 全亮度， 50% Alpha 混合</font>
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE);		<font
+color="#ffffaa">// 基於源象素alpha通道值的半透明混合函數</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">在接近第七課結尾處的地方找到下面的代碼段。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	if (keys[VK_LEFT])				<font color="#ffffaa">// Left方向鍵按下了麼?</font>
+	{
+		yspeed-=0.01f;				<font
+color="#ffffaa">// 若是, 減少yspeed </font>
+	}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">接著上面的代碼，我們增加如下的代碼。這幾行監視B鍵是否按下。如果是的話，計算機檢查混合選項是否已經打開。然後將其置為相反的狀態。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>	if (keys['B'] &amp;&amp; !bp)				<font color="#ffffaa">// B 健按下且bp為 FALSE麼?</font>
+	{
+		bp=TRUE;				<font
+color="#ffffaa">// 若是， bp 設為 TRUE</font>
+		blend = !blend;				<font color="#ffffaa">// 切換混合選項的 TRUE / FALSE</font>
+		if(blend)				<font
+color="#ffffaa">// 混合打開了麼?</font>
+		{
+			glEnable(GL_BLEND);		<font color="#ffffaa">// 打開混合</font>
+			glDisable(GL_DEPTH_TEST);	<font
+color="#ffffaa">// 關閉深度測試</font>
+		}
+		else					<font color="#ffffaa">// 否則</font>
+		{
+			glDisable(GL_BLEND);		<font
+color="#ffffaa">// 關閉混合</font>
+			glEnable(GL_DEPTH_TEST);	<font
+color="#ffffaa">// 打開深度測試</font>
+		}
+	}
+	if (!keys['B'])					<font
+color="#ffffaa">//  B 鍵鬆開了麼?</font>
+	{
+		bp=FALSE;				<font color="#ffffaa">// 若是， bp設為 FALSE</font>
+	}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"><p>但是怎樣才能在使用紋理貼圖的時候指定混合時的顏色呢?很簡單，在調整貼圖模式時，文理貼圖的每個像素點的顏色都是由alpha通道參數與當前地象素顏色相乘所得到的。比如，繪製的顏色是 
+          (0.5, 0.6, 0.4),我們會把顏色相乘得到(0.5, 0.6, 0.4, 0.2) (alpha參數在沒有指定時，缺省為零)。<br>
+          就是如此！OpenGL實現Alpha混合的確很簡單！ </p>
+        <p>原文注 (11/13/99)<br>
+          我(NeHe)混色代碼進行了修改，以使顯示的物體看起來更逼真。同時對源象素和目的象素使用alpha參數來混合，會導致物體的人造痕跡看起來很明顯。 
+          會使得物體的背面沿著側面的地方顯得更暗。基本上物體會看起來很怪異。我所用的混色方法也許不是最好的，但的確能夠工作。啟用光源之後，物體看起來很逼真。感謝Tom提供的原始代碼，他採用的混色方法是正確的，但物體看起來並不像所期望的那樣吸引人:)<br>
+          代碼所作的再次修改是因為在某些顯卡上glDepthMask()函數存在尋址問題。這條命令在某些卡上啟用或關閉深度緩衝測試時似乎不是很有效，所以我已經將啟用或關閉深度緩衝測試的代碼轉成老式的glEnable和glDisable。 
+        </p>
+        <p>紋理貼圖的Alpha混合<br>
+          用於紋理貼圖的alpha參數可以像顏色一樣從問題貼圖中讀取。方法如下，您需要在載入所需的材質同時取得其的alpha參數。然後在調用glTexImage2D()時使用GL_RGBA的顏色格式。</p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+              <p>感謝<br>
+                感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+                感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+              <p>資源下載: <br>
+                文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2008.mht">網頁格式</a> 
+                <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_08.pdf">PDF格式</a><br>
+                源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/08_Blend.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+        <table border="0" width="100%">
+<TBODY>
+      <tr>
+              <td align="left" width="50%"><a href="Tutorial_07.html"><b><font size="-1">&lt; 
+                第07課</font></b></a></td>
+              <td align="right" width="50%"><a href="Tutorial_09.html"><b><font size="-1">第09課 
+                &gt;</font></b></a></td>
+      </tr>
+</TBODY>
+    </table>
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+  <TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_08.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+</html>

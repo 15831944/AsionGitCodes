@@ -1,0 +1,412 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_31.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:58 GMT -->
+<head>
+<title>NeHe OpenGL教程第三十一課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第31課 
+      </i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="28%"><img src="../Pic/lesson31.jpg" width="240" height="180"></td>
+            <td width="72%"><p><FONT size="3" class=head>模型加載</FONT><FONT class=head>:</FONT></p>
+              <p><font size="3">你知道大名鼎鼎的Milkshape3D建模軟件麼，我們將加載它的模型，當然你可以加載任何你認為不錯的模型。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這篇渲染模型的文章是由Brett Porter所寫的。<br>
+      這篇教程的代碼是從PortaLib3D中提取出來的，PortaLib3D是一個可以讀取3D文件實用庫。
+      <p>這篇教程的代碼是以第六課為基礎的，我們只討論改變的部分。</p>
+      <p>這課中使用的模型是從Milkshape3D中提取出來的，Milkshape3D是一個非常好的建模軟件，它包含了自己的文件格式，所以你能很容易去分析和理解。</p>
+      <p>但是文件格式並不能使你加載一個模型，你必須自己定義一個結構去保存數據，接著把數據讀入那個結構，我們將告訴你如何定義這樣一個結構。</p>
+      <p>模型的定義在model.h中，好吧我們開始吧：</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+<font color=#ffffaa>// 頂點結構</font>
+struct Vertex
+{
+	char m_boneID;	<font color=#ffffaa>// 頂點所在的骨骼</font>
+	float m_location[3];
+};
+
+<font color=#ffffaa>// 頂點的個數和數據</font>
+int m_numVertices;
+Vertex *m_pVertices;
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在這一課你，你可以忽略m_boneID，我們將在以後的教程中介紹骨骼動畫。m_location定義頂點的位置。
+      <p>下面是三角形結構</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+	  
+<pre><font color=#ffffaa>// 三角形結構</font>
+struct Triangle
+{
+	float m_vertexNormals[3][3];
+	float m_s[3], m_t[3];
+	int m_vertexIndices[3];
+};
+
+<font color=#ffffaa>// 使用的三角形</font>
+int m_numTriangles;
+Triangle *m_pTriangles;
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>3個頂點構成一個三角形，m_vertexIndices保存了三個頂點的索引。 m_s 和 m_t儲存了三個頂點的紋理坐標。m_vertexNormals保存了三個頂點的法線。 
+      <p>下面我們定義網格結構</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+	  
+<pre><font color=#ffffaa>// 網格結構</font>
+struct Mesh
+{
+	int m_materialIndex;
+	int m_numTriangles;
+	int *m_pTriangleIndices;
+};
+
+<font color=#ffffaa>// 使用的網格</font>
+int m_numMeshes;
+Mesh *m_pMeshes;
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>m_pTriangleIndices指向包含在網格中三角形的數據，它是動態分配的。 m_materialIndex 
+      指向了這個網格所用的材質。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+<font color=#ffffaa>// 材質屬性</font>
+struct Material
+{
+	float m_ambient[4], m_diffuse[4], m_specular[4], m_emissive[4];
+	float m_shininess;
+	GLuint m_texture;
+	char *m_pTextureFilename;
+};
+
+<font color=#ffffaa>// 使用的紋理</font>
+int m_numMaterials;
+Material *m_pMaterials;
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>這裡我們使用與OpenGL中相對的材質。 <p>下面的代碼用來載入模型，我們通過重載loadModelData函數來實現它。</p>
+      我們創建了一個新類MilkshapeModel,它是從Model繼承而來的。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+bool MilkshapeModel::loadModelData( const char *filename )
+{
+	ifstream inputFile( filename, ios::in | ios::binary | ios::nocreate );
+	if ( inputFile.fail())
+		return false;	<font color=#ffffaa>// 不能打開文件，返回失敗</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>以二進制的方式打開文件，如果失敗則返回</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	inputFile.seekg( 0, ios::end );
+	long fileSize = inputFile.tellg();
+	inputFile.seekg( 0, ios::beg );
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>返回文件大小</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	byte *pBuffer = new byte[fileSize];
+	inputFile.read( pBuffer, fileSize );
+	inputFile.close();
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>分配一個內存，載入文件，並關閉文件</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	const byte *pPtr = pBuffer;
+	MS3DHeader *pHeader = ( MS3DHeader* )pPtr;
+	pPtr += sizeof( MS3DHeader );
+
+	if ( strncmp( pHeader-&gt;m_ID, "MS3D000000", 10 ) != 0 )
+		return false;	<font color=#ffffaa>// 如果不是一個有效的MS3D文件則返回</font>
+
+	if ( pHeader-&gt;m_version &lt; 3 || pHeader-&gt;m_version &gt; 4 )
+		return false;	<font color=#ffffaa>// 如果不能支持這種版本的文件，則返回失敗</font></pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>上面的文件讀取文件頭</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	int nVertices = *( word* )pPtr;
+	m_numVertices = nVertices;
+	m_pVertices = new Vertex[nVertices];
+	pPtr += sizeof( word );
+
+	int i;
+	for ( i = 0; i &lt; nVertices; i++ )
+	{
+		MS3DVertex *pVertex = ( MS3DVertex* )pPtr;
+		m_pVertices[i].m_boneID = pVertex-&gt;m_boneID;
+		memcpy( m_pVertices[i].m_location, pVertex-&gt;m_vertex, sizeof( float )*3 );
+		pPtr += sizeof( MS3DVertex );
+	}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>上面的代碼讀取頂點數據</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	int nTriangles = *( word* )pPtr;
+	m_numTriangles = nTriangles;
+	m_pTriangles = new Triangle[nTriangles];
+	pPtr += sizeof( word );
+
+	for ( i = 0; i &lt; nTriangles; i++ )
+	{
+		MS3DTriangle *pTriangle = ( MS3DTriangle* )pPtr;
+		int vertexIndices[3] = { pTriangle-&gt;m_vertexIndices[0], pTriangle-&gt;m_vertexIndices[1], pTriangle-&gt;m_vertexIndices[2] };
+		float t[3] = { 1.0f-pTriangle-&gt;m_t[0], 1.0f-pTriangle-&gt;m_t[1], 1.0f-pTriangle-&gt;m_t[2] };
+		memcpy( m_pTriangles[i].m_vertexNormals, pTriangle-&gt;m_vertexNormals, sizeof( float )*3*3 );
+		memcpy( m_pTriangles[i].m_s, pTriangle-&gt;m_s, sizeof( float )*3 );
+		memcpy( m_pTriangles[i].m_t, t, sizeof( float )*3 );
+		memcpy( m_pTriangles[i].m_vertexIndices, vertexIndices, sizeof( int )*3 );
+		pPtr += sizeof( MS3DTriangle );
+	}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>上面的代碼用來讀取三角形信息，因為MS3D使用窗口坐標系而OpenGL使用笛卡兒坐標系，所以需要反轉每個頂點Y方向的紋理坐標</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	int nGroups = *( word* )pPtr;
+	m_numMeshes = nGroups;
+	m_pMeshes = new Mesh[nGroups];
+	pPtr += sizeof( word );
+	for ( i = 0; i &lt; nGroups; i++ )
+	{
+		pPtr += sizeof( byte );	
+		pPtr += 32;	
+
+		word nTriangles = *( word* )pPtr;
+		pPtr += sizeof( word );
+		int *pTriangleIndices = new int[nTriangles];
+		for ( int j = 0; j &lt; nTriangles; j++ )
+		{
+			pTriangleIndices[j] = *( word* )pPtr;
+			pPtr += sizeof( word );
+		}
+
+		char materialIndex = *( char* )pPtr;
+		pPtr += sizeof( char );
+
+		m_pMeshes[i].m_materialIndex = materialIndex;
+		m_pMeshes[i].m_numTriangles = nTriangles;
+		m_pMeshes[i].m_pTriangleIndices = pTriangleIndices;
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>上面的代碼填充網格結構</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	int nMaterials = *( word* )pPtr;
+	m_numMaterials = nMaterials;
+	m_pMaterials = new Material[nMaterials];
+	pPtr += sizeof( word );
+	for ( i = 0; i &lt; nMaterials; i++ )
+	{
+		MS3DMaterial *pMaterial = ( MS3DMaterial* )pPtr;
+		memcpy( m_pMaterials[i].m_ambient, pMaterial-&gt;m_ambient, sizeof( float )*4 );
+		memcpy( m_pMaterials[i].m_diffuse, pMaterial-&gt;m_diffuse, sizeof( float )*4 );
+		memcpy( m_pMaterials[i].m_specular, pMaterial-&gt;m_specular, sizeof( float )*4 );
+		memcpy( m_pMaterials[i].m_emissive, pMaterial-&gt;m_emissive, sizeof( float )*4 );
+		m_pMaterials[i].m_shininess = pMaterial-&gt;m_shininess;
+		m_pMaterials[i].m_pTextureFilename = new char[strlen( pMaterial-&gt;m_texture )+1];
+		strcpy( m_pMaterials[i].m_pTextureFilename, pMaterial-&gt;m_texture );
+		pPtr += sizeof( MS3DMaterial );
+	}
+
+	reloadTextures();
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>上面的代碼加載紋理數據</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	delete[] pBuffer;
+
+	return true;
+}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>上面的代碼設置好了一切參數，但紋理還沒有載入內存，下面的代碼完成這個功能。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+void Model::reloadTextures()
+{
+	for ( int i = 0; i &lt; m_numMaterials; i++ )
+		if ( strlen( m_pMaterials[i].m_pTextureFilename ) &gt; 0 )
+			m_pMaterials[i].m_texture = LoadGLTexture( m_pMaterials[i].m_pTextureFilename );
+		else
+			m_pMaterials[i].m_texture = 0;
+}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>有了數據，就可以寫出繪製函數了，下面的函數根據模型的信息，按網格分組，分別繪製每一組的數據。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+void Model::draw()
+{
+	GLboolean texEnabled = glIsEnabled( GL_TEXTURE_2D );
+</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+	<font color=#ffffaa>// 按網格分組繪製</font>
+	for ( int i = 0; i &lt; m_numMeshes; i++ )
+	{
+</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+		int materialIndex = m_pMeshes[i].m_materialIndex;
+		if ( materialIndex &gt;= 0 )
+		{
+			glMaterialfv( GL_FRONT, GL_AMBIENT, m_pMaterials[materialIndex].m_ambient );
+			glMaterialfv( GL_FRONT, GL_DIFFUSE, m_pMaterials[materialIndex].m_diffuse );
+			glMaterialfv( GL_FRONT, GL_SPECULAR, m_pMaterials[materialIndex].m_specular );
+			glMaterialfv( GL_FRONT, GL_EMISSION, m_pMaterials[materialIndex].m_emissive );
+			glMaterialf( GL_FRONT, GL_SHININESS, m_pMaterials[materialIndex].m_shininess );
+
+			if ( m_pMaterials[materialIndex].m_texture &gt; 0 )
+			{
+				glBindTexture( GL_TEXTURE_2D, m_pMaterials[materialIndex].m_texture );
+				glEnable( GL_TEXTURE_2D );
+			}
+			else
+				glDisable( GL_TEXTURE_2D );
+		}
+		else
+		{
+			glDisable( GL_TEXTURE_2D );
+		}
+</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+		glBegin( GL_TRIANGLES );
+		{
+			for ( int j = 0; j &lt; m_pMeshes[i].m_numTriangles; j++ )
+			{
+				int triangleIndex = m_pMeshes[i].m_pTriangleIndices[j];
+				const Triangle* pTri = &amp;m_pTriangles[triangleIndex];
+
+				for ( int k = 0; k &lt; 3; k++ )
+				{
+					int index = pTri-&gt;m_vertexIndices[k];
+
+					glNormal3fv( pTri-&gt;m_vertexNormals[k] );
+					glTexCoord2f( pTri-&gt;m_s[k], pTri-&gt;m_t[k] );
+					glVertex3fv( m_pVertices[index].m_location );
+				}
+			}
+		}
+		glEnd();
+	}
+</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+	if ( texEnabled )
+		glEnable( GL_TEXTURE_2D );
+	else
+		glDisable( GL_TEXTURE_2D );
+}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>有了上面的函數，我們來看看如何使用它們。首先，我們定義一個MilkshapeModel類。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	Model *pModel = NULL;	<font color=#ffffaa>// 定義一個指向模型類的指針</font>
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接著加載模型文件</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	pModel = new MilkshapeModel();
+	if ( pModel-&gt;loadModelData( "data/model.ms3d" ) == false )
+	{
+		MessageBox( NULL, "不能加載data/model.ms3d文件", "加載錯誤", MB_OK | MB_ICONERROR );
+		return 0;									<font color=#ffffaa>// 返回失敗</font>
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接著載入紋理</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+	pModel-&gt;reloadTextures();
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>完成了初始化操作，我們來實際繪製我們的模型</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int DrawGLScene(GLvoid)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	<font color=#ffffaa>// 情況緩存</font>
+	glLoadIdentity();				
+	gluLookAt( 75, 75, 75, 0, 0, 0, 0, 1, 0 );
+
+	glRotatef(yrot,0.0f,1.0f,0.0f);
+
+	<font color=#ffffaa>//繪製模型</font>
+	pModel-&gt;draw();
+
+	yrot+=1.0f;
+	return TRUE;						<font color=#ffffaa>//成功返回 </font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>簡單吧？下一步我們該做什麼？在以後的教程中，我將會加入骨骼動畫的知識，到時候見吧！ </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2031.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_31.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/31_LoadMilkshapeFile.rar">RAR格式</a></p></td>
+  </tr>
+</table><table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_30.html">< 
+          第30課 </a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_32.html">第32課 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_31.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:02:02 GMT -->
+</html>

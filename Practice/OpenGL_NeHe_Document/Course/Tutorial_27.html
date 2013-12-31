@@ -1,0 +1,646 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_27.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:16 GMT -->
+<head>
+<title>NeHe OpenGL教程第二十七課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第27課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="25%"><img src="../Pic/lesson27.jpg" width="240" height="180"></td>
+            <td width="75%"><p><FONT 
+              class=head>影子:</FONT></p>
+              <p><font size="3">這是一個高級的主題，請確信你已經熟練的掌握了基本的OpenGL，並熟悉蒙板緩存。當然它會給你留下深刻的印象的。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>歡迎來到另一個有些複雜的課程，陰影。這一課的效果好的有些讓人不可思議，陰影可以變形，混合在其他的物體上。<br>
+      這一課要求你必須對OpenGL比較瞭解，它假設你知道許多OpenGL的知識，你必須知道蒙板緩存，基本的OpenGL步驟。如果你對這些不太熟悉，我建議你可以看看前面的教程。當然，在這一課裡，我們用到了很多數學知識，請準備好一本數學手冊在你的身邊。<br>
+      首先我們定義陰影體可以延伸的距離。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+<font color=#ffffaa>// 定義陰影體可以延伸的距離</font>
+#define INFINITY	100
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面定義一個3D頂點結構</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+<font color=#ffffaa>// 3D頂點結構</font>
+struct sPoint
+{
+	GLfloat x, y, z;
+};
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>定義一個平面結構</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>
+<font color=#ffffaa>// 平面方程為: ax + by + cz + d = 0</font>
+struct sPlaneEq
+{
+	GLfloat a, b, c, d;
+};
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面定義一個用來投影的三角形的結構 
+      <ul>
+        <li>3個整形索引指定了模型中三角形的三個頂點</li>
+        <li>第二個變量指定了三角形面的法線</li>
+        <li>平面方程描述了三角所在的平面</li>
+        <li>臨近的3個頂點索引，指定了與這個三角形相鄰的三個頂點</li>
+        <li>最後一個變量指定這個三角形是否投出陰影</li>
+      </ul>
+      </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+<font color=#ffffaa>// 描述一個模型表面的結構</font>
+struct sPlane
+{
+	unsigned int p[3];			<font color=#ffffaa>// 3個整形索引指定了模型中三角形的三個頂點</font>
+	sPoint normals[3];			<font color=#ffffaa>// 第二個變量指定了三角形面的法線</font>
+	unsigned int neigh[3]; <font color=#ffffaa>		// 與本三角形三個邊相鄰的面的索引</font>
+	sPlaneEq PlaneEq;			<font color=#ffffaa>// 平面方程描述了三角所在的平面</font>
+	bool visible;			<font color=#ffffaa>// 最後一個變量指定這個三角形是否投出陰影?</font>
+};
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>最後我們用下面的結構描述一個產生陰影的物體。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>struct glObject{<br>	GLuint nPlanes, nPoints;<br>	sPoint points[100];<br>	sPlane planes[200];<br>};</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼用來讀取模型，它的代碼本身就解釋了它的功能。它從文件中讀取數據，並把頂點和索引存儲在上面定義的結構中，並把所有的臨近頂點初始化為-1，它代表這沒有任何頂點與它相鄰，我們將在以後計算它。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+bool readObject( const char *filename, glObject*o)
+{
+  FILE *file;
+  unsigned int i;
+
+  file = fopen(st, "r");
+  if (!file) return FALSE;
+  <font color=#ffffaa>//讀取頂點</font>
+  fscanf(file, "%d", &(o->nPoints));
+  for (i=1;i<=o->nPoints;i++){
+    fscanf(file, "%f", &(o->points[i].x));
+    fscanf(file, "%f", &(o->points[i].y));
+    fscanf(file, "%f", &(o->points[i].z));
+  }
+ <font color=#ffffaa> //讀取三角形面</font>
+  fscanf(file, "%d", &(o->nPlanes));
+  for (i=0;i<o->nPlanes;i++){
+    fscanf(file, "%d", &(o->planes[i].p[0]));
+    fscanf(file, "%d", &(o->planes[i].p[1]));
+    fscanf(file, "%d", &(o->planes[i].p[2]));
+	<font color=#ffffaa>//讀取每個頂點的法線</font>
+    fscanf(file, "%f", &(o->planes[i].normals[0].x));
+    fscanf(file, "%f", &(o->planes[i].normals[0].y));
+    fscanf(file, "%f", &(o->planes[i].normals[0].z));
+    fscanf(file, "%f", &(o->planes[i].normals[1].x));
+    fscanf(file, "%f", &(o->planes[i].normals[1].y));
+    fscanf(file, "%f", &(o->planes[i].normals[1].z));
+    fscanf(file, "%f", &(o->planes[i].normals[2].x));
+    fscanf(file, "%f", &(o->planes[i].normals[2].y));
+    fscanf(file, "%f", &(o->planes[i].normals[2].z));
+  }
+	return true;
+}
+</pre>
+</font><font color=#aaffaa size=3></font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td><td width=100% valign=top><p>現在從setConnectivity函數開始,事情變得越來越複雜了,這個函數用來查找每個面的相鄰的頂點,下面是它的偽代碼: 
+      </p>
+      </td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre>對於模型中的每一個面A<br>	對於面A中的每一條邊<br>		如果我們不只到這條邊相鄰的頂點<br>			那麼對於模型中除了面A外的每一個面B<br>				對於面B中的每一條邊<br>					如果面A的邊和面B的邊是同一條邊,那麼這兩個面相鄰<br>						設置面A和面B的相鄰屬性</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼完成上面偽代碼中最後兩行的內容,你先獲得每個面中邊的兩個頂點,然後檢測他們是否相鄰,如果是則設置各自的相鄰頂點信息</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	int vertA1 = pFaceA->vertexIndices[edgeA];
+	int vertA2 = pFaceA->vertexIndices[( edgeA+1 )%3];
+
+	int vertB1 = pFaceB->vertexIndices[edgeB];
+	int vertB2 = pFaceB->vertexIndices[( edgeB+1 )%3];
+
+	<font color=#ffffaa>// 測試他們是否為同一邊,如果是則設置相應的相鄰頂點信息</font>
+	if (( vertA1 == vertB1 && vertA2 == vertB2 ) || ( vertA1 == vertB2 && vertA2 == vertB1 ))
+	{
+		pFaceA->neighbourIndices[edgeA] = faceB;
+		pFaceB->neighbourIndices[edgeB] = faceA;
+		edgeFound = true;
+		break;
+	}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%">
+  <tr>
+    <td><img src="../Pic/tl.png" width=28 height=28></td>
+    <td width="100%"><img src="../Pic/tc.png" width=100% height=28></td>
+    <td><img src="../Pic/tr.png" width=28 height=28></td>
+  </tr>
+</table>
+<table border=0 cellpadding=0 cellspacing=0 width="100%">
+  <tr>
+    <td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>完整的SetConnectivity函數的代碼如下</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td>
+  </tr>
+</table>
+<table border=0 cellpadding=0 cellspacing=0 width="100%">
+  <tr>
+    <td><img src="../Pic/bl.png" width=28 height=28></td>
+    <td width="100%"><img src="../Pic/bc.png" width=100% height=28></td>
+    <td><img src="../Pic/br.png" width=28 height=28></td>
+  </tr>
+</table>
+<pre>
+<font color=#aaffaa size="3">
+<font color=#ffffaa>// 設置相鄰頂點信息</font>
+inline void SetConnectivity(glObject *o){
+	unsigned int p1i, p2i, p1j, p2j;
+	unsigned int P1i, P2i, P1j, P2j;
+	unsigned int i,j,ki,kj;
+
+	<font color=#ffffaa>//對於模型中的每一個面A</font>
+	for(i=0;i<o->nPlanes-1;i++)
+	{
+		<font color=#ffffaa>//對於除了此面的其它的面B</font>
+		for(j=i+1;j<o->nPlanes;j++)
+		{
+			<font color=#ffffaa>//對於面A中的每一個相鄰的頂點</font>
+			for(ki=0;ki<3;ki++)
+			{
+				<font color=#ffffaa>//如果這個相鄰的頂點沒有被設置</font>
+				if(!o->planes[i].neigh[ki])
+				{
+					for(kj=0;kj<3;kj++)
+					{
+						p1i=ki;
+						p1j=kj;
+						p2i=(ki+1)%3;
+						p2j=(kj+1)%3;
+
+						p1i=o->planes[i].p[p1i];
+						p2i=o->planes[i].p[p2i];
+						p1j=o->planes[j].p[p1j];
+						p2j=o->planes[j].p[p2j];
+				
+						<font color=#ffffaa>//如果面A的邊P1i->P1j和面B的邊P2i->P2j為同一條邊，則又下面的公式的P1i=P1j，並且P2i=P2j</font>
+						P1i=((p1i+p2i)-abs(p1i-p2i))/2;
+						P2i=((p1i+p2i)+abs(p1i-p2i))/2;
+						P1j=((p1j+p2j)-abs(p1j-p2j))/2;
+						P2j=((p1j+p2j)+abs(p1j-p2j))/2;
+
+						<font color=#ffffaa>//記錄與這個邊相鄰的面的索引</font>
+						if((P1i==P1j) && (P2i==P2j))
+						{
+							o->planes[i].neigh[ki] = j+1;	  
+							o->planes[j].neigh[kj] = i+1;	  
+						}
+					}
+				}
+			}
+		}
+	}
+}
+</font></pre>
+<font color=#aaffaa size=3> </font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的函數用來繪製模型</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+<font color=#ffffaa>// 繪製模型，像以前一樣它繪製組成模型的三角形</font>
+void drawObject( const ShadowedObject& object )
+{
+	glBegin( GL_TRIANGLES );
+	for ( int i = 0; i < object.nFaces; i++ )
+	{
+		const Face& face = object.pFaces[i];
+
+		for ( int j = 0; j < 3; j++ )
+		{
+			const Point3f& vertex = object.pVertices[face.vertexIndices[j]];
+
+			glNormal3f( face.normals[j].x, face.normals[j].y, face.normals[j].z );
+			glVertex3f( vertex.x, vertex.y, vertex.z );
+		}
+	}
+	glEnd();
+}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的函數用來計算平面的方程參數</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void calculatePlane( const ShadowedObject& object, Face& face )
+{
+	<font color=#ffffaa>// 獲得平面的三個頂點</font>
+	const Point3f& v1 = object.pVertices[face.vertexIndices[0]];
+	const Point3f& v2 = object.pVertices[face.vertexIndices[1]];
+	const Point3f& v3 = object.pVertices[face.vertexIndices[2]];
+
+	face.planeEquation.a = v1.y*(v2.z-v3.z) + v2.y*(v3.z-v1.z) + v3.y*(v1.z-v2.z);
+	face.planeEquation.b = v1.z*(v2.x-v3.x) + v2.z*(v3.x-v1.x) + v3.z*(v1.x-v2.x);
+	face.planeEquation.c = v1.x*(v2.y-v3.y) + v2.x*(v3.y-v1.y) + v3.x*(v1.y-v2.y);
+	face.planeEquation.d = -( v1.x*( v2.y*v3.z - v3.y*v2.z ) +
+				v2.x*(v3.y*v1.z - v1.y*v3.z) +
+				v3.x*(v1.y*v2.z - v2.y*v1.z) );
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>你還可以呼吸麼?好的,我們繼續:) 接下來你將學習如何去投影,castShadow函數幾乎用到了所有OpenGL的功能,完成這個函數後,把它傳遞到doShadowPass函數來通過兩個渲染通道繪製出陰影.<br>
+      首先,我們看看哪些面面對著燈光,我們可以通過燈光位置和平面方程計算出.如果燈光到平面的位置大於0,則位於燈光的上方,否則位於燈光的下方(如果有什麼問題,翻一下你高中的解析幾何).</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void castShadow( ShadowedObject& object, GLfloat *lightPosition )
+{
+	<font color=#ffffaa>// 設置哪些面在燈光的前面</font>
+	for ( int i = 0; i < object.nFaces; i++ )
+	{
+		const Plane& plane = object.pFaces[i].planeEquation;
+
+		GLfloat side = plane.a*lightPosition[0]+
+			plane.b*lightPosition[1]+
+			plane.c*lightPosition[2]+
+			plane.d;
+
+		if ( side > 0 )
+			object.pFaces[i].visible = true;
+		else
+			object.pFaces[i].visible = false;
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面設置必要的狀態來渲染陰影.<br>
+      首先,禁用燈光和繪製顏色,因為我們不計算光照,這樣可以節約計算量.<br>
+      接著,設置深度緩存,深度測試還是需要的,但我們不希望我們的陰影體向實體一樣具有深度,所以關閉深度緩存.<br>
+      最後我們啟用蒙板緩存,讓陰影體的位置在蒙板中被設置為1.</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>	glDisable( GL_LIGHTING );					<font color=#ffffaa>// 關閉燈光</font>
+	glColorMask( GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE );		<font color=#ffffaa>// 關閉顏色緩存的寫入</font>	
+	glDepthFunc( GL_LEQUAL );					<font color=#ffffaa>// 設置深度比較函數</font>
+	glDepthMask( GL_FALSE );					<font color=#ffffaa>// 關閉深度緩存的寫入</font>	
+	glEnable( GL_STENCIL_TEST );				<font color=#ffffaa>// 使用蒙板緩存</font>
+	glStencilFunc( GL_ALWAYS, 1, 0xFFFFFFFFL );	<font color=#ffffaa>		// 設置蒙板函數</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在到了陰影被實際渲染得地方了,我們使用了下面提到的doShadowPass函數,它用來繪製陰影體的邊界面.我們通過兩個步驟來繪製陰影體,首先使用前向面增加陰影體在蒙板緩存中的值,接著使用後向面減少陰影體在蒙板緩存中的值.</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>	<font color=#ffffaa>// 如果是逆時針（即面向視點）的多邊形，通過了蒙板和深度測試，則把蒙板的值增加1</font>
+	glFrontFace( GL_CCW );
+	glStencilOp( GL_KEEP, GL_KEEP, GL_INCR );
+	doShadowPass( object, lightPosition );
+	<font color=#ffffaa>// 如果是順時針（即背向視點）的多邊形，通過了蒙板和深度測試，則把蒙板的值減少1</font>
+	glFrontFace( GL_CW );
+	glStencilOp( GL_KEEP, GL_KEEP, GL_DECR );
+	doShadowPass( object, lightPosition );
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>為了更好的理解這兩個步驟,我建議你把第二步註釋掉看看效果,如下所示: <FONT face=Tahoma,Verdana,sans-serif size=-1><br>
+      <br>
+      <table border="0" align="center">
+        <tr align="center" valign="top"> 
+          <td><img src="../Pic/pass1.jpg" width="200" height="150"></td>
+          <td><img src="../Pic/pass2.jpg" width="200" height="150"></td>
+        </tr>
+        <tr align="center" valign="top"> 
+          <td>圖 1: 步驟1</td>
+          <td>圖 2: 步驟2</td>
+        </tr>
+      </table>
+      <br>
+      <br>
+      </font>最後一步就是把陰影體所在的位置繪製上陰影的顏色</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glFrontFace( GL_CCW );
+	glColorMask( GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE );	
+
+	<font color=#ffffaa>// 把陰影繪製上顏色</font>
+	glColor4f( 0.0f, 0.0f, 0.0f, 0.4f );
+	glEnable( GL_BLEND );
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+	glStencilFunc( GL_NOTEQUAL, 0, 0xFFFFFFFFL );
+	glStencilOp( GL_KEEP, GL_KEEP, GL_KEEP );
+	glPushMatrix();
+	glLoadIdentity();
+	glBegin( GL_TRIANGLE_STRIP );
+		glVertex3f(-0.1f, 0.1f,-0.10f);
+		glVertex3f(-0.1f,-0.1f,-0.10f);
+		glVertex3f( 0.1f, 0.1f,-0.10f);
+		glVertex3f( 0.1f,-0.1f,-0.10f);
+	glEnd();
+	glPopMatrix();
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的部分我們繪製構成陰影體邊界的四邊形,當我們循環所有的三角形面的時候,我們檢測它是否是邊界邊,如果是我們繪製從燈光到這個邊界邊的射線,並衍生它用來構成四邊形.
+<p>這裡要用一個蠻力,我們檢測物體模型中每一個三角形面,找出其邊界並連接燈光到邊界的直線,把直線延長出一定的距離,構成陰影體.</p>
+      <p>下面的代碼完成這些功能,它看起來並沒有想像的複雜.</p></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<pre>
+<font color=#aaffaa size=3>void doShadowPass(glObject *o, float *lp)
+{
+	unsigned int	i, j, k, jj;
+	unsigned int	p1, p2;
+	sPoint			v1, v2;
+
+	<font color=#ffffaa>//對模型中的每一個面</font>
+	for (i=0; i<o->nPlanes;i++)
+	{	
+		<font color=#ffffaa>//如果面在燈光的前面</font>
+		if (o->planes[i].visible)
+		{
+			<font color=#ffffaa>//對於被燈光照射的面的每一個相鄰的面</font>
+			for (j=0;j<3;j++)
+			{
+				k = o->planes[i].neigh[j];
+				<font color=#ffffaa>//如果面不存在，或不被燈光照射，那麼這個邊是邊界</font>
+				if ((!k) || (!o->planes[k-1].visible))
+				{
+					<font color=#ffffaa>// 獲得面的兩個頂點</font>
+					p1 = o->planes[i].p[j];
+					jj = (j+1)%3;
+					p2 = o->planes[i].p[jj];
+
+					<font color=#ffffaa>//計算邊的頂點到燈光的方向，並放大100倍</font>
+					v1.x = (o->points[p1].x - lp[0])*100;
+					v1.y = (o->points[p1].y - lp[1])*100;
+					v1.z = (o->points[p1].z - lp[2])*100;
+
+					v2.x = (o->points[p2].x - lp[0])*100;
+					v2.y = (o->points[p2].y - lp[1])*100;
+					v2.z = (o->points[p2].z - lp[2])*100;
+					
+					<font color=#ffffaa>//繪製構成陰影體邊界的面</font>
+					glBegin(GL_TRIANGLE_STRIP);
+						glVertex3f(o->points[p1].x,
+									o->points[p1].y,
+									o->points[p1].z);
+						glVertex3f(o->points[p1].x + v1.x,
+									o->points[p1].y + v1.y,
+									o->points[p1].z + v1.z);
+
+						glVertex3f(o->points[p2].x,
+									o->points[p2].y,
+									o->points[p2].z);
+						glVertex3f(o->points[p2].x + v2.x,
+									o->points[p2].y + v2.y,
+									o->points[p2].z + v2.z);
+					glEnd();
+				}
+			}
+		}
+	}
+
+}
+</font>
+</pre>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>既然我們已經能繪製陰影了,那麼我們開始繪製我們的場景吧</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+bool drawGLScene()
+{
+	GLmatrix16f Minv;
+	GLvector4f wlp, lp;
+
+	<font color=#ffffaa>// 清空緩存</font>
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	glLoadIdentity();							<font color=#ffffaa>// 設置燈光，並繪製球</font>
+	glTranslatef(0.0f, 0.0f, -20.0f);				
+	glLightfv(GL_LIGHT1, GL_POSITION, LightPos);			
+	glTranslatef(SpherePos[0], SpherePos[1], SpherePos[2]);		
+	gluSphere(q, 1.5f, 32, 16);					</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面我們計算燈光在物體坐標系中的位置</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glLoadIdentity();						
+	glRotatef(-yrot, 0.0f, 1.0f, 0.0f);				
+	glRotatef(-xrot, 1.0f, 0.0f, 0.0f);				
+	glTranslatef(-ObjPos[0], -ObjPos[1], -ObjPos[2]);		
+	glGetFloatv(GL_MODELVIEW_MATRIX,Minv);				<font color=#ffffaa>// 計算從世界坐標系變化到物體坐標系中的坐標</font>
+	lp[0] = LightPos[0];						<font color=#ffffaa>// 保存燈光的位置</font>
+	lp[1] = LightPos[1];						
+	lp[2] = LightPos[2];						
+	lp[3] = LightPos[3];						
+	VMatMult(Minv, lp);						<font color=#ffffaa>// 計算最後燈光的位置</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面繪製房間，物體和它的陰影</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glLoadIdentity();		
+	glTranslatef(0.0f, 0.0f, -20.0f);				
+	DrawGLRoom();							<font color=#ffffaa>// 繪製房間</font>
+	glTranslatef(ObjPos[0], ObjPos[1], ObjPos[2]);			
+	glRotatef(xrot, 1.0f, 0.0f, 0.0f);				
+	glRotatef(yrot, 0.0f, 1.0f, 0.0f);				
+	DrawGLObject(obj);						<font color=#ffffaa>	// 繪製物體</font>
+	CastShadow(&amp;obj, lp);						<font color=#ffffaa>// 繪製物體的陰影</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼繪製一個黃色的球代表了燈光的位置</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glColor4f(0.7f, 0.4f, 0.0f, 1.0f);				
+	glDisable(GL_LIGHTING);						
+	glDepthMask(GL_FALSE);						
+	glTranslatef(lp[0], lp[1], lp[2]);				
+	gluSphere(q, 0.2f, 16, 8);					
+	glEnable(GL_LIGHTING);						
+	glDepthMask(GL_TRUE);						</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>最後設置物體的控制</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	xrot += xspeed;							<font color=#ffffaa>// 增加X軸選擇速度</font>
+	yrot += yspeed;							<font color=#ffffaa>// 增加Y軸選擇速度</font>
+
+	glFlush();							<font color=#ffffaa>// 強制OpenGL完成所有的命令</font>
+	return TRUE;							<font color=#ffffaa>// 成功返回</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>繪製房間牆面</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void DrawGLRoom()								<font color=#ffffaa>// 繪製房間(盒裝) </font>
+{
+	glBegin(GL_QUADS);							<font color=#ffffaa>// 繪製四邊形</font>
+		<font color=#ffffaa>// 地面</font>
+		glNormal3f(0.0f, 1.0f, 0.0f);				<font color=#ffffaa>// 法線向上</font>
+		glVertex3f(-10.0f,-10.0f,-20.0f);			
+		glVertex3f(-10.0f,-10.0f, 20.0f);			
+		glVertex3f( 10.0f,-10.0f, 20.0f);			
+		glVertex3f( 10.0f,-10.0f,-20.0f);			
+		<font color=#ffffaa>// 天花板</font>
+		glNormal3f(0.0f,-1.0f, 0.0f);				<font color=#ffffaa>// 法線向下</font>
+		glVertex3f(-10.0f, 10.0f, 20.0f);			
+		glVertex3f(-10.0f, 10.0f,-20.0f);			
+		glVertex3f( 10.0f, 10.0f,-20.0f);			
+		glVertex3f( 10.0f, 10.0f, 20.0f);			
+		<font color=#ffffaa>// 前面</font>
+		glNormal3f(0.0f, 0.0f, 1.0f);				<font color=#ffffaa>// 法線向後</font>
+		glVertex3f(-10.0f, 10.0f,-20.0f);			
+		glVertex3f(-10.0f,-10.0f,-20.0f);			
+		glVertex3f( 10.0f,-10.0f,-20.0f);			
+		glVertex3f( 10.0f, 10.0f,-20.0f);			
+		<font color=#ffffaa>// 後面</font>
+		glNormal3f(0.0f, 0.0f,-1.0f);				<font color=#ffffaa>// 法線向前</font>
+		glVertex3f( 10.0f, 10.0f, 20.0f);			
+		glVertex3f( 10.0f,-10.0f, 20.0f);			
+		glVertex3f(-10.0f,-10.0f, 20.0f);			
+		glVertex3f(-10.0f, 10.0f, 20.0f);			
+		<font color=#ffffaa>// 左面</font>
+		glNormal3f(1.0f, 0.0f, 0.0f);				<font color=#ffffaa>// 法線向右</font>
+		glVertex3f(-10.0f, 10.0f, 20.0f);			
+		glVertex3f(-10.0f,-10.0f, 20.0f);			
+		glVertex3f(-10.0f,-10.0f,-20.0f);			
+		glVertex3f(-10.0f, 10.0f,-20.0f);			
+		<font color=#ffffaa>// 右面</font>
+		glNormal3f(-1.0f, 0.0f, 0.0f);				<font color=#ffffaa>// 法線向左</font>
+		glVertex3f( 10.0f, 10.0f,-20.0f);			
+		glVertex3f( 10.0f,-10.0f,-20.0f);		
+		glVertex3f( 10.0f,-10.0f, 20.0f);			
+		glVertex3f( 10.0f, 10.0f, 20.0f);			
+	glEnd();								<font color=#ffffaa>// 結束繪製</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>下面的函數完成矩陣M與向量V的乘法M=M*V</p>
+      </td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void VMatMult(GLmatrix16f M, GLvector4f v)
+{
+	GLfloat res[4];							<font color=#ffffaa>// 保存中間計算結果</font>
+	res[0]=M[ 0]*v[0]+M[ 4]*v[1]+M[ 8]*v[2]+M[12]*v[3];
+	res[1]=M[ 1]*v[0]+M[ 5]*v[1]+M[ 9]*v[2]+M[13]*v[3];
+	res[2]=M[ 2]*v[0]+M[ 6]*v[1]+M[10]*v[2]+M[14]*v[3];
+	res[3]=M[ 3]*v[0]+M[ 7]*v[1]+M[11]*v[2]+M[15]*v[3];
+	v[0]=res[0];							<font color=#ffffaa>// 把結果保存在V中</font>
+	v[1]=res[1];
+	v[2]=res[2];
+	v[3]=res[3];							
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的函數用來初始化模型對像</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int InitGLObjects()							<font color=#ffffaa>// 初始化模型對像</font>
+{
+	if (!ReadObject("Data/Object2.txt", &amp;obj))				<font color=#ffffaa>// 讀取模型數據</font>
+	{
+		return FALSE;						<font color=#ffffaa>// 返回失敗</font>
+	}
+
+	SetConnectivity(&amp;obj);						<font color=#ffffaa>// 設置相鄰頂點的信息</font>
+
+	for ( int i=0;i < obj.nPlanes;i++)				<font color=#ffffaa>	// 計算每個面的平面參數</font>
+		CalcPlane(obj, &amp;obj.planes[i]);			
+
+	return TRUE;							<font color=#ffffaa>//成功返回</font>
+}
+
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>其他的函數我們不做過多解釋了,這會分散你的注意力,好好享受陰影帶給你的快感吧. <p>下面還有一些說明:<br>
+        球體不會產生陰影,因為我們沒有設置其投影.<br>
+        如果你發現程序很慢,買塊好的顯卡吧.</p>
+      <p>最後我希望你喜歡它,如果有什麼好的建議,請告訴我. 
+      <table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2027.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_27.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/27_Shadow.rar">RAR格式</a></p></td>
+  </tr>
+</table>	
+      <table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_26.html">< 
+          <font face="Tahoma,Verdana,sans-serif">第</font>26<font face="Tahoma,Verdana,sans-serif">課</font></a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_28.html"><font face="Tahoma,Verdana,sans-serif">第</font>28<font face="Tahoma,Verdana,sans-serif">課</font> 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_27.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:31 GMT -->
+</html>

@@ -1,0 +1,1009 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<HTML>
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_47.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:05:22 GMT -->
+<HEAD><TITLE>NeHe OpenGL教程第四十七課，DancingWind翻譯</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:active {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:link {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:visited {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:hover {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #ffda6a; TEXT-DECORATION: none
+}
+BODY {
+	COLOR: #ffffff; BACKGROUND-COLOR: #000000
+}
+TD IMG {
+	DISPLAY: block
+}
+.back {
+	BACKGROUND: #000022; COLOR: #ffffff
+}
+.back2 {
+	BACKGROUND: #000000; COLOR: #ffffff
+}
+.back3 {
+	BACKGROUND: #000022; COLOR: #ffffff
+}
+.copy {
+	FONT-SIZE: 11px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.head {
+	FONT: bold 13px Tahoma, Verdana, sans-serif; TEXT-DECORATION: none
+}
+.link {
+	FONT-SIZE: 14px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.menu {
+	FONT: bold 17px Tahoma, Verdana, sans-serif; TEXT-DECORATION: none
+}
+.news {
+	BACKGROUND: #00008b; COLOR: #ffffff
+}
+.tab {
+	PADDING-LEFT: 35px
+}
+.text {
+	FONT-SIZE: 12px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.theme {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff
+}
+.dotted {
+	BORDER-RIGHT: #00008b 2px dotted; BORDER-TOP: #00008b 2px dotted; BORDER-LEFT: #00008b 2px dotted; BORDER-BOTTOM: #00008b 2px dotted
+}
+.solid {
+	BORDER-RIGHT: #ffffff 1px solid; BORDER-TOP: #ffffff 1px solid; BORDER-LEFT: #ffffff 1px solid; BORDER-BOTTOM: #ffffff 1px solid
+}
+.logo {
+	BACKGROUND-IMAGE: url(../graphics/rgb/logo.html)
+}
+.menubar {
+	BACKGROUND-IMAGE: url(../graphics/rgb/menubar.html)
+}
+.menubg {
+	BACKGROUND-IMAGE: url(../graphics/rgb/menubg.html)
+}
+.menuheading {
+	BACKGROUND-IMAGE: url(../graphics/rgb/menuheading.html)
+}
+.nehebutton {
+	BACKGROUND-IMAGE: url(../graphics/rgb/nehebutton.html)
+}
+.newslogo {
+	BACKGROUND-IMAGE: url(../graphics/rgb/newslogo.html)
+}
+.tinylogo {
+	BACKGROUND-IMAGE: url(../graphics/rgb/border/tinylogo.html)
+}
+.bc {
+	BACKGROUND-IMAGE:  url(../Pic/bc.png)
+}
+.bl {
+	BACKGROUND-IMAGE:  url(../Pic/bl.png)
+}
+.br {
+	BACKGROUND-IMAGE:  url(../Pic/br.png)
+}
+.c {
+	BACKGROUND-IMAGE: url(../Picc.html)
+}
+.l {
+	BACKGROUND-IMAGE:  url(../Pic/l.png)
+}
+.lc {
+	BACKGROUND-IMAGE: url(../Piclc.html)
+}
+.r {
+	BACKGROUND-IMAGE:  url(../Pic/r.png)
+}
+.rc {
+	BACKGROUND-IMAGE: url(../Picrc.html)
+}
+.tc {
+	BACKGROUND-IMAGE:  url(../Pic/tc.png)
+}
+.tl {
+	BACKGROUND-IMAGE:  url(../Pic/tl.png)
+}
+.tr {
+	BACKGROUND-IMAGE:  url(../Pic/tr.png)
+}
+
+</style>
+</head>
+<BODY text=white vLink=#aaccff link=#aaccff bgColor=black>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tinylogo width=326 height=130><IMG height=130 
+      alt="NeHe Productions" 
+      src="../Pic/logo.png" width=326></TD>
+      <TD vAlign=center align=middle><div align="center"><FONT class=text><FONT class=theme 
+      size=+3><B><I>第47課</I></B></FONT></FONT></div></TD>
+  </TR></TBODY></TABLE>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="20%"><img src="../Pic/lesson47.jpg" width="160" height="120"></td>
+            <td width="80%"><p><font ><b>CG 頂點腳本</b></font></p>
+              <p><font size="3">nVidio的面向GPU的C語言，如果你相信它就好好學學吧，同樣這裡也只是個入門。記住，類似的語言還有微軟的HLSL,OpenGL的GLSL,ATI的shaderMonker。不要選錯哦:)</font></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">使用頂點和片斷腳本去做渲染工作可以得到額外的好處，最大的好處就是把CPU的一些工作交給了GPU，Cg提供了書寫這些強大的腳本的一種手段。
+        <p>這篇教程有許多目的，第一向你展現了一個非常簡單的頂點腳本，第二向你說明如何在OpenGL中使用Cg編寫的腳本。</p>
+        <p>這個教程是基於最新的NeHeGL的基本代碼，為了獲得更多的信息，你可以訪問nVidia的官方網站(developer.nvidia.com)，它會給你一個完整的答案。</p>
+        <p>注意：這個教程不是叫你如何去寫一個完整的Cg腳本，而是教你在OpenGL中載入並運行腳本。</p>
+        <p>開始：<br>
+          第一步，從nVidia的網站上下載Cg Compiler庫，最好去下載1.1版本的，因為nvidia各個版本的變化很大，為了讓程序不出現任何問題，最好這樣做，因為我們用的是1.1版本的。</p>
+        <p>下一步，包含編譯需要的頭文件和庫文件。</p>
+        <p>&nbsp;</p>
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=back3 vAlign=top width="100%"><p>我已經幫你把它們拷貝到了工程的文件夾裡了。</p>
+        <p>Cg介紹<br>
+          你必須有以下幾個概念：<br>
+          1、頂點腳本會作用於你輸入的每一個頂點，如果你想要作用於一些頂點，那麼你必須在作用前加載頂點腳本，並於作用後釋放頂點腳本。<br>
+          2、頂點腳本輸出的結果被送入到片斷處理器中，你不用管這其中是如何實現的。<br>
+          最後，記住頂點腳本在圖元裝配前被執行，片斷腳本在光柵化後被執行。</p>
+        <p>好了，現在我們創建一個空白的文件吧(保存為wave.cg)，接著我們創建一個數據結構，它被我們得腳本使用。下面的代碼被加入到wave.cg文件中。</p></TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>struct appdata <br>{<br>	float4 position : POSITION;<br>	float4 color	: COLOR0;<br>	float3 wave	: COLOR1;<br>};</PRE>
+<p></p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">上面的結果說明,我們輸入的頂點包含一個位置坐標,一個顏色和我們自定義的波的顏色 
+        <p>下面的代碼定義一個輸出頂點的數據,包括一個頂點和顏色</p>
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>struct vfconn<br>{<br>	float4 HPos	: POSITION;<br>	float4 Col0	: COLOR0;<br>};<br></PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面的代碼是Cg的主函數,每個頂點都會被以下函數執行: 
+        <p>&nbsp;</p>
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<p>vfconn main(appdata IN, uniform float4x4 ModelViewProj)<br>
+  {<br>
+  vfconn OUT; <span class="theme">// 保存我們輸出頂點的數據</span></p>
+<p> <span class="theme">// 計算頂點y的坐標</span><br>
+  IN.position.y = ( sin(IN.wave.x + (IN.position.x / 5.0) ) + sin(IN.wave.x + 
+  (IN.position.z / 4.0) ) ) * 2.5f;<br>
+  <br>
+  <span class="theme">// 保存到輸出數據中</span><br>
+  OUT.HPos = mul(ModelViewProj, IN.position);</p>
+<p> <span class="theme">// 不改變輸入的顏色</span><br>
+  OUT.Col0.xyz = IN.color.xyz;</p>
+<p> return OUT;<br>
+  }</p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%"><p>完成了上面的代碼,記得保存一下.</p>
+        <p>下面我們到了程序中,首先包含使用cg需要的頭文件,和庫文件</p>
+        </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>#include &lt;cg\cg.h&gt;									<br>#include &lt;cg\cggl.h&gt;									</PRE>
+<PRE>#pragma comment( lib, &quot;cg.lib&quot; )							<br>#pragma comment( lib, &quot;cggl.lib&quot; )							</PRE>
+<p></p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面我們定義一些全局變量，用來計算我們得網格和控制cg程序的開關</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>#define		SIZE	64							<span class="theme">	// 定義網格的大小</span><br>bool		cg_enable = TRUE, sp;							<span class="theme">// 開關Cg程序</span><br>GLfloat		mesh[SIZE][SIZE][3];							<span class="theme">// 保存我們的網格</span><br>GLfloat		wave_movement = 0.0f;						<span class="theme">	// 記錄波動的移動</span></PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面我們來定義一些cg相關的全局變量 
+        <p></p>
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	CGcontext	cgContext;								<span class="theme">// 用來保存cg腳本</span></PRE>
+<p></p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">我們需要的第一個變量是CGcontext,這個變量是多個Cg腳本的容器,一般來說,你獲得你可以用函數從這個容器中獲得你想要的腳本
+<p>接下來我們定義一個CGprogram變量,它用來保存我們得頂點腳本</p>
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>CGprogram	cgProgram;							<span class="theme">	// 我們得頂點腳本</span></PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">接下來我們需要一個變量來設置如何編譯這個頂點腳本</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>CGprofile	cgVertexProfile;						<span class="theme">	// 被頂點腳本使用</span></PRE>
+<p></p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面我們需要一些參數用來把Cg腳本使用的數據從程序中傳送過去。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>CGparameter	position, color, modelViewMatrix, wave;				<span class="theme">	// 腳本中需要的參數</span></PRE>
+<p></p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">在初始化階段我們先要創建我們網格數據</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);					</PRE>
+<p> for (int x = 0; x &lt; SIZE; x++)<br>
+  {<br>
+  for (int z = 0; z &lt; SIZE; z++)<br>
+  {<br>
+  mesh[x][z][0] = (float) (SIZE / 2) - x; <br>
+  mesh[x][z][1] = 0.0f; <br>
+  mesh[x][z][2] = (float) (SIZE / 2) - z; <br>
+  }<br>
+  }</p>
+<p></p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">我們設置多邊形的現實模式為線框圖，接著遍歷沒有頂點，設置其高度。
+        <p>接下來，我們初始化Cg程序</p>
+        <p>&nbsp;</p>
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><span class="theme">// 設置Cg</span><br>	cgContext = cgCreateContext();							<span class="theme">// 創建一個Cg容器</span></PRE>
+<p> <span class="theme">// 測試是否創建成功</span><br>
+  if (cgContext == NULL)<br>
+  {<br>
+  MessageBox(NULL, &quot;Failed To Create Cg Context&quot;, &quot;Error&quot;, 
+  MB_OK);<br>
+  return FALSE; <br>
+  }<br>
+</p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">我們創建一個Cg程序的容器，並檢查它是否創建成功</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>cgVertexProfile = cgGLGetLatestProfile(CG_GL_VERTEX);				<span class="theme">// 配置在OpenGL中使用頂點緩存</span></PRE>
+<p> <span class="theme">// 檢測Cg程序的是否創建成功</span><br>
+  if (cgVertexProfile == CG_PROFILE_UNKNOWN)<br>
+  {<br>
+  MessageBox(NULL, &quot;Invalid profile type&quot;, &quot;Error&quot;, MB_OK);<br>
+  return FALSE; <br>
+  }</p>
+<p> cgGLSetOptimalOptions(cgVertexProfile); <span class="theme">// 啟用配置文件</span></p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">如果你想使用片斷腳本，使用CG_GL_FRAGMENT變量。如果返回的變量為CG_PROFILE_UNKNOW表示沒有可用的配置文件，則不能編譯你需要的Cg程序。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><span class="theme">// 從文件中載入Cg程序</span><br>	cgProgram = cgCreateProgramFromFile(cgContext, CG_SOURCE, &quot;CG/Wave.cg&quot;, cgVertexProfile, &quot;main&quot;, 0);</PRE>
+<p> <span class="theme">// 檢測是否成功</span><br>
+  if (cgProgram == NULL)<br>
+  {<br>
+  CGerror Error = cgGetError();<br>
+  MessageBox(NULL, cgGetErrorString(Error), &quot;Error&quot;, MB_OK);<br>
+  return FALSE; <br>
+  }<br>
+</p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">我們嘗試從源文件中創建一個Cg程序，並返回編譯後的結果。 </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><span class="theme">// 載入腳本</span><br>	cgGLLoadProgram(cgProgram);<br></PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面我們把頂點腳本載入到顯存，並準備幫定給GPU。所有的腳本在使用前必須加載。</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><span class="theme">	// 把數據變量地址發送給Cg程序</span><br>	position	= cgGetNamedParameter(cgProgram, &quot;IN.position&quot;);<br>	color		= cgGetNamedParameter(cgProgram, &quot;IN.color&quot;);<br>	wave		= cgGetNamedParameter(cgProgram, &quot;IN.wave&quot;);<br>	modelViewMatrix	= cgGetNamedParameter(cgProgram, &quot;ModelViewProj&quot;);</PRE>
+<p> return TRUE; <br>
+</p>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">在初始化的最後，我們必須告訴Cg腳本在那裡去獲得輸入的數據，我們需要把變量的指針傳遞過去，下面的函數完成了這個功能。
+<p>程序結束時，記得釋放我們創建的內容。</p>
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>cgDestroyContext(cgContext);							</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面的代碼使用空格切換是否使用Cg程序</TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>if (g_keys-&gt;keyDown [' '] &amp;&amp; !sp)<br>	{<br>		sp=TRUE;<br>		cg_enable=!cg_enable;<br>	}</PRE>
+<PRE>if (!g_keys-&gt;keyDown [' '])<br>		sp=FALSE;<br></PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">現在我們已經完成了所有的準備工作了，到了我們實際繪製網格的地方了，按照慣例我們還是先設置我們得視口。
+<p>&nbsp;</p>
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><br>	gluLookAt(0.0f, 25.0f, -45.0f, 0.0f, 0.0f, 0.0f, 0, 1, 0);<br></PRE>
+<PRE><span class="theme">// 把當前Cg程序的模型變化矩陣告訴當前程序</span><br>	cgGLSetStateMatrixParameter(modelViewMatrix, CG_GL_MODELVIEW_PROJECTION_MATRIX, CG_GL_MATRIX_IDENTITY);</PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%"><p>上面我們要做的事就是把當前Cg程序的模型變化矩陣告訴當前程序。</p>
+        <p>結下來如果使用cg程序，則把頂點的顏色設置為綠色</p></TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><span class="theme">	// 如果使用Cg程序</span><br>	if (cg_enable)<br>	{<br><span class="theme">		// 使用頂點腳本配置文件</span><br>		cgGLEnableProfile(cgVertexProfile);								<br><span class="theme">		// 幫定到當前的頂點腳本</span><br>		cgGLBindProgram(cgProgram);<br><span class="theme">		// 設置繪製顏色</span><br>		cgGLSetParameter4f(color, 0.5f, 1.0f, 0.5f, 1.0f);<br>	}<br></PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">下面我們來繪製我們的網格。 </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE><span class="theme">	// 開始繪製我們的網格</span><br>	for (int x = 0; x &lt; SIZE - 1; x++)<br>	{<br>		glBegin(GL_TRIANGLE_STRIP);<br>		for (int z = 0; z &lt; SIZE - 1; z++)<br>		{<br><span class="theme">			// 設置Wave參數</span><br>			cgGLSetParameter3f(wave, wave_movement, 1.0f, 1.0f);<br>	<span class="theme">		//設置輸入的頂點</span><br>			glVertex3f(mesh[x][z][0], mesh[x][z][1], mesh[x][z][2]);		<br>			glVertex3f(mesh[x+1][z][0], mesh[x+1][z][1], mesh[x+1][z][2]);	<br>			wave_movement += 0.00001f;									<br>			if (wave_movement &gt; TWO_PI)									<br>				wave_movement = 0.0f;<br>		}<br><span class="theme">		//經過Cg程序處理，進行繪製</span><br>		glEnd();<br>	}<br></PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%">上面的代碼完成具體的繪製操作，對於每一個頂點，我們動態的傳入波動係數和輸入原始的頂點數據。在繪製開始前，頂點腳本接受所有的頂點數據並處理，接著進行光柵華操作。
+<p>別忘了在繪製完成後，關閉我們啟用的頂點腳本，否則在繪製其它的模型時會讓你得到不想要的結果。</p>
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<PRE>if (cg_enable)<br>		cgGLDisableProfile(cgVertexProfile);					<span class="theme">// 禁用頂點腳本配置文件</span></PRE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=tc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+    width="100%"></TD>
+    <TD class=tr><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=l><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+      <TD class=back3 vAlign=top width="100%"><p>好了上面就是所有的內容了,簡單吧.Cg就是這麼簡單 </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+              <p>感謝<br>
+                感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+                感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+              <p>資源下載: <br>
+                文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2047.mht">網頁格式</a> 
+                <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_47.pdf">PDF格式</a><br>
+                源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/47_Cg.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+        <FONT class=text><TABLE width="100%" border=0>
+          <TBODY>
+            <TR> 
+              <TD align=left width="50%"><B><FONT size=-1><A 
+            href="Tutorial_46.html">&lt; 第46課</A></FONT></B></TD>
+              <TD align=right width="50%"><B><FONT 
+        size=-1><a href="Tutorial_48.html">第48課 &gt;&nbsp;</a></FONT></B></TD>
+            </TR>
+          </TBODY>
+        </TABLE>
+        </FONT> 		  
+    </TD>
+    <TD class=r><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=bl><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=bc width="100%"><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" width=28></TD>
+    <TD class=br><IMG height=28 alt="" 
+      src="../Pic/blank(1).gif" 
+  width=28></TD></TR></TBODY></TABLE>
+</BODY>
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_47.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:05:22 GMT -->
+</HTML>

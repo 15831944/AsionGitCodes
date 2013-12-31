@@ -1,0 +1,673 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_10.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+<head>
+<title>NeHe OpenGL教程第十課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第10課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="25%"><img src="../Pic/lesson10.jpg" width="240" height="180"></td>
+            <td width="75%"><p><FONT class=head>加載3D世界，並在其中漫遊:</FONT></p>
+              <p><font size="3">在這一課中，你將學會如何加載3D世界，並在3D世界中漫遊。這一課使用第一課的代碼，當然在課程說明中我只介紹改變了代碼。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 這一課是由Lionel Brits (βtelgeuse)所寫的。在本課中我們只對增加的代碼做解釋。當然只添加課程中所寫的代碼，程序是不會運行的。如果您有興趣知道下面的每一行代碼是如何運行的話，請下載完整的源碼，並在瀏覽這一課的同時，對源碼進行跟蹤。<br>
+      好了現在歡迎來到名不見經傳的第十課。到現在為止，您應該有能力創建一個旋轉的立方體或一群星星了，對3D編程也應該有些感覺了吧？但還是請等一下！不要立馬衝動地要開始寫個Quake<br>
+      IV，好不好...:)。只靠旋轉的立方體還很難來創造一個可以決一死戰的酷斃了的對手....:)。現在這些日子您所需要的是一個大一點的、更複雜些的、動態3D世界，它帶有空間的六自由度和花哨的效果如鏡像、入口、扭曲等等，當然還要有更快的幀顯示速度。這一課就要解釋一個基本的3D世界&quot;結構&quot;，以及如何在這個世界裡遊走。<br>
+      數據結構<br>
+      當您想要使用一系列的數字來完美的表達3D環境時，隨著環境複雜度的上升，這個工作的難度也會隨之上升。出於這個原因，我們必須將數據歸類,使其具有更多的可操作性風格。在程序清單頭部出現了sector(區段)的定義。每個3D世界基本上可以看作是sector(區段)的集合。一個sector(區段)可以是一個房間、一個立方體、或者任意一個閉合的區間。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>typedef struct tagSECTOR						<font color="#ffffaa">// 創建Sector區段結構</font>
+{
+	int numtriangles;						<font
+color="#ffffaa">// Sector中的三角形個數</font>
+	TRIANGLE* triangle;						<font
+color="#ffffaa">// 指向三角數組的指針</font>
+} SECTOR;								<font
+color="#ffffaa">// 命名為SECTOR</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"> 一個sector(區段)包含了一系列的多邊形，所以下一個目標就是triangle(我們將只用三角形，這樣寫代碼更容易些)。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>typedef struct tagTRIANGLE						<font color="#ffffaa">// 創建Triangle三角形結構</font>
+{
+	VERTEX vertex[3];						<font
+color="#ffffaa">// VERTEX矢量數組，大小為3</font>
+} TRIANGLE;								<font color="#ffffaa">// 命名為 TRIANGLE</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">三角形本質上是由一些(兩個以上)頂點組成的多邊形，頂點同時也是我們的最基本的分類單位。頂點包含了OpenGL真正感興趣的數據。我們用3D空間中的坐標值(x,y,z)以及它們的紋理坐標(u,v)來定義三角形的每個頂點。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>typedef struct tagVERTEX						<font color="#ffffaa">// 創建Vertex頂點結構</font>
+{
+	float x, y, z;							<font
+color="#ffffaa">// 3D 坐標</font>
+	float u, v;							<font color="#ffffaa">// 紋理坐標</font>
+} VERTEX;								<font
+color="#ffffaa">// 命名為VERTEX</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"><p>載入文件<br>
+          在程序內部直接存儲數據會讓程序顯得太過死板和無趣。從磁盤上載入世界資料，會給我們帶來更多的彈性，可以讓我們體驗不同的世界，而不用被迫重新編譯程序。另一個好處就是用戶可以切換世界資料並修改它們而無需知道程序如何讀入輸出這些資料的。數據文件的類型我們準備使用文本格式。這樣編輯起來更容易，寫的代碼也更少。等將來我們也許會使用二進制文件。 
+        </p>
+        <p> 問題是，怎樣才能從文件中取得數據資料呢？首先，創建一個叫做SetupWorld()的新函數。把這個文件定義為filein，並且使用只讀方式打開文件。我們必須在使用完畢之後關閉文件。大家一起來看看現在的代碼：<br>
+        </p></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre><font color="#ffffaa">// 先前的定義： char* worldfile = &quot;data\\world.txt&quot;;</font>
+void SetupWorld()							<font
+color="#ffffaa">// 設置我們的世界</font>
+{
+	FILE *filein;							<font color="#ffffaa">// 工作文件</font>
+	filein = fopen(worldfile, &quot;rt&quot;);				<font
+color="#ffffaa">// 打開文件</font>
+
+	...
+	(讀入數據資料))
+	...
+
+	fclose(filein);							<font
+color="#ffffaa">// 關閉文件</font>
+	return;								<font color="#ffffaa">// 返回</font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"> 下一個挑戰是將每個單獨的文本行讀入變量。這有很多辦法可以做到。一個問題是文件中並不是所有的行都包含有意義的信息。空行和註釋不應該被讀入。我們創建了一個叫做readstr()的函數。這個函數會從數據文件中讀入一個有意義的行至一個已經初始化過的字符串。下面就是代碼：<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>void readstr(FILE *f,char *string)					<font color="#ffffaa">//  讀入一個字符串</font>
+
+{
+	do								<font
+color="#ffffaa">// 循環開始</font>
+	{
+		fgets(string, 255, f);					<font color="#ffffaa">// 讀入一行</font>
+	} while ((string[0] == '/') || (string[0] == '\n'));		<font
+color="#ffffaa">// 考察是否有必要進行處理</font>
+	return;								<font
+color="#ffffaa">// 返回</font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"> 下一步我們讀入區段數據。這一課將只處理一個區段，不過實現一個多區段引擎也很容易。讓我們將注意力轉回SetupWorld()。程序必須知道區段內包含了多少個三角形。我們在數據文件中以下面這種形式定義三角形數量：<br>
+        接下來是讀取三角形數量的代碼：</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>int numtriangles;							<font color="#ffffaa">// 區段中的三角形數量</font>
+char oneline[255];							<font
+color="#ffffaa">// 存儲數據的字符串</font>
+...
+readstr(filein,oneline);						<font
+color="#ffffaa">// 讀入一行數據</font>
+sscanf(oneline, &quot;NUMPOLLIES %d\n&quot;, &amp;numtriangles);			<font
+color="#ffffaa">// 讀入三角形數量</font>
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%">餘下的世界載入過程採用了相似的方法。接著，我們對區段進行初始化，並讀入部分數據：</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre><font color="#ffffaa">// 先前的定義: SECTOR sector1;</font>
+char oneline[255];							<font
+color="#ffffaa">// 存儲數據的字符串</font>
+int numtriangles;							<font
+color="#ffffaa">// 區段的三角形數量</font>
+float x, y, z, u, v;							<font
+color="#ffffaa">// 3D 和 紋理坐標</font>
+...
+sector1.triangle = new TRIANGLE[numtriangles];				<font
+color="#ffffaa">// 為numtriangles個三角形分配內存並設定指針</font>
+sector1.numtriangles = numtriangles;					<font
+color="#ffffaa">// 定義區段1中的三角形數量</font>
+<font color="#ffffaa">// 遍歷區段中的每個三角形</font>
+for (int triloop = 0; triloop &lt; numtriangles; triloop++)		<font
+color="#ffffaa">// 遍歷所有的三角形</font>
+{
+	<font color="#ffffaa">// 遍歷三角形的每個頂點</font>
+	for (int vertloop = 0; vertloop &lt; 3; vertloop++)		<font
+color="#ffffaa">// 遍歷所有的頂點</font>
+	{
+		readstr(filein,oneline);				<font
+color="#ffffaa">// 讀入一行數據</font>
+		<font color="#ffffaa">// 讀入各自的頂點數據</font>
+		sscanf(oneline, &quot;%f %f %f %f %f&quot;, &amp;x, &amp;y, &amp;z, &amp;u, &amp;v);
+		<font
+color="#ffffaa">// 將頂點數據存入各自的頂點</font>
+		sector1.triangle[triloop].vertex[vertloop].x = x;	<font
+color="#ffffaa">// 區段 1,  第 triloop 個三角形, 第  vertloop 個頂點, 值 x =x</font>
+		sector1.triangle[triloop].vertex[vertloop].y = y;	<font
+color="#ffffaa">// 區段 1,  第 triloop 個三角形, 第  vertloop 個頂點, 值 y =y</font>
+		sector1.triangle[triloop].vertex[vertloop].z = z;	<font
+color="#ffffaa">// 區段 1,  第 triloop 個三角形, 第  vertloop 個頂點, 值  z =z</font>
+		sector1.triangle[triloop].vertex[vertloop].u = u;	<font
+color="#ffffaa">// 區段 1,  第 triloop 個三角形, 第  vertloop 個頂點, 值  u =u</font>
+		sector1.triangle[triloop].vertex[vertloop].v = v;	<font
+color="#ffffaa">// 區段 1,  第 triloop 個三角形, 第  vertloop 個頂點, 值  e=v</font>
+	}
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"><font face="arial" size="-1">&nbsp;</font>數據文件中每個三角形都以如下形式聲明:<br>
+        X1 Y1 Z1 U1 V1<br>
+        X2 Y2 Z2 U2 V2<br>
+        X3 Y3 Z3 U3 V3<br>
+        顯示世界<br>
+        現在區段已經載入內存，我們下一步要在屏幕上顯示它。到目前為止，我們所作過的都是些簡單的旋轉和平移。但我們的鏡頭始終位於原點(0，0，0)處。任何一個不錯的3D引擎都會允許用戶在這個世界中遊走和遍歷，我們的這個也一樣。實現這個功能的一種途徑是直接移動鏡頭並繪製以鏡頭為中心的3D環境。這樣做會很慢並且不易用代碼實現。我們的解決方法如下：
+		<ul>
+		<li>根據用戶的指令旋轉並變換鏡頭位置。</li>
+        <li>圍繞原點，以與鏡頭相反的旋轉方向來旋轉世界。(讓人產生鏡頭旋轉的錯覺)</li>
+        <li>以與鏡頭平移方式相反的方式來平移世界(讓人產生鏡頭移動的錯覺)。</li>
+		</ul>
+        <p>這樣實現起來就很簡單.<br>
+          下面從第一步開始吧(平移並旋轉鏡頭)。<br>
+        </p>
+        </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>if (keys[VK_RIGHT])							<font color="#ffffaa">// 右方向鍵按下了麼?</font>
+{
+	yrot -= 1.5f;							<font
+color="#ffffaa">// 向左旋轉場景</font>
+}
+
+if (keys[VK_LEFT])							<font
+color="#ffffaa">// 左方向鍵按下了麼?</font>
+{
+	yrot += 1.5f;							<font
+color="#ffffaa">// 向右側旋轉場景</font>
+}
+
+if (keys[VK_UP])							<font
+color="#ffffaa">// 向上方向鍵按下了麼?</font>
+{
+	xpos -= (float)sin(heading*piover180) * 0.05f;			<font
+color="#ffffaa">// 沿遊戲者所在的X平面移動</font>
+	zpos -= (float)cos(heading*piover180) * 0.05f;			<font
+color="#ffffaa">// 沿遊戲者所在的Z平面移動</font>
+	if (walkbiasangle &gt;= 359.0f)					<font
+color="#ffffaa">// 如果walkbiasangle大於</font><font color="#aaffaa" size="3"><font
+color="#ffffaa">359度</font></font>
+	{
+		walkbiasangle = 0.0f;					<font
+color="#ffffaa">// 將 walkbiasangle 設為0</font>
+	}
+	else								<font color="#ffffaa">// 否則</font>
+	{
+		 walkbiasangle+= 10;					<font
+color="#ffffaa">// 如果 walkbiasangle &lt; 359 ，則增加 10</font>
+	}
+	walkbias = (float)sin(walkbiasangle * piover180)/20.0f;		<font
+color="#ffffaa">// 使遊戲者產生跳躍感</font>
+}
+
+if (keys[VK_DOWN])							<font
+color="#ffffaa">// 向下方向鍵按下了麼？</font>
+{
+	xpos += (float)sin(heading*piover180) * 0.05f;			<font
+color="#ffffaa">// 沿遊戲者所在的X平面移動</font>
+	zpos += (float)cos(heading*piover180) * 0.05f;			<font
+color="#ffffaa">// 沿遊戲者所在的Z平面移動</font>
+	if (walkbiasangle &lt;= 1.0f)					<font
+color="#ffffaa">// 如果walkbiasangle小於1度</font>
+	{
+		walkbiasangle = 359.0f;					<font
+color="#ffffaa">// 使 walkbiasangle 等於 359</font>
+	}
+	else								<font color="#ffffaa">// 否則</font>
+	{
+		walkbiasangle-= 10;					<font
+color="#ffffaa">// 如果 walkbiasangle &gt; 1 減去 10</font>
+	}
+	walkbias = (float)sin(walkbiasangle * piover180)/20.0f;		<font
+color="#ffffaa">// 使遊戲者產生跳躍感</font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"> 這個實現很簡單。當左右方向鍵按下後，旋轉變量yrot<br>
+        相應增加或減少。當前後方向鍵按下後，我們使用sine和cosine函數重新生成鏡頭位置(您需要些許三角函數學的知識:-)。Piover180<br>
+        是一個很簡單的折算因子用來折算度和弧度。<br>
+        接著您可能會問：walkbias是什麼意思？這是NeHe的發明的單詞:-)。基本上就是當人行走時頭部產生上下擺動的幅度。我們使用簡單的sine正弦波來調節鏡頭的Y軸位置。如果不添加這個而只是前後移動的話，程序看起來就沒這麼棒了。<br>
+        現在，我們已經有了下面這些變量。可以開始進行步驟2和3了。由於我們的程序還不太複雜，我們無需新建一個函數，而是直接在顯示循環中完成這些步驟。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>int DrawGLScene(GLvoid)							<font color="#ffffaa">// 繪製 OpenGL 場景</font>
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		<font
+color="#ffffaa">// 清除 場景 和 深度緩衝</font>
+	glLoadIdentity();						<font
+color="#ffffaa">// 重置當前矩陣</font>
+
+
+	GLfloat x_m, y_m, z_m, u_m, v_m;				<font
+color="#ffffaa">// 頂點的臨時 X, Y, Z, U 和 V 的數值</font>
+	GLfloat xtrans = -xpos;						<font
+color="#ffffaa">// 用於遊戲者沿X軸平移時的大小</font>
+	GLfloat ztrans = -zpos;						<font
+color="#ffffaa">// 用於遊戲者沿Z軸平移時的大小</font>
+	GLfloat ytrans = -walkbias-0.25f;				<font
+color="#ffffaa">// 用於頭部的上下擺動</font>
+	GLfloat sceneroty = 360.0f - yrot;				<font
+color="#ffffaa">// 位於遊戲者方向的360度角</font>
+
+	int numtriangles;						<font
+color="#ffffaa">// 保有三角形數量的整數</font>
+
+	glRotatef(lookupdown,1.0f,0,0);					<font
+color="#ffffaa">// 上下旋轉</font>
+	glRotatef(sceneroty,0,1.0f,0);					<font
+color="#ffffaa">// 根據遊戲者正面所對方向所作的旋轉</font>
+
+	glTranslatef(xtrans, ytrans, ztrans);				<font
+color="#ffffaa">// 以遊戲者為中心的平移場景</font>
+	glBindTexture(GL_TEXTURE_2D, texture[filter]);			<font
+color="#ffffaa">// 根據 filter 選擇的紋理</font>
+
+	numtriangles = sector1.numtriangles;				<font
+color="#ffffaa">// 取得Sector1的三角形數量</font>
+
+	<font color="#ffffaa">// 逐個處理三角形</font>
+	for (int loop_m = 0; loop_m &lt; numtriangles; loop_m++)		<font
+color="#ffffaa">// 遍歷所有的三角形</font>
+	{
+		glBegin(GL_TRIANGLES);					<font
+color="#ffffaa">// 開始繪製三角形</font>
+			glNormal3f( 0.0f, 0.0f, 1.0f);			<font
+color="#ffffaa">// 指向前面的法線</font>
+			x_m = sector1.triangle[loop_m].vertex[0].x;	<font
+color="#ffffaa">// 第一點的 X 份量</font>
+			y_m = sector1.triangle[loop_m].vertex[0].y;	<font
+color="#ffffaa">// 第一點的 Y 份量</font>
+			z_m = sector1.triangle[loop_m].vertex[0].z;	<font
+color="#ffffaa">// 第一點的 Z 份量</font>
+			u_m = sector1.triangle[loop_m].vertex[0].u;	<font
+color="#ffffaa">// 第一點的 U  紋理坐標</font>
+			v_m = sector1.triangle[loop_m].vertex[0].v;	<font
+color="#ffffaa">// 第一點的 V  紋理坐標</font>
+			glTexCoord2f(u_m,v_m); glVertex3f(x_m,y_m,z_m);	<font
+color="#ffffaa">// 設置紋理坐標和頂點</font>
+
+			x_m = sector1.triangle[loop_m].vertex[1].x;	<font
+color="#ffffaa">// 第二點的 X 份量</font>
+			y_m = sector1.triangle[loop_m].vertex[1].y;	<font
+color="#ffffaa">// 第二點的 Y 份量</font>
+			z_m = sector1.triangle[loop_m].vertex[1].z;	<font
+color="#ffffaa">// 第二點的 Z 份量</font>
+			u_m = sector1.triangle[loop_m].vertex[1].u;	<font
+color="#ffffaa">// 第二點的 U  紋理坐標</font>
+			v_m = sector1.triangle[loop_m].vertex[1].v;	<font
+color="#ffffaa">// 第二點的 V  紋理坐標</font>
+			glTexCoord2f(u_m,v_m); glVertex3f(x_m,y_m,z_m);	<font
+color="#ffffaa">// 設置紋理坐標和頂點</font>
+
+			x_m = sector1.triangle[loop_m].vertex[2].x;	<font
+color="#ffffaa">// 第三點的 X 份量</font>
+			y_m = sector1.triangle[loop_m].vertex[2].y;	<font
+color="#ffffaa">// 第三點的 Y 份量</font>
+			z_m = sector1.triangle[loop_m].vertex[2].z;	<font
+color="#ffffaa">// 第三點的 Z 份量</font>
+			u_m = sector1.triangle[loop_m].vertex[2].u;	<font
+color="#ffffaa">// 第二點的 U  紋理坐標</font>
+			v_m = sector1.triangle[loop_m].vertex[2].v;	<font
+color="#ffffaa">// 第二點的 V  紋理坐標</font>
+			glTexCoord2f(u_m,v_m); glVertex3f(x_m,y_m,z_m);	<font
+color="#ffffaa">// 設置紋理坐標和頂點</font>
+		glEnd();						<font
+color="#ffffaa">// 三角形繪製結束</font>
+	}
+	return TRUE;							<font
+color="#ffffaa">// 返回</font>
+}
+</pre>
+</font> 
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+      <td vAlign="top" width="100%"> <p>搞定！我們已經完成了自己的第一幀畫面。這絕對算不上什麼Quake，但咳...,我們絕對也不是Carmack或者Abrash。運行程序時，您可以按下F、B、<br>
+          PgUp 和 PgDown 鍵來看看效果。PgUp /<br>
+          PgDown簡單的上下傾斜鏡頭。如果NeHe決定保留的話，程序中使用的紋理取自於我的學校ID證件上的照片，並且做了浮雕效果....:)。<br>
+          現在您也許在考慮下一步該做什麼。但還是不要考慮使用這些代碼來實現完整的3D引擎，寫這個程序的目的也並非如此。您也許希望您的遊戲中不止存在一個Sector，尤其是實現類似入口這樣的部分，您還可能需要使用多邊形(超過3個頂點)。程序現在的代碼實現允許載入多個Sector並剔除了背面(背向鏡頭不用繪製的多邊形)。將來我會寫個這樣的教程，但這需要更多的數學知識基礎。 
+        </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+              <p>感謝<br>
+                感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+                感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+              <p>資源下載: <br>
+                文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2010.mht">網頁格式</a> 
+                <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_10.pdf">PDF格式</a><br>
+                源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/10_3DWorld.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+        <table border="0" width="100%">
+<TBODY>
+      <tr>
+              <td align="left" width="50%"><a href="Tutorial_09.html"><b><font size="-1">&lt; 
+                第09課</font></b></a></td>
+              <td align="right" width="50%"><a href="Tutorial_11.html"><b><font size="-1">第11課 
+                &gt;</font></b></a></td>
+      </tr>
+</TBODY>
+    </table>
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+  <TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_10.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:36 GMT -->
+</html>

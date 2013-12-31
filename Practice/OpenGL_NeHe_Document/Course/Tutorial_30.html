@@ -1,0 +1,619 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_30.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:53 GMT -->
+<head>
+<title>NeHe OpenGL教程第三十課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第30課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="28%"><img src="../Pic/lesson30.jpg" width="240" height="180"></td>
+            <td width="72%"><p><FONT class=head>碰撞檢測:</FONT></p>
+              <p><font size="3">這是一課激動的教程，你也許等待它多時了。你將學會碰撞剪裁，物理模擬太多的東西，慢慢期待吧。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>碰撞檢測和物理模擬(作者:Dimitrios Christopoulos (christop@fhw.gr))<br> 
+      <br> <b><u>碰撞檢測</u></b> <br> <br>
+      這是一個我遇到的最困難的題目,因為它沒有一個簡單的解決辦法.對於每一個程序都有一種檢測碰撞的方法.當然這裡有一種蠻力,它適用於各種不同的應用,當它非常的費時.<br>
+      我們將講述一種算法,它非常的快,簡單並易於擴展.下面我們來看看這個算法包含的內容:<br> <br>
+      1) 碰撞檢測 
+      <ul>
+        <li>移動的球-平面</li>
+        <li>移動的球-圓柱</li>
+        <li>移動的球-移動的球</li>
+      </ul>
+      2) 基於物理的建模 
+      <ul>
+        <li>碰撞表示</li>
+        <li>應用重力加速度</li>
+      </ul>
+      3) 特殊效果 
+      <ul>
+        <li>爆炸的表示，利用互交叉的公告板形式</li>
+        <li>聲音使用Windows聲音庫</li>
+      </ul>
+      4) 關於代碼 
+      <ul>
+        <li>代碼被分為以下5個部分</li>
+      </ul>
+      <table border="0">
+        <tr> 
+          <td>Lesson30.cpp</td>
+          <td>&nbsp;</td>
+          <td>: 主程序代碼l</td>
+        </tr>
+        <tr> 
+          <td>Image.cpp,</td>
+          <td>Image.h</td>
+          <td>: 加載圖像</td>
+        </tr>
+        <tr> 
+          <td>Tmatrix.cpp,</td>
+          <td>Tmatrix.h</td>
+          <td>: 矩陣</td>
+        </tr>
+        <tr> 
+          <td>Tray.cpp,</td>
+          <td>Tray.h</td>
+          <td>: 射線</td>
+        </tr>
+        <tr> 
+          <td>Tvector.cpp,</td>
+          <td>Tvector.h</td>
+          <td>: 向量</td>
+        </tr>
+      </table>
+      <p><br>
+        <br>
+        1) 碰撞檢測 <br>
+        <br>
+        我們使用射線來完成相關的算法，它的定義為: <br>
+        <br>
+        <i>射線上的點 = 射線的原點+ t * 射線的方向</i> <br>
+        <br>
+        t 用來描述它距離原點的位置，它的範圍是[0, 無限遠). <br>
+        <br>
+        現在我們可以使用射線來計算它和平面以及圓柱的交點了。<br>
+        <br>
+        射線和平面的碰撞檢測： <br>
+        <br>
+        平面被描述為：<br>
+        <br>
+        <i>Xn dot X = d</i> <br>
+        <br>
+        Xn 是平面的法線.<br>
+        X 是平面上的一個點.<br>
+        d 是平面到原點的距離. <br>
+        <br>
+        現在我們得到射線和平面的兩個方程: <br>
+        <br>
+        <i>PointOnRay = Raystart + t * Raydirection<br>
+        Xn dot X = d</i> <br>
+        <br>
+        如果他們相交，則上訴方程組有解，如下所示：<br>
+        <br>
+        <i>Xn dot PointOnRay = d</i> </p>
+      <p><i>(Xn dot Raystart) + t * (Xn dot Raydirection) = d</i> <br>
+        <br>
+        解得 t: <br>
+        <br>
+        <i>t = (d - Xn dot Raystart) / (Xn dot Raydirection)</i> <br>
+        <br>
+        t代表原點到與平面相交點的參數,把t帶回原方程我們會得到與平面的碰撞點.如果Xn*Raydirection=0。則說明它與平面平行，則將不產生碰撞。如果t為負值，則說明交點在射線的相反方向，也不會產生碰撞<FONT face=Tahoma,Verdana,sans-serif size=-1>。</font></p></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre><font color=#ffffaa size=3>//判斷是否和平面相交，是則返回1，否則返回0</font><br>int TestIntersionPlane(const Plane&amp; plane,const TVector&amp; position,const TVector&amp; direction, double&amp; lamda, TVector&amp; pNormal)<br>{</pre>
+
+<p> double DotProduct=direction.dot(plane._Normal);<br>
+  double l2;</p>
+<p> <font color=#ffffaa size=3>//判斷是否平行於平面</font><br>
+  if ((DotProduct&lt;ZERO)&amp;&amp;(DotProduct&gt;-ZERO)) <br>
+  return 0;</p>
+<p> l2=(plane._Normal.dot(plane._Position-position))/DotProduct;</p>
+<p> if (l2&lt;-ZERO) <br>
+  return 0;</p>
+<p> pNormal=plane._Normal;<br>
+  lamda=l2;<br>
+  return 1;<br>
+  }</p>
+  </font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><FONT face=Tahoma,Verdana,sans-serif size=-1> <font size="+1"><u>射線-圓柱的碰撞檢測</u></font> 
+      <br>
+      <br>
+      </font>計算射線和圓柱方程組得解。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+int TestIntersionCylinder(const Cylinder&amp; cylinder,const TVector&amp; position,const TVector&amp; direction, double&amp; lamda, TVector&amp; pNormal,TVector&amp; newposition)
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>球-球之間的碰撞檢測<br> <br>
+      球被表示為中心和它的半徑，決定兩個球是否相交就是求出它們之間的距離是否小於它們的直徑。<br> <br>
+      在處理兩個移動的球是否相交時，有一個bug就是，當它們的移動速度太快，回出現它們相交，但在相鄰的兩步檢測不出它們是否相交的情況，如下圖所示：<br> 
+      <br> <center>
+        <img src="../Pic/figure1.jpg"><br>
+        圖 1 
+      </center>
+      <br> <br>
+      有一個替代的辦法就是細分相鄰的時間片斷，如果在這之間發生了碰撞，則確定有效。我們把這個細分時間段設置為3，代碼如下：<font face="Tahoma,Verdana,sans-serif"> 
+      <center>
+      </center>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3>
+<pre><font color=#ffffaa>//判斷球和球是否相交，是則返回1，否則返回0</font><br>int FindBallCol(TVector&amp; point, double&amp; TimePoint, double Time2, int&amp; BallNr1, int&amp; BallNr2)<br>{<br>	TVector RelativeV;<br>	TRay rays;<br>	double MyTime=0.0, Add=Time2/150.0, Timedummy=10000, Timedummy2=-1;<br>	TVector posi;<br>	<br>	<font color=#ffffaa>//判斷球和球是否相交</font><br>	for (int i=0;i&lt;NrOfBalls-1;i++)<br>	{<br>	 for (int j=i+1;j&lt;NrOfBalls;j++)<br>	 {	<br>		    RelativeV=ArrayVel[i]-ArrayVel[j];<br>			rays=TRay(OldPos[i],TVector::unit(RelativeV));<br>			MyTime=0.0;</pre>
+
+<p> if ( (rays.dist(OldPos[j])) &gt; 40) continue; </p>
+<p> while (MyTime&lt;Time2)<br>
+  {<br>
+  MyTime+=Add;<br>
+  posi=OldPos[i]+RelativeV*MyTime;<br>
+  if (posi.dist(OldPos[j])&lt;=40) {<br>
+  point=posi;<br>
+  if (Timedummy&gt;(MyTime-Add)) Timedummy=MyTime-Add;<br>
+  BallNr1=i;<br>
+  BallNr2=j;<br>
+  break;<br>
+  }<br>
+  <br>
+  }<br>
+  }</p>
+<p> }</p>
+<p> if (Timedummy!=10000) { TimePoint=Timedummy;<br>
+  return 1;<br>
+  }</p>
+<p> return 0;<br>
+  }</p></font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><u>怎樣應用我們的知識</u><br> <br>
+      現在我們已經可以決定射線和平面/圓柱的交點了,如下圖所示:<br> <br> <center>
+        <img src="../Pic/figure2.jpg"><br>
+        圖 2a &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        圖 2b 
+      </center>
+      <br>
+      當我們找到了碰撞位置後,下一步我們需要知道它是否發生在當前這一步中.如果距離碰撞點的位置小於這一步球體運動的間隔,則碰撞發生.我們使用如下的方程計算運動到碰撞時所需的時間:<br>
+      Tc= Dsc*T / Dst <br>
+      接著我們知道碰撞點位置,如下面公式所示:<br>
+      Collision point= Start + Velocity*Tc <br> <br>
+      2) 基於物理的模擬 <center>
+      </center> <br> <br> <u>碰撞反應</u> <br> <br>
+      為了計算對於一個靜止物體的碰撞,我們需要知道以下信息:碰撞點,碰撞法線,碰撞時間.<br> <br>
+      它是基於以下物理規律的,碰撞的入射角等於反射角.如下圖所示:<br> <br> <center>
+        <img src="../Pic/figure3.jpg"><br>
+        圖 3 
+      </center>
+      <br> <br>
+      R 為反射方向<br>
+      I 為入射方向<br>
+      N 為法線方向<br> <br>
+      反射方向有以下公式計算 : <br> <br>
+      R= 2*(-I dot N)*N + I <br>
+      <font face="Tahoma,Verdana,sans-serif">
+      <center>
+      </center>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+rt2=ArrayVel[BallNr].mag();						<font color=#ffffaa>// 返回速度向量的模</font>
+ArrayVel[BallNr].unit();						<font color=#ffffaa>// 歸一化速度向量</font>
+
+<font color=#ffffaa>// 計算反射向量</font>
+ArrayVel[BallNr]=TVector::unit( (normal*(2*normal.dot(-ArrayVel[BallNr]))) + ArrayVel[BallNr] );
+ArrayVel[BallNr]=ArrayVel[BallNr]*rt2;					
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><u>球體之間的碰撞</u><br> <br>
+      由於它很複雜，我們用下圖來說明這個原理. <br> <br> <center>
+        <img src="../Pic/figure4.jpg"><br>
+        圖 4 </center> <center>
+      </center> <p><br>
+        <br>
+        U1和U2為速度向量，我們用X_Axis表示兩個球中心連線的軸，U1X和U2X為U1和U2在這個軸上的份量。U1y和U2y為垂直於X_Axis軸的份量。M1和M2為兩個球體的份量。V1和V2為碰撞後的速度，V1x,V1y,V2x,V2y為他們的份量。</p>
+      <p>在我們的例子裡，所有球的質量都相等，解得方程為，在垂直軸上的速度不變，在X_Axis軸上互相交換速度。代碼如下：</p>
+      </td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+TVector pb1,pb2,xaxis,U1x,U1y,U2x,U2y,V1x,V1y,V2x,V2y;
+double a,b;
+pb1=OldPos[BallColNr1]+ArrayVel[BallColNr1]*BallTime;			<font color=#ffffaa>// 球1的位置</font>
+pb2=OldPos[BallColNr2]+ArrayVel[BallColNr2]*BallTime;			<font color=#ffffaa>// 球2的位置</font>
+xaxis=(pb2-pb1).unit();							<font color=#ffffaa>// X-Axis軸</font>
+a=xaxis.dot(ArrayVel[BallColNr1]);					<font color=#ffffaa>// X_Axis投影係數</font>
+U1x=xaxis*a;								<font color=#ffffaa>// 計算在X_Axis軸上的速度</font>
+U1y=ArrayVel[BallColNr1]-U1x; <font color=#aaffaa size=3><font color=#ffffaa>// 計算在垂直軸上的速度</font></font>
+xaxis=(pb1-pb2).unit();							
+b=xaxis.dot(ArrayVel[BallColNr2]);					
+U2x=xaxis*b;								
+U2y=ArrayVel[BallColNr2]-U2x;
+V1x=(U1x+U2x-(U1x-U2x))*0.5;						<font color=#ffffaa>// 計算新的速度</font>
+V2x=(U1x+U2x-(U2x-U1x))*0.5;
+V1y=U1y;
+V2y=U2y;
+for (j=0;j&lt;NrOfBalls;j++)						<font color=#ffffaa>// 更新所有球的位置</font>
+ArrayPos[j]=OldPos[j]+ArrayVel[j]*BallTime;
+ArrayVel[BallColNr1]=V1x+V1y;						<font color=#ffffaa>// 設置新的速度</font>
+ArrayVel[BallColNr2]=V2x+V2y;						</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><u>萬有引力的模擬</u> <br> <br>
+      我們使用歐拉方程來模擬萬有引力，如下所示： <br>
+      Velocity_New = Velovity_Old + Acceleration*TimeStep<br>
+      Position_New = Position_Old + Velocity_New*TimeStep <br> <br>
+      在每次模擬中，我們用上面公式計算的速度取代舊的速度<br> <br>
+      3) 特殊效果 <br> <br> <u>爆炸</u><br> <br>
+      最好的表示爆炸效果的就是使用兩個互相垂直的平面，並使用alpha混合在窗口中顯示它們。接著讓alpha變為0，設定爆炸效果不可見。代碼如下所示：</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+<font color=#ffffaa>// 渲染/混合爆炸效果</font>
+glEnable(GL_BLEND);							<font color=#ffffaa>// 使用混合</font>
+glDepthMask(GL_FALSE);							<font color=#ffffaa>// 禁用深度緩存</font>
+glBindTexture(GL_TEXTURE_2D, texture[1]);				<font color=#ffffaa>// 設置紋理</font>
+for(i=0; i&lt;20; i++)							<font color=#ffffaa>// 渲染20個爆炸效果</font>
+{
+	if(ExplosionArray[i]._Alpha>=0)
+	{
+		glPushMatrix();
+		ExplosionArray[i]._Alpha-=0.01f;			<font color=#ffffaa>// 設置alpha</font>
+		ExplosionArray[i]._Scale+=0.03f;			<font color=#ffffaa>// 設置縮放</font>
+		<font color=#ffffaa>// 設置顏色</font>
+		glColor4f(1,1,0,ExplosionArray[i]._Alpha);		
+		glScalef(ExplosionArray[i]._Scale,ExplosionArray[i]._Scale,ExplosionArray[i]._Scale);
+		<font color=#ffffaa>// 設置位置</font>
+		glTranslatef((float)ExplosionArray[i]._Position.X()/ExplosionArray[i]._Scale,
+			(float)ExplosionArray[i]._Position.Y()/ExplosionArray[i]._Scale,
+			(float)ExplosionArray[i]._Position.Z()/ExplosionArray[i]._Scale);
+		glCallList(dlist);					<font color=#ffffaa>// 調用顯示列表繪製爆炸效果</font>
+		glPopMatrix();
+	}
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><u>聲音</u> <br> <br>
+      在Windows下我們簡單的調用PlaySound()函數播放聲音。<br> <br>
+      4) 代碼的流程 <br> <br>
+      如果你成功的讀完了理論部分，在你開始運行程序並播放聲音以前。我們將用偽代碼向你介紹一些整個流程，以便你能成功的看懂代碼。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+While (Timestep!=0)
+{
+	對每一個球
+	{
+		計算最近的與平面碰撞的位置;
+		計算最近的與圓柱碰撞的位置;
+		如果碰撞發生，則保存並替換最近的碰撞點;
+	}
+	檢測各個球之間的碰撞;
+	如果碰撞發生，則保存並替換最近的碰撞點;
+
+	If (碰撞發生)
+	{
+		移動所有的球道碰撞點的時間;
+		(We already have computed the point, normal and collision time.)
+		計算碰撞後的效果;
+		Timestep-=CollisonTime;
+	}
+	else
+		移動所有的球體一步
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td><td width=100% valign=top><p>下面是對上面偽代碼的實現：</p>
+      </td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre><font color=#ffffaa>//模擬函數，計算碰撞檢測和物理模擬</font><br>void idle()<br>{<br>  double rt,rt2,rt4,lamda=10000;<br>  TVector norm,uveloc;<br>  TVector normal,point,time;<br>  double RestTime,BallTime;<br>  TVector Pos2;<br>  int BallNr=0,dummy=0,BallColNr1,BallColNr2;<br>  TVector Nc;</pre>
+
+<p> <font color=#ffffaa>//如果沒有鎖定到球上，旋轉攝像機</font><br>
+  if (!hook_toball1)<br>
+  {<br>
+  camera_rotation+=0.1f;<br>
+  if (camera_rotation&gt;360)<br>
+  camera_rotation=0;<br>
+  }<br>
+  <br>
+  RestTime=Time;<br>
+  lamda=1000;</p>
+<p> <font color=#ffffaa>//計算重力加速度</font><br>
+  for (int j=0;j&lt;NrOfBalls;j++)<br>
+  ArrayVel[j]+=accel*RestTime;</p>
+<p><font color=#ffffaa> //如果在一步的模擬時間內(如果來不及計算，則跳過幾步)</font><br>
+  while (RestTime&gt;ZERO)<br>
+  {<br>
+  lamda=10000; <br>
+  <br>
+ <font color=#ffffaa> //對於每個球，找到它們最近的碰撞點</font><br>
+  for (int i=0;i&lt;NrOfBalls;i++)<br>
+  {<br>
+  <font color=#ffffaa>//計算新的位置和移動的距離</font><br>
+  OldPos[i]=ArrayPos[i];<br>
+  TVector::unit(ArrayVel[i],uveloc);<br>
+  ArrayPos[i]=ArrayPos[i]+ArrayVel[i]*RestTime;<br>
+  rt2=OldPos[i].dist(ArrayPos[i]);</p>
+<p> <font color=#ffffaa>//測試是否和牆面碰撞</font><br>
+  if (TestIntersionPlane(pl1,OldPos[i],uveloc,rt,norm))<br>
+  { <br>
+  <font color=#ffffaa>//計算碰撞的時間</font><br>
+  rt4=rt*RestTime/rt2;</p>
+<p> <font color=#ffffaa>//如果小於當前保存的碰撞時間，則更新它</font><br>
+  if (rt4&lt;=lamda)<br>
+  { <br>
+  if (rt4&lt;=RestTime+ZERO)<br>
+  if (! ((rt&lt;=ZERO)&amp;&amp;(uveloc.dot(norm)&gt;ZERO)) )<br>
+  {<br>
+  normal=norm;<br>
+  point=OldPos[i]+uveloc*rt;<br>
+  lamda=rt4;<br>
+  BallNr=i;<br>
+  }<br>
+  }<br>
+  }<br>
+  <br>
+  if (TestIntersionPlane(pl2,OldPos[i],uveloc,rt,norm))<br>
+  {<br>
+  rt4=rt*RestTime/rt2;</p>
+<p> if (rt4&lt;=lamda)<br>
+  { <br>
+  if (rt4&lt;=RestTime+ZERO)<br>
+  if (! ((rt&lt;=ZERO)&amp;&amp;(uveloc.dot(norm)&gt;ZERO)) )<br>
+  {<br>
+  normal=norm;<br>
+  point=OldPos[i]+uveloc*rt;<br>
+  lamda=rt4;<br>
+  BallNr=i;<br>
+  dummy=1;<br>
+  }<br>
+  }<br>
+  <br>
+  }</p>
+<p> if (TestIntersionPlane(pl3,OldPos[i],uveloc,rt,norm))<br>
+  {<br>
+  rt4=rt*RestTime/rt2;</p>
+<p> if (rt4&lt;=lamda)<br>
+  { <br>
+  if (rt4&lt;=RestTime+ZERO)<br>
+  if (! ((rt&lt;=ZERO)&amp;&amp;(uveloc.dot(norm)&gt;ZERO)) )<br>
+  {<br>
+  normal=norm;<br>
+  point=OldPos[i]+uveloc*rt;<br>
+  lamda=rt4;<br>
+  BallNr=i;<br>
+  }<br>
+  }<br>
+  }</p>
+<p> if (TestIntersionPlane(pl4,OldPos[i],uveloc,rt,norm))<br>
+  {<br>
+  rt4=rt*RestTime/rt2;</p>
+<p> if (rt4&lt;=lamda)<br>
+  { <br>
+  if (rt4&lt;=RestTime+ZERO)<br>
+  if (! ((rt&lt;=ZERO)&amp;&amp;(uveloc.dot(norm)&gt;ZERO)) )<br>
+  {<br>
+  normal=norm;<br>
+  point=OldPos[i]+uveloc*rt;<br>
+  lamda=rt4;<br>
+  BallNr=i;<br>
+  }<br>
+  }<br>
+  }</p>
+<p> if (TestIntersionPlane(pl5,OldPos[i],uveloc,rt,norm))<br>
+  {<br>
+  rt4=rt*RestTime/rt2;</p>
+<p> if (rt4&lt;=lamda)<br>
+  { <br>
+  if (rt4&lt;=RestTime+ZERO)<br>
+  if (! ((rt&lt;=ZERO)&amp;&amp;(uveloc.dot(norm)&gt;ZERO)) )<br>
+  {<br>
+  normal=norm;<br>
+  point=OldPos[i]+uveloc*rt;<br>
+  lamda=rt4;<br>
+  BallNr=i;<br>
+  }<br>
+  }<br>
+  }</p>
+<p> <font color=#ffffaa>//測試是否與三個圓柱相碰</font><br>
+  if (TestIntersionCylinder(cyl1,OldPos[i],uveloc,rt,norm,Nc))<br>
+  {<br>
+  rt4=rt*RestTime/rt2;</p>
+<p> if (rt4&lt;=lamda)<br>
+  { <br>
+  if (rt4&lt;=RestTime+ZERO)<br>
+  if (! ((rt&lt;=ZERO)&amp;&amp;(uveloc.dot(norm)&gt;ZERO)) )<br>
+  {<br>
+  normal=norm;<br>
+  point=Nc;<br>
+  lamda=rt4;<br>
+  BallNr=i;<br>
+  }<br>
+  }<br>
+  <br>
+  }<br>
+  if (TestIntersionCylinder(cyl2,OldPos[i],uveloc,rt,norm,Nc))<br>
+  {<br>
+  rt4=rt*RestTime/rt2;</p>
+<p> if (rt4&lt;=lamda)<br>
+  { <br>
+  if (rt4&lt;=RestTime+ZERO)<br>
+  if (! ((rt&lt;=ZERO)&amp;&amp;(uveloc.dot(norm)&gt;ZERO)) )<br>
+  {<br>
+  normal=norm;<br>
+  point=Nc;<br>
+  lamda=rt4;<br>
+  BallNr=i;<br>
+  }<br>
+  }<br>
+  <br>
+  }<br>
+  if (TestIntersionCylinder(cyl3,OldPos[i],uveloc,rt,norm,Nc))<br>
+  {<br>
+  rt4=rt*RestTime/rt2;</p>
+<p> if (rt4&lt;=lamda)<br>
+  { <br>
+  if (rt4&lt;=RestTime+ZERO)<br>
+  if (! ((rt&lt;=ZERO)&amp;&amp;(uveloc.dot(norm)&gt;ZERO)) )<br>
+  {<br>
+  normal=norm;<br>
+  point=Nc;<br>
+  lamda=rt4;<br>
+  BallNr=i;<br>
+  }<br>
+  }<br>
+  <br>
+  }<br>
+  }</p>
+<p><br>
+  <font color=#ffffaa>//計算每個球之間的碰撞，如果碰撞時間小於與上面的碰撞，則替換它們</font><br>
+  if (FindBallCol(Pos2,BallTime,RestTime,BallColNr1,BallColNr2))<br>
+  {<br>
+  if (sounds)<br>
+  PlaySound(&quot;Data/Explode.wav&quot;,NULL,SND_FILENAME|SND_ASYNC);<br>
+  <br>
+  if ( (lamda==10000) || (lamda&gt;BallTime) )<br>
+  {<br>
+  RestTime=RestTime-BallTime;</p>
+<p> TVector pb1,pb2,xaxis,U1x,U1y,U2x,U2y,V1x,V1y,V2x,V2y;<br>
+  double a,b;</p>
+<p> pb1=OldPos[BallColNr1]+ArrayVel[BallColNr1]*BallTime;<br>
+  pb2=OldPos[BallColNr2]+ArrayVel[BallColNr2]*BallTime;<br>
+  xaxis=(pb2-pb1).unit();</p>
+<p> a=xaxis.dot(ArrayVel[BallColNr1]);<br>
+  U1x=xaxis*a;<br>
+  U1y=ArrayVel[BallColNr1]-U1x;</p>
+<p> xaxis=(pb1-pb2).unit();<br>
+  b=xaxis.dot(ArrayVel[BallColNr2]);<br>
+  U2x=xaxis*b;<br>
+  U2y=ArrayVel[BallColNr2]-U2x;</p>
+<p> V1x=(U1x+U2x-(U1x-U2x))*0.5;<br>
+  V2x=(U1x+U2x-(U2x-U1x))*0.5;<br>
+  V1y=U1y;<br>
+  V2y=U2y;</p>
+<p> for (j=0;j&lt;NrOfBalls;j++)<br>
+  ArrayPos[j]=OldPos[j]+ArrayVel[j]*BallTime;</p>
+<p> ArrayVel[BallColNr1]=V1x+V1y;<br>
+  ArrayVel[BallColNr2]=V2x+V2y;</p>
+<p> //Update explosion array<br>
+  for(j=0;j&lt;20;j++)<br>
+  {<br>
+  if (ExplosionArray[j]._Alpha&lt;=0)<br>
+  {<br>
+  ExplosionArray[j]._Alpha=1;<br>
+  ExplosionArray[j]._Position=ArrayPos[BallColNr1];<br>
+  ExplosionArray[j]._Scale=1;<br>
+  break;<br>
+  }<br>
+  }</p>
+<p> continue;<br>
+  }<br>
+  }<br>
+  <br>
+  <font color=#ffffaa>//最後的測試，替換下次碰撞的時間，並更新爆炸效果的數組</font><br>
+  if (lamda!=10000)<br>
+  { <br>
+  RestTime-=lamda;</p>
+<p> for (j=0;j&lt;NrOfBalls;j++)<br>
+  ArrayPos[j]=OldPos[j]+ArrayVel[j]*lamda;</p>
+<p> rt2=ArrayVel[BallNr].mag();<br>
+  ArrayVel[BallNr].unit();<br>
+  ArrayVel[BallNr]=TVector::unit( (normal*(2*normal.dot(-ArrayVel[BallNr]))) + 
+  ArrayVel[BallNr] );<br>
+  ArrayVel[BallNr]=ArrayVel[BallNr]*rt2;<br>
+  <br>
+  for(j=0;j&lt;20;j++)<br>
+  {<br>
+  if (ExplosionArray[j]._Alpha&lt;=0)<br>
+  {<br>
+  ExplosionArray[j]._Alpha=1;<br>
+  ExplosionArray[j]._Position=point;<br>
+  ExplosionArray[j]._Scale=1;<br>
+  break;<br>
+  }<br>
+  }<br>
+  }<br>
+  else<br>
+  RestTime=0;</p>
+<p> }</p>
+<p>}</p>
+</font>
+<pre>
+
+</pre>
+
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>你可以從源代碼得到全部的信息,我盡了最大的努力來解釋每一行代碼,一旦碰撞的原理知道了,代碼是非常簡單的.</p>
+      <p>就像我開頭所說的,碰撞檢測這個題目是非常難得,你已經學會了很多新的知識,並能夠用它創建出非常棒的演示.但在這個課題,你認友很多需要學習,既然你已經開始了,其它的原理和模型就非常容易了.</p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2030.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_30.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/30_Collide.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+      <table border="0" width="100%">
+        <td width="50%" align="left"><b><a href="Tutorial_29.html">< 第29課</a></b></td>
+        <td width="50%" align="right"><b><a href="Tutorial_31.html">第31課 ></a></b></td>
+      </table>
+</td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_30.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:58 GMT -->
+</html>

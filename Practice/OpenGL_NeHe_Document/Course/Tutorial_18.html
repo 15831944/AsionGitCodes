@@ -1,0 +1,540 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn --><html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_18.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:37 GMT -->
+<head>
+<title>NeHe OpenGL教程第十八課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第18課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="25%"><img src="../Pic/lesson18.jpg" width="240" height="180"></td>
+            <td width="75%"><p><FONT 
+                class=head>二次幾何體:</FONT></p>
+              <p><font size="3">利用二次幾何體，你可以很容易的創建球，圓盤，圓柱和圓錐。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>二次曲面是一種畫復合對象的方法，這種方法通常並不需要很多的三角形。我們將要使用第七課的代碼。我們將要增加7個變量以及修改紋理以增加一些變化 
+      ：</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3"> 
+<pre>bool    sp;						<font color="#ffffaa">// 空格鍵是否按下</font>
+
+int	part1;						<font
+color="#ffffaa">// 圓盤的起始角度</font>
+int	part2;						<font color="#ffffaa">// </font><font color="#aaffaa" size="3"><font
+color="#ffffaa">圓盤的結束角度</font></font>
+int	p1=0;						<font
+color="#ffffaa">// 增量1</font>
+int	p2=1;						<font color="#ffffaa">// </font><font color="#aaffaa" size="3"><font
+color="#ffffaa">增量1</font></font>
+GLUquadricObj *quadratic;					<font
+color="#ffffaa">// 二次幾何體</font>
+GLuint  object=0;						<font
+color="#ffffaa">// 二次幾何體標示符</font>
+</pre>
+</font> 
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">好了我們現在開始搞InitGL()函數。我們打算增加3行代碼用來初始化我們的二次曲面。這3行代碼將在你使1號光源有效後增加，但是要在返回之前。第一行代碼將初始化二次曲面並且創建一個指向改二次曲面的指針，如果改二次曲面不能被創建的話，那麼該指針就是NULL。第二行代碼將在二次曲面的表面創建平滑的法向量，這樣當燈光照上去的時候將會好看些。另外一些可能的取值是：GLU_NONE和GLU_FLAT。最後我們使在二次曲面表面的紋理映射有效。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	quadratic=gluNewQuadric();			<font color="#ffffaa">	// 創建二次幾何體</font>
+	gluQuadricNormals(quadratic, GLU_SMOOTH);	<font
+color="#ffffaa">	// 使用平滑法線</font>
+	gluQuadricTexture(quadratic, GL_TRUE);		<font
+color="#ffffaa">// 使用紋理</font></pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">現在我決定在本課裡保留立方體，這樣你可以看到紋理是如何映射到二次曲面對像上的。而且我打算將繪製立方體的代碼定義為一個單獨的函數，這樣我們在定義函數Draw()的時候它將會變的不那麼凌亂。每個人都應該記住這些代碼：</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>GLvoid glDrawCube()					<font color="#ffffaa">// 繪製立方體</font>
+{
+		glBegin(GL_QUADS);			
+		<font color="#ffffaa">// 前面</font>
+		glNormal3f( 0.0f, 0.0f, 1.0f);		
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	
+		<font color="#ffffaa">// 後面</font>
+		glNormal3f( 0.0f, 0.0f,-1.0f);		
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	
+		<font color="#ffffaa">// 上面</font>
+		glNormal3f( 0.0f, 1.0f, 0.0f);		
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	
+		<font color="#ffffaa">// 下面</font>
+		glNormal3f( 0.0f,-1.0f, 0.0f);		
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	
+		<font color="#ffffaa">// 右面</font>
+		glNormal3f( 1.0f, 0.0f, 0.0f);		
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	
+		<font color="#ffffaa">// 左面</font>
+		glNormal3f(-1.0f, 0.0f, 0.0f);		
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	
+	glEnd();					
+}
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">接下來就是場景繪製函數了，在這裡我只寫一個簡單的例子。並且當我繪製一個部分的盤子的時候，我將使用一個靜態變量（一個局部的變量，該變量可以保留他的值不論你任何時候調用他）來表達一個非常酷的效果。為了清晰起見我將要重寫DrawGLScene函數。<br>
+      　　 你們將會注意到當我討論這些正在使用的參數時我忽略了當前函數的第一個參數（quadratic）。這個參數將被除立方體外的所有對象使用。所以當我討論這些參數的時候我忽略了它。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>int DrawGLScene(GLvoid)						
+{
+		//...
+<font color="#ffffaa">// 這部分是新增加的</font>
+	switch(object)						<font
+color="#ffffaa">// 繪製哪一種二次幾何體</font>
+	{
+	case 0:							<font
+color="#ffffaa">// 繪製立方體</font>
+		glDrawCube();					
+		break;						
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">我們創建的第2個對象是一個圓柱體。參數1（1.0F）是圓柱體的底面半徑，參數2（1.0F）是圓柱體的餓頂面半徑，參數3（3.0F）是圓柱體的高度。參數4（32）是緯線（環繞Z軸有多少細分），參數5（32）是經線（沿著Z軸有多少細分）。細分越多該對象就越細緻。我們可以用增加細分的方法來增加對象的多邊形數。因此你可以犧牲速度換回質量（以時間換質量），大多數的時候我們都可以很容易的找到一個合適的「度」。<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	case 1:							<font color="#ffffaa">// 繪製圓柱體</font>
+		glTranslatef(0.0f,0.0f,-1.5f);			
+		gluCylinder(quadratic,1.0f,1.0f,3.0f,32,32);	
+		break;						</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">對像3將會創建一個CD樣子的盤子。參數1（0.5F）是盤子的內圓半徑，該參數可以為0，則表示在盤子中間沒孔，內圓半徑越大孔越大。參數2（1.5F）表示外圓半徑，這個參數必須比內圓半徑大。參數3（32）是組成該盤子的切片的數量，這個數量可以想像成披薩餅中的切片的數量。切片越多，外圓邊緣就越平滑。最後一個參數（32）是組成盤子的環的數量。環很像唱片上的軌跡，一環套一環。這些環從內圓半徑細分到外圓半徑。再說一次，細分越多，速度越慢。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	case 2:							<font color="#ffffaa">// 繪製圓盤</font>
+		gluDisk(quadratic,0.5f,1.5f,32,32);		
+		break;						</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">我們的第4個對象我知道你們為描述它耗盡精力。就是球。繪製球將會變的非常簡單。參數1是球的半徑。如果你無法理解半徑/直徑等等的話，可以理解成物體中心到物體外部的距離，在這裡我們使用1.3F作為半徑。接下來兩個參數就是細分了，和圓柱體一樣，參數2是緯線，參數3是經線。細分越多球看起來就越平滑，通常球需要多一些的細分以使他們看起來平滑。<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	case 3:							<font color="#ffffaa">// 繪製球</font>
+		gluSphere(quadratic,1.3f,32,32);		
+		break;						</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">我們創建的第4個對象使用與我們曾經創建的圓柱體一樣的命令來創建，如果你還記得的話，我們可以通過控制參數2和參數3來控制頂面半徑和地面半徑。因此我們可以使頂面半徑為0來繪製一個圓錐體，頂面半徑為0將會在頂面上創建一個點。因此在下面的代碼中，我們使頂面半徑等於0，這將會創建一個點，同時也就創建了我們的圓錐。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	case 4:							<font color="#ffffaa">// 繪製圓錐</font>
+		glTranslatef(0.0f,0.0f,-1.5f);			
+		gluCylinder(quadratic,1.0f,0.0f,3.0f,32,32);	
+		break;						</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top">我們的第6個對象將被gluPartialDisk函數創建。我們打算創建的這個對象使用了一些命令，這些命令在我們創建對像之前，你將會清楚的看到。但是命令gluPartialDisk擁有兩個新的參數。第5個參數是我們想要繪製的部分盤子的開始角度，參數6是旋轉角，也就是轉過的角度。我們將要增加旋轉角，這將引起盤子沿順時針方向緩慢的被繪製在屏幕上。一旦旋轉角達到360度我們將開始增加開始角度，這樣盤子看起來就想是被逐漸的抹去一樣。我們將重複這些過程。</td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>	case 5:							<font color="#ffffaa">// 繪製部分圓盤</font>
+		part1+=p1;					
+		part2+=p2;					
+
+		if(part1&gt;359)					
+		{
+			p1=0;					
+			part1=0;				
+			p2=1;					
+			part2=0;				
+		}
+		if(part2&gt;359)					
+		{
+			p1=1;					
+			p2=0;					
+		}
+		gluPartialDisk(quadratic,0.5f,1.5f,32,32,part1,part2-part1);	
+		break;						
+	};
+
+		//...
+}
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"><font face="arial" size="-1">In the KillGLWindow() section
+    of code, we need to delete the quadratic to free up system resources. We do this with the
+    command gluDeleteQuadratic. </font></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>GLvoid KillGLWindow(GLvoid)					
+{
+	gluDeleteQuadric(quadratic);				<font
+color="#ffffaa">// 刪除二次幾何體</font>
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"> 在最後，我給出鍵盤輸入代碼。僅僅增加一些對剩餘鍵的檢查。<br></td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+<font color="#aaffaa" size="3">
+
+<pre>				if (keys[' '] &amp;&amp; !sp)		<font color="#ffffaa">// 空格是否按下</font>
+				{
+					sp=TRUE;		<font
+color="#ffffaa">	// 是,則繪製下一種二次幾何體</font>
+					object++;		
+					if(object&gt;5)		
+						object=0;	
+				}
+				if (!keys[' '])			<font
+color="#ffffaa">// 空格是否釋放</font>
+				{
+					sp=FALSE;		<font
+color="#ffffaa">	// 記錄這個狀態</font>
+				}
+</pre>
+</font>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/tl.jpg" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/tc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/tr.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+    <td width="100%" valign="top"><p>這就是全部了。現在你可以在OpenGL中繪製二次曲面了。 </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2018.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_18.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/18_Quadratic.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+      <table border="0" width="100%">
+      <tr>
+          <td width="50%" align="left"><a href="Tutorial_17.html"><b>&lt; 第17課</b></a></td>
+          <td width="50%" align="right"><a href="Tutorial_19.html"><b>第19課 
+            &gt;</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td><img src="../Pic/bl.gif" width="28" height="28"></td>
+    <td width="100%"><img src="../Pic/bc.gif" width="100%" height="28"></td>
+    <td><img src="../Pic/br.gif" width="28" height="28"></td>
+  </tr>
+</table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_18.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 09:59:37 GMT -->
+</html>

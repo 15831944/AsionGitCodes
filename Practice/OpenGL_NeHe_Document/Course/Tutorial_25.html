@@ -1,0 +1,426 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_25.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:04 GMT -->
+<head>
+<title>NeHe OpenGL教程第二十五課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第25課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="28%"><img src="../Pic/lesson25.jpg" width="240" height="180"></td>
+            <td width="72%"><p><FONT class=head>變形和從文件中加載3D物體:</FONT></p>
+              <p><font size="3">在這一課中，你將學會如何從文件加載3D模型，並且平滑的從一個模型變換為另一個模型。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>歡迎來到這激動人心的一課，在這一課裡，我們將介紹模型的變形。需要注意的是各個模型必須要有相同的頂點，才能一一對應，並應用變形。<br>
+      在這一課裡，我們同樣要教會你如何從一個文件中讀取模型數據。<br>
+      文件開始的部分和前面一樣，沒有任何變化。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> </font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>我們結下來添加幾個旋轉變量，用來記錄旋轉的信息。並使用cx,cy,cz設置物體在屏幕上的位置。<br>
+      變量key用來記錄當前的模型，step用來設置相鄰變形之間的中間步驟。如step為200，則需要200次，才能把一個物體變為另一個物體。<br>
+      最後我們用一個變量來設置是否使用變形。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLfloat		xrot,yrot,zrot,								<font color=#ffffaa>// X, Y & Z 軸的旋轉角度</font>
+		xspeed,yspeed,zspeed,							<font color=#ffffaa>// X, Y & Z 軸的旋轉速度</font>
+		cx,cy,cz=-15;								<font color=#ffffaa>// 物體的位置</font>
+
+int		key=1;									<font color=#ffffaa>// 物體的標識符</font>
+int		step=0,steps=200;								<font color=#ffffaa>// 變換的步數</font>
+bool		morph=FALSE;								<font color=#ffffaa>// 是否使用變形</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的結構定義一個三維頂點</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+typedef struct					
+{
+	float	x, y, z;							
+} VERTEX;							</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的結構使用頂點來描述一個三維物體</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+typedef	struct										<font color=#ffffaa>// 物體結構</font>
+{
+ int		verts;									<font color=#ffffaa>// 物體中頂點的個數</font>
+ VERTEX		*points;									<font color=#ffffaa>// 包含頂點數據的指針</font>
+} OBJECT;										</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>maxver用來記錄各個物體中最大的頂點數，如一個物體使用5個頂點，另一個物體使用20個頂點，那麼物體的頂點個數為20。<br>
+      結下來定義了四個我們使用的模型物體，並把相鄰模型變形的中間狀態保存在helper中，sour保存原模型物體，dest保存將要變形的模型物體。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int		maxver;									<font color=#ffffaa>// 最大的頂點數</font>
+OBJECT		morph1,morph2,morph3,morph4,						<font color=#ffffaa>// 我們的四個物體</font>
+		helper,*sour,*dest;		 					<font color=#ffffaa>// 幫助物體,原物體，目標物體</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>WndProc()函數沒有變化</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的函數用來為模型分配保存頂點數據的內存空間</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void objallocate(OBJECT *k,int n)
+{											
+	k-&gt;points=(VERTEX*)malloc(sizeof(VERTEX)*n);					<font color=#ffffaa>// 分配n個頂點的內存空間</font>
+}										</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的函數用來釋放為模型分配的內存空間</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void objfree(OBJECT *k)			
+{
+	free(k-&gt;points);								
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼用來讀取文件中的一行。<br>
+      我們用一個循環來讀取字符，最多讀取255個字符，當遇到'\n'回車時，停止讀取並立即返回。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void readstr(FILE *f,char *string)							<font color=#ffffaa>// 讀取一行字符</font>
+{
+	do										
+	{
+		fgets(string, 255, f);						<font color=#ffffaa>// 最多讀取255個字符</font>
+	} while ((string[0] == '/') || (string[0] == '\n'));				<font color=#ffffaa>// 遇到回車則停止讀取</font>
+	return;									<font color=#ffffaa>// 返回</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼用來加載一個模型文件，並為模型分配內存，把數據存儲進去。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void objload(char *name,OBJECT *k)							<font color=#ffffaa>// 從文件加載一個模型</font>
+{
+	int	ver;								<font color=#ffffaa>// 保存頂點個數</font>
+	float	rx,ry,rz;								<font color=#ffffaa>// 保存模型位置</font>
+	FILE	*filein;								<font color=#ffffaa>// 打開的文件句柄</font>
+	char	oneline[255];							<font color=#ffffaa>// 保存255個字符</font>
+
+	filein = fopen(name, "rt");							<font color=#ffffaa>// 打開文本文件，供讀取</font>
+											
+	readstr(filein,oneline);							<font color=#ffffaa>// 讀入一行文本</font>
+	sscanf(oneline, "Vertices: %d\n", &ver);					<font color=#ffffaa>// 搜索字符串"Vertices: "，並把其後的頂點數保存在ver變量中</font>
+	k-&gt;verts=ver;								<font color=#ffffaa>// 設置模型的頂點個數</font>
+	objallocate(k,ver);							<font color=#ffffaa>// 為模型數據分配內存</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的循環，讀取每一行（即每個頂點）的數據，並把它保存到內存中?/td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	for (int i=0;i&lt;ver;i++)								<font color=#ffffaa>// 循環所有的頂點</font>
+	{
+		readstr(filein,oneline);							<font color=#ffffaa>// 讀取一行數據</font>
+		sscanf(oneline, "%f %f %f", &rx, &ry, &rz);					<font color=#ffffaa>// 把頂點數據保存在rx,ry,rz中</font>
+</pre>
+</font><font color=#aaffaa size=3> 
+<pre>
+		k-&gt;points[i].x = rx;							<font color=#ffffaa>// 保存當前頂點的x坐標</font>
+		k-&gt;points[i].y = ry;							<font color=#ffffaa>// 保存當前頂點的y坐標</font>
+		k-&gt;points[i].z = rz;							<font color=#ffffaa>// 保存當前頂點的z坐標</font>
+	}
+	fclose(filein);									<font color=#ffffaa>// 關閉文件</font>
+
+	if(ver&gt;maxver) maxver=ver;								<font color=#ffffaa>// 記錄最大的頂點數</font>
+}										</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的函數根據設定的間隔，計算第i個頂點每次變換的位移</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+VERTEX calculate(int i)									<font color=#ffffaa>// 計算第i個頂點每次變換的位移</font>
+{
+	VERTEX a;								
+	a.x=(sour-&gt;points[i].x-dest-&gt;points[i].x)/steps;				
+	a.y=(sour-&gt;points[i].y-dest-&gt;points[i].y)/steps;				
+	a.z=(sour-&gt;points[i].z-dest-&gt;points[i].z)/steps;				
+	return a;									
+}											</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><FONT color="#FFFFFF">ReSizeGLScene()函數沒有變化</font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+GLvoid ReSizeGLScene(GLsizei width, GLsizei height)
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的函數完成初始化功能，它設置混合模式為半透明</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int InitGL(GLvoid)			
+{
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE);						<font color=#ffffaa>// 設置半透明混合模式</font>
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);					<font color=#ffffaa>// 設置清除色為黑色</font>
+	glClearDepth(1.0);								<font color=#ffffaa>// 設置深度緩存中值為1</font>
+	glDepthFunc(GL_LESS);							<font color=#ffffaa>// 設置深度測試函數</font>
+	glEnable(GL_DEPTH_TEST);							<font color=#ffffaa>// 啟用深度測試</font>
+	glShadeModel(GL_SMOOTH);							<font color=#ffffaa>// 設置著色模式為光滑著色</font>
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);			</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼用來加載我們的模型物體</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	maxver=0;									<font color=#ffffaa>// 初始化最大頂點數為0</font>
+	objload("data/sphere.txt",&morph1);						<font color=#ffffaa>// 加載球模型</font>
+	objload("data/torus.txt",&morph2);						<font color=#ffffaa>// 加載圓環模型</font>
+	objload("data/tube.txt",&morph3);						<font color=#ffffaa>// 加載立方體模型</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>第四個模型不從文件讀取，我們在（-7，-7，-7）-（7，7，7）之間隨機生成模型點,它和我們載如的模型都一樣具有486個頂點。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	objallocate(&morph4,486);							<font color=#ffffaa>// 為第四個模型分配內存資源</font>
+	for(int i=0;i&lt;486;i++)							<font color=#ffffaa>// 隨機設置486個頂點</font>
+	{
+		morph4.points[i].x=((float)(rand()%14000)/1000)-7;			
+		morph4.points[i].y=((float)(rand()%14000)/1000)-7;			<font color=#ffffaa> </font>
+		morph4.points[i].z=((float)(rand()%14000)/1000)-7;			
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>初始化中間模型為球體，並把原和目標模型都設置為球</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	objload("data/sphere.txt",&helper);
+	sour=dest=&morph1;								
+
+	return TRUE;									<font color=#ffffaa>// 初始化完成，成功返回</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面是具體的繪製代碼，向往常一樣我們先設置模型變化，以便我們更好的觀察。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void DrawGLScene(GLvoid)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				<font color=#ffffaa>// 清空緩存</font>
+	glLoadIdentity();								<font color=#ffffaa>// 重置模型變換矩陣</font>
+	glTranslatef(cx,cy,cz);							<font color=#ffffaa>// 平移和旋轉</font>
+	glRotatef(xrot,1,0,0);								
+	glRotatef(yrot,0,1,0);							
+	glRotatef(zrot,0,0,1);								
+
+	xrot+=xspeed; yrot+=yspeed; zrot+=zspeed;					<font color=#ffffaa>// 根據旋轉速度，增加旋轉角度</font>
+
+	GLfloat tx,ty,tz;								<font color=#ffffaa>// 頂點臨時變量</font>
+	VERTEX q;									<font color=#ffffaa>// 保存中間計算的臨時頂點</font></pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來我們來繪製模型中的點，如果啟用了變形，則計算變形的中間過程點。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glBegin(GL_POINTS);								<font color=#ffffaa>// 點繪製開始</font>
+		for(int i=0;i&lt;morph1.verts;i++)						<font color=#ffffaa>// 循環繪製模型1中的每一個頂點</font>
+		{									
+			if(morph) q=calculate(i); else q.x=q.y=q.z=0;				<font color=#ffffaa>// 如果啟用變形，則計算中間模型</font>
+			helper.points[i].x-=q.x;					
+			helper.points[i].y-=q.y;					
+			helper.points[i].z-=q.z;					
+			tx=helper.points[i].x;						<font color=#ffffaa>// 保存計算結果到x,y,z變量中</font>
+			ty=helper.points[i].y;						
+			tz=helper.points[i].z;					</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>為了讓動畫開起來流暢，我們一共繪製了三個中間狀態的點。讓變形過程從藍綠色向藍色下一個狀態變化。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+			glColor3f(0,1,1);						<font color=#ffffaa>// 設置顏色</font>
+			glVertex3f(tx,ty,tz);					<font color=#ffffaa>// 繪製頂點</font>
+			glColor3f(0,0.5f,1);					<font color=#ffffaa>// 把顏色變藍一些</font>
+			tx-=2*q.x; ty-=2*q.y; ty-=2*q.y;				<font color=#ffffaa>// 如果啟用變形，則繪製2步後的頂點</font>
+			glVertex3f(tx,ty,tz);						
+			glColor3f(0,0,1);						<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>把顏色變藍一些</font></font>
+			tx-=2*q.x; ty-=2*q.y; ty-=2*q.y;				<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>如果啟用變形，則繪製2步後的頂點</font></font>
+			glVertex3f(tx,ty,tz);						
+		}									
+	glEnd();									<font color=#ffffaa>// 繪製結束</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>最後如果啟用了變形，則增加遞增的步驟參數，然後繪製下一個點。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	<font color=#ffffaa>// 如果啟用變形則把變形步數增加</font>
+	if(morph && step&lt;=steps)step++; else { morph=FALSE; sour=dest; step=0;}</pre>
+<pre>
+	return TRUE; <font color=#ffffaa>// 一切OK</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>KillGLWindow() 函數基本沒有變化，只是添加釋放5個模型內存的代碼</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>objfree(&morph1);								<font color=#ffffaa>// 釋放模型1內存</font>
+	objfree(&morph2);								<font color=#ffffaa>// 釋放模型2內存</font>
+	objfree(&morph3);								<font color=#ffffaa>// 釋放模型3內存</font>
+	objfree(&morph4);								<font color=#ffffaa>// 釋放模型4內存</font>
+	objfree(&helper);								<font color=#ffffaa>// 釋放模型5內存</font>
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>CreateGLWindow() 函數沒有變化</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+BOOL CreateGLWindow()		
+
+LRESULT CALLBACK WndProc()
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在WinMain()函數中，我們添加了一些鍵盤控制的函數</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> </font> <font color=#aaffaa size=3> 
+<pre>
+				if(keys[VK_PRIOR])						<font color=#ffffaa>// PageUp鍵是否被按下</font>
+					zspeed+=0.01f;					<font color=#ffffaa>// 按下增加繞z軸旋轉的速度</font>
+
+				if(keys[VK_NEXT])						<font color=#ffffaa>// PageDown鍵是否被按下</font>
+					zspeed-=0.01f;					<font color=#ffffaa>// 按下減少繞z軸旋轉的速度</font>
+
+				if(keys[VK_DOWN])					<font color=#ffffaa>	// 下方向鍵是否被按下</font>
+					xspeed+=0.01f;					<font color=#ffffaa>// 按下增加繞x軸旋轉的速度</font>
+
+				if(keys[VK_UP])						<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>上方向鍵是否被按下</font></font>
+					xspeed-=0.01f;					<font color=#ffffaa>// 按下減少繞x軸旋轉的速度</font>
+
+				if(keys[VK_RIGHT])					<font color=#ffffaa>	// </font><font color=#aaffaa size=3><font color=#ffffaa>右方向鍵是否被按下</font></font>
+					yspeed+=0.01f;					<font color=#ffffaa>// 按下增加沿y軸旋轉的速度</font>
+
+				if(keys[VK_LEFT])						<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>左方向鍵是否被按下</font></font>
+					yspeed-=0.01f;					<font color=#ffffaa>// 按下減少沿y軸旋轉的速度</font></pre>
+</font> <font color=#aaffaa size=3>
+<pre>
+				if (keys['Q'])						<font color=#ffffaa>// Q鍵是否被按下</font>
+				 cz-=0.01f;						<font color=#ffffaa>// 是則向屏幕裡移動</font>
+
+				if (keys['Z'])						<font color=#ffffaa>// Z鍵是否被按下 </font>
+				 cz+=0.01f;						<font color=#ffffaa>// 是則向屏幕外移動</font>
+
+				if (keys['W'])						<font color=#ffffaa>// W鍵是否被按下</font>
+				 cy+=0.01f;						<font color=#ffffaa>// 是則向上移動</font>
+
+				if (keys['S'])						<font color=#ffffaa>// S鍵是否被按下</font>
+				 cy-=0.01f;						<font color=#ffffaa>// 是則向下移動</font>
+
+				if (keys['D'])						<font color=#ffffaa>// D鍵是否被按下 </font>
+				 cx+=0.01f;						<font color=#ffffaa>// 是則向右移動</font>
+
+				if (keys['A'])						<font color=#ffffaa>// A鍵是否被按下 </font>
+				 cx-=0.01f;						<font color=#ffffaa>// 是則向左移動</font></pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>1，2，3，4鍵用來設置變形的目標模型</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+				if (keys['1'] && (key!=1) && !morph)			<font color=#ffffaa>// 如果1被按下，則變形到模型1</font>
+				{
+					key=1;						
+					morph=TRUE;				
+					dest=&morph1;					
+				}
+				if (keys['2'] && (key!=2) && !morph)			<font color=#ffffaa>// 如果2被按下，則變形到模型1</font>
+				{
+					key=2;						
+					morph=TRUE;					
+					dest=&morph2;					
+				}
+				if (keys['3'] && (key!=3) && !morph)			<font color=#ffffaa>// 如果3被按下，則變形到模型1</font>
+				{
+					key=3;						
+					morph=TRUE;					
+					dest=&morph3;					
+				}
+				if (keys['4'] && (key!=4) && !morph)			<font color=#ffffaa>// 如果4被按下，則變形到模型1</font>
+				{
+					key=4;						
+					morph=TRUE;					
+					dest=&morph4;					
+				}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><p>我希望你能喜歡這個教程，相信你已經學會了變形動畫。<br>
+        Piotr Cieslak 的代碼非常的新穎，希望通過這個教程你能知道如何從文件中加載三維模型。<br>
+        這份教程化了我三天的時間，如果有什麼錯誤請告訴我。 </p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2025.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_25.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/25_Morph.rar">RAR格式</a></p></td>
+  </tr>
+</table><table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_24.html">< 
+          <font face="Tahoma,Verdana,sans-serif">第</font>24<font face="Tahoma,Verdana,sans-serif">課</font></a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_26.html"><font face="Tahoma,Verdana,sans-serif">第</font>26<font face="Tahoma,Verdana,sans-serif">課</font> 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_25.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:01:10 GMT -->
+</html>

@@ -1,0 +1,1107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 這篇文章由Dancingwind翻譯，作者的聯繫方式zhouwei02@mails.tsinghua.edu.cn -->
+
+<html>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_21.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:00:23 GMT -->
+<head>
+<title>NeHe OpenGL教程第二十一課，DancingWind翻譯</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<style type=text/css>
+A:link {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:visited {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:active {COLOR: #ccaaff; TEXT-DECORATION: none}
+A:hover {COLOR: #ffccaa; TEXT-DECORATION: none}
+</style>
+</head>
+
+<br><br>
+
+<body bgcolor=#000000 text=#ffffff><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td width=326 height=130><img src="../Pic/logo.png" width=326 height=130></td>
+    <td valign=middle align=center width="75%"><font color=#ffccaa size=+3><b><i>第21課</i></b></font></td>
+  </tr></table>
+  <!-- 上邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/tl.jpg" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/tc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/tr.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 中部-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+  	<!-- 中部左邊框-->
+    <td  background="../Pic/l.gif"><img src="../Pic/l.gif" width="28" height="28"></td>
+	<!-- 中部文字部分-->
+    <td vAlign="top" width="100%">
+	<table width="100%" border="0">
+          <tr>
+            <td width="29%"><img src="../Pic/lesson21.jpg" width="240" height="180"></td>
+            <td width="71%"><p><FONT class=head>線，反走樣，計時，正投影和簡單的聲音:</FONT></p>
+              <p><font size="3">這是我第一個大的教程，它將包括線，反走樣，計時，正投影和簡單的聲音。希望這一課中的東西能讓每個人感到高興。</FONT></p></td>
+          </tr>
+     </table>
+      </td>
+	<!-- 中部右邊框-->
+    <td background="../Pic/r.gif"><img src="../Pic/r.gif" width="28" height="28"></td>
+  </tr>
+</TBODY>
+</table>
+
+<!-- 下邊框-->
+<table border="0" cellPadding="0" cellSpacing="0" width="100%">
+<TBODY>
+  <tr>
+    <td><img height="28" src="../Pic/bl.gif" width="28"></td>
+    <td width="100%"><img height="28" src="../Pic/bc.gif" width="100%"></td>
+    <td><img height="28" src="../Pic/br.gif" width="28"></td>
+  </tr>
+</TBODY>
+</table>
+  <table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>歡迎來到第21課，在這一課裡，你將學會直線，反走樣，正投影，計時，基本的音效和一個簡單的遊戲邏輯。希望這裡的東西可以讓你高興。我花了兩天的時間寫代碼，並用了兩周的時間寫這份HTML文件，希望你能享受我的勞動。
+      <p>在這課的結尾你將獲得一個叫&quot;amidar&quot;的遊戲，你的任務是走完所有的直線。這個程序有了一個基本遊戲的一切要素，關卡，生命值，聲音和一個遊戲道具。</p>
+      <p>我們從第一課的程序來逐步完整這個程序，按照慣例，我們只介紹改動的部分。</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+#include	&lt;windows.h&gt;							
+#include	&lt;stdio.h&gt;							
+#include	&lt;stdarg.h&gt;						
+#include	&lt;gl\gl.h&gt;							
+#include	&lt;gl\glu.h&gt;							
+#include	&lt;gl\glaux.h&gt;							
+
+HDC		hDC=NULL;							
+HGLRC		hRC=NULL;							
+HWND		hWnd=NULL;							
+HINSTANCE	hInstance;							</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>bool類型的變量，vline保存了組成我們遊戲網格垂直方向上的121條線，上下水平各11條。hline保存了水平方向上的 
+      121條線，用ap來檢查A鍵是否已經按下。
+      <p>當網格被填滿時， filled被設置為TRUE而反之則為FALSE。gameover這個變量的作用顯而易見，當他的值為TRUE時，遊戲結束。anti指出抗鋸齒功能是否打開，當設置為TRUE時，該功能是打開著的。active 
+        和 fullscreen 指出窗口是否被最小化以及遊戲窗口是窗口模式還是全屏模式。</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+bool		keys[256];							
+bool		vline[11][10];							<font color=#ffffaa>// 保存垂直方向的11根線條中，每根線條中的10段是否被走過</font>
+bool		hline[10][11];							<font color=#ffffaa>//保存水平方向的11根線條中，每根線條中的10段是否被走過</font>
+bool		ap;								<font color=#ffffaa>// A鍵是否已經按下</font>
+bool		filled;								<font color=#ffffaa>// 網格是否被填滿?</font>
+bool		gameover;							<font color=#ffffaa>// 遊戲是否結束?</font>
+bool		anti=TRUE;							<font color=#ffffaa>// 是否啟用反走樣?</font>
+bool		active=TRUE;							
+bool		fullscreen=TRUE;						</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接著設置整型變量。loop1 和 loop2 被用來檢查網格，查看是否有敵人攻擊我們，以及在網格上給對像一個隨機的位置。你將看到loop1 
+      / loop2在後面的程序得到使用。delay 是一個計數器，我用他來減慢那些壞蛋的動作。當delay的值大於某一個饋值的時候，敵人才可以行動，此時delay將被重置。<br>
+      adjust是一個非常特殊的變量，即使我們的程序擁有一個定時器，他也僅僅用來檢查你的計算機是否運行地太快。如果是，則需要暫停一下以減慢運行速度。在我地GeForce顯卡上，程序的運行平滑地簡直變態，並且非常非常快。但是在我的PIII/450＋Voodoo 
+      3500TV上測試的時候，我注意到程序運行地非常緩慢。我發現問題在於關於時間控制那部分代碼只能夠用來減慢遊戲進行而並不能加速之。因此我引入了一個叫做adjust 
+      的變量。它可以是0到5之間的任何值。遊戲中的對象移動速度的不同依賴於這個變量的值。值越小，運動越平滑；而值越大，則運動速度越快。這是在比較慢的機器上運行這個程序最簡單有效的解決方案了。但是請注意，不管對像移動的速度有多快，遊戲的速度都不會比我期望的更快。我們推薦把adjust值設置為3，這樣在大部分機器上都有比較滿意的效果。<br>
+      我們把lives的值設置成5，這樣我們的英雄一出場就擁有5條命。level是一個內部變量，用來指出當前遊戲的難度。當然，這並不是你在屏幕上所看到的那個Level。變量level2開始的時候和Level擁有相同的值，但是隨著你技能的提高，這個值也會增加。當你成功通過難度3之後，這個值也將在難度3上停止增加。level 
+      是一個用來表示遊戲難度的內部變量，stage才是用來記錄當前遊戲關卡的變量。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int		loop1;								<font color=#ffffaa>// 通用循環變量</font>
+int		loop2;								<font color=#ffffaa>// 通用循環變量</font>
+int		delay;								<font color=#ffffaa>// 敵人的暫停時間</font>
+int		adjust=3;							<font color=#ffffaa>// 調整顯示的速度</font>
+int		lives=5;							<font color=#ffffaa>// 玩家的生命</font>
+int		level=1;							<font color=#ffffaa>// 內部遊戲的等級</font>
+int		level2=level;							<font color=#ffffaa>// 顯示的遊戲的等級</font>
+int		stage=1;							<font color=#ffffaa>// 遊戲的關卡</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來我們需要一個結構來記錄遊戲中的對象。fx和fy每次在網格上移動我們的英雄和敵人一些較小的象素，以創建一個平滑的動畫效果。x和y則記錄著對像處於網格的那個交點上。<br>
+      上下左右各有11個點，因此x和y可以是0到10之間的任意值。這也是我們為什麼需要fx和fy的原因。考慮如果我們只能夠在上下和左右方向的11個點間移動的話，我們的英雄不得不<br>
+      在各個點間跳躍前進。這樣顯然是不夠平滑美觀的。<br>
+      最後一個變量spin用來使對像在Z軸上旋轉。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+struct		object								<font color=#ffffaa>// 記錄遊戲中的對象</font>
+{
+	int	fx, fy;								<font color=#ffffaa>// 使移動變得平滑</font>
+	int	x, y;								<font color=#ffffaa>// 當前遊戲者的位置</font>
+	float	spin;								<font color=#ffffaa>// 旋轉方向</font>
+};
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><br>
+      既然我們已經為我們的玩家，敵人，甚至是秘密武器。設置了結構體，那麼同樣的，為了表現剛剛創設的結構體的功能和特性，我們也可以為此設置新的結構體。<br>
+      為我們的玩家創設結構體之下的第一條直線。基本上我們將會為玩家提供fx，fy，x，y和spin值幾種不同的結構體。通過增加這些直線，僅需查看玩家的x值我們就很容易取得玩家的位置，同時我們也可以通過增加玩家的旋轉度來改變玩家的spin值。<br>
+      第二條直線略有不同。因為同一屏幕我們可以同時擁有至多15個敵人。我們需要為每個敵人創造上面所提到的可變量。我們通過設置一個有15個敵人的組來實現這個目標，如第一個敵人的位置被設定為敵人（0）.x.第二個敵人的位置為（1），x等等<br>
+      第三條直線使得為寶物創設結構體實現了可能。寶物是一個會時不時在屏幕上出現的沙漏。我們需要通過沙漏來追蹤x和y值。但是因為沙漏的位置是固定的所以我們不需要尋找最佳位置，而通過為程序後面的其他物品尋找好的可變量來實現（如fx和fy）</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+struct	object	player;								<font color=#ffffaa>// 玩家信息</font>
+struct	object	enemy[9];							<font color=#ffffaa>// 最多9個敵人的信息</font>
+struct	object	hourglass;							<font color=#ffffaa>// 寶物信息</font>
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在我們創建一個描述時間的結構，使用這個結構我們可以很輕鬆的跟蹤時間變量。
+      <p>接下來的第一步，就是創建一個64位的頻率變量，它記錄時間的頻率。</p>
+      <p>resolution變量用來記錄最小的時間間隔。</p>
+      <p>mm_timer_start和mm_timer_elapsed保存計時器開始時的時間和計時器開始後流失的時間。這兩個變量只有當計算機不擁有performance 
+        counter時才啟用。</p>
+      <p>變量performance_timer用來標識計算機是否有performance counter</p>
+      <p>如果performance counter啟用，最後兩個變量用來保存計時器開始時的時間和計時器開始後流失的時間，它們比普通的根據精確。</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+struct			 							<font color=#ffffaa>// 保存時間信息的結構</font>
+{
+  __int64       frequency;							<font color=#ffffaa>// 頻率</font>
+  float         resolution;							<font color=#ffffaa>// 時間間隔</font>
+  unsigned long mm_timer_start;							<font color=#ffffaa>// 多媒體計時器的開始時間</font>
+  unsigned long mm_timer_elapsed;						<font color=#ffffaa>// 多媒體</font><font color=#aaffaa size=3><font color=#ffffaa>計時器的開始時間</font></font>
+  bool		performance_timer;						<font color=#ffffaa>// 使用Performance Timer?</font>
+  __int64       performance_timer_start;					<font color=#ffffaa>// Performance Timer</font><font color=#aaffaa size=3><font color=#ffffaa>計時器的開始時間</font></font>
+  __int64       performance_timer_elapsed;					<font color=#ffffaa>// Performance Timer</font><font color=#aaffaa size=3><font color=#ffffaa>計時器的開始時間</font></font>
+} timer;									
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下一行代碼定義了速度表。如前所說，對像移動的速度依賴於值adjust，而以adjust為下標去檢索速度表，就可以獲得對象的移動速度。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+int		steps[6]={ 1, 2, 4, 5, 10, 20 };				<font color=#ffffaa>// 用來調整顯示的速度</font>
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來我們將為紋理分配空間。紋理一共2張，一張是背景而另外一張是一張字體紋理。如本系列教程中的其他課程一樣，base用來指出字符顯示列表的基，同樣的我們在最後聲明了窗口過程WndProc()。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLuint		texture[2];							<font color=#ffffaa>// 字符紋理</font>
+GLuint		base;								<font color=#ffffaa>// 字符顯示列表的開始值</font>
+
+LRESULT	CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);				
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來會是很有趣的工作。接下來的一段代碼會初始化我們的計時器。代碼會檢查performance 
+      counter(非常精確的計數器)是否可用，如果不可用，則使用多媒體計時器。這段代碼是可以移植的。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void TimerInit(void)								<font color=#ffffaa>// 初始化我們的計時器</font>
+{
+	memset(&timer, 0, sizeof(timer));					<font color=#ffffaa>// 清空計時器結構</font>
+
+	<font color=#ffffaa>// 檢測Performance Counter是否可用，可用則創建</font>
+	if (!QueryPerformanceFrequency((LARGE_INTEGER *) &timer.frequency))
+	{
+		<font color=#ffffaa>// 如果不可用</font>
+		timer.performance_timer	= FALSE;				<font color=#ffffaa>// 設置Performance Timer為false</font>
+		timer.mm_timer_start	= timeGetTime();			<font color=#ffffaa>// 使用普通的計時器</font>
+		timer.resolution	= 1.0f/1000.0f;				<font color=#ffffaa>// 設置單位為毫秒</font>
+		timer.frequency		= 1000;					<font color=#ffffaa>// 設置頻率為1000</font>
+		timer.mm_timer_elapsed	= timer.mm_timer_start;			<font color=#ffffaa>// 設置流失的時間為當前的時間</font>
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如果performance counter 可用，則執行下面的代碼：</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	else
+	{
+		<font color=#ffffaa>// 使用Performance Counter計時器</font>
+		QueryPerformanceCounter((LARGE_INTEGER *) &timer.performance_timer_start);
+		timer.performance_timer		= TRUE;				<font color=#ffffaa>// 設置Performance Timer為TRUE</font>
+		<font color=#ffffaa>// 計算計時的精確度</font>
+		timer.resolution		= (float) (((double)1.0f)/((double)timer.frequency));
+		<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>設置流失的時間為當前的時間</font></font>
+		timer.performance_timer_elapsed	= timer.performance_timer_start;
+	}
+}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>上面的代碼設置了計時器，而下面的代碼則讀出計時器並返回已經經過的時間，以毫秒計。代碼很簡單，首先檢查是否支持performance 
+      counter，若支持，則調用其相關函數；否則調用多媒體函數。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+float TimerGetTime()								<font color=#ffffaa>// 返回經過的時間，以毫秒為單位</font>
+{
+	__int64 time;								<font color=#ffffaa>// 使用64位的整數</font>
+
+	if (timer.performance_timer)						<font color=#ffffaa>// 是否使用Performance Timer計時器?</font>
+	{
+		QueryPerformanceCounter((LARGE_INTEGER *) &time);		<font color=#ffffaa>// 返回當前的時間</font>
+		<font color=#ffffaa>// 返回時間差</font>
+		return ( (float) ( time - timer.performance_timer_start) * timer.resolution)*1000.0f;
+	}
+	else
+	{
+		<font color=#ffffaa>// 使用普通的計時器，返回時間差</font>
+		return( (float) ( timeGetTime() - timer.mm_timer_start) * timer.resolution)*1000.0f;
+	}
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在下面的代碼裡，我們把玩家重置在屏幕的左上角，而給敵人設置一個隨機的位置。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+void ResetObjects(void)								<font color=#ffffaa>// 重置玩家和敵人</font>
+{
+	player.x=0;								<font color=#ffffaa>// 把玩家置於左上角</font>
+	player.y=0;								
+	player.fx=0;								
+	player.fy=0;								
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接著我們給敵人一個隨機的開始位置，敵人的數量等於難度乘上當前關卡號。記著，難度最大是3，而最多有3關。因此敵人最多有9個。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	for (loop1=0; loop1&lt;(stage*level); loop1++)				<font color=#ffffaa>// 循環隨即放置所有的敵人</font>
+	{
+		enemy[loop1].x=5+rand()%6;					
+		enemy[loop1].y=rand()%11;					
+		enemy[loop1].fx=enemy[loop1].x*60;				
+		enemy[loop1].fy=enemy[loop1].y*40;				
+	}
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>並沒有做任何改動，因此我將跳過它。在LoadGLTextures函數里我將載入那兩個紋理－－背景和字體。並且我會把這兩副圖都轉化成紋理，這樣我們就可以在遊戲中使用他們。紋理創建好之後，像素數據就可以刪除了。沒有什麼新東西，你可以閱讀以前的課程以獲得更多信息。<br></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int LoadGLTextures()								
+{
+	int Status=FALSE;							
+	AUX_RGBImageRec *TextureImage[2];					
+	memset(TextureImage,0,sizeof(void *)*2);				
+	if 	((TextureImage[0]=LoadBMP("Data/Font.bmp")) &&			<font color=#ffffaa>// 載入字體紋理</font>
+		 (TextureImage[1]=LoadBMP("Data/Image.bmp")))			<font color=#ffffaa>// 載入圖像紋理</font>
+	{
+		Status=TRUE;							
+
+		glGenTextures(2, &texture[0]);					
+
+		for (loop1=0; loop1&lt;2; loop1++)					
+		{
+			glBindTexture(GL_TEXTURE_2D, texture[loop1]);
+			glTexImage2D(GL_TEXTURE_2D, 0, 3, TextureImage[loop1]-&gt;sizeX, TextureImage[loop1]-&gt;sizeY,
+				0, GL_RGB, GL_UNSIGNED_BYTE, TextureImage[loop1]-&gt;data);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		}
+
+		for (loop1=0; loop1&lt;2; loop1++)					
+		{
+			if (TextureImage[loop1])				
+			{
+				if (TextureImage[loop1]-&gt;data)			
+				{
+					free(TextureImage[loop1]-&gt;data);	
+				}
+				free(TextureImage[loop1]);			
+			}
+		}
+	}
+	return Status;							
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼建立了顯示列表。對於字體的顯示，我已經寫過教程。在這裡我把字體圖像分成16×16個單元共256個字符。如果你有什麼不明白，請參閱前面的教程</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLvoid BuildFont(GLvoid)							
+{
+	base=glGenLists(256);							
+	glBindTexture(GL_TEXTURE_2D, texture[0]);				
+	for (loop1=0; loop1&lt;256; loop1++)					
+	{
+		float cx=float(loop1%16)/16.0f;					
+		float cy=float(loop1/16)/16.0f;					
+
+		glNewList(base+loop1,GL_COMPILE);				
+			glBegin(GL_QUADS);					
+				glTexCoord2f(cx,1.0f-cy-0.0625f);		
+				glVertex2d(0,16);				
+				glTexCoord2f(cx+0.0625f,1.0f-cy-0.0625f);	
+				glVertex2i(16,16);				
+				glTexCoord2f(cx+0.0625f,1.0f-cy);		
+				glVertex2i(16,0);				
+				glTexCoord2f(cx,1.0f-cy);			
+				glVertex2i(0,0);				
+			glEnd();						
+			glTranslated(15,0,0);					
+		glEndList();							
+	}									
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>當我們不再需要顯示列表的時候，銷毀它是一個好主意。在這裡我仍然把代碼加上了，雖然沒有什麼新東西。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLvoid KillFont(GLvoid)		
+{
+	glDeleteLists(base,256);						
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>函數沒有做太多改變。唯一的改動是它可以打印變量了。我把代碼列出這樣你可以容易看到改動的地方。<br>
+      請注意，在這裡我激活了紋理並且重置了視圖矩陣。如果set被置1的話，字體將被放大。我這樣做是希望可以在屏幕上顯示大一點的字符。在一切結束後，我會禁用紋理。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLvoid glPrint(GLint x, GLint y, int set, const char *fmt, ...)
+{
+	char		text[256];						
+	va_list		ap;							
+
+	if (fmt == NULL)		
+		return;								
+
+	va_start(ap, fmt);							
+	    vsprintf(text, fmt, ap);						
+	va_end(ap);								
+
+	if (set&gt;1)								
+	{
+		set=1;							
+	}
+	glEnable(GL_TEXTURE_2D);						
+	glLoadIdentity();							
+	glTranslated(x,y,0);							
+	glListBase(base-32+(128*set));						
+
+	if (set==0)								
+	{
+		glScalef(1.5f,2.0f,1.0f);					
+	}
+
+	glCallLists(strlen(text),GL_UNSIGNED_BYTE, text);			
+	glDisable(GL_TEXTURE_2D);						
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼基本沒有變化，只是把透視投影變為了正投影</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLvoid ReSizeGLScene(GLsizei width, GLsizei height)				 
+{
+	if (height==0)							
+	{
+		height=1;							
+	}
+
+	glViewport(0,0,width,height);						
+
+	glMatrixMode(GL_PROJECTION);						
+	glLoadIdentity();							
+
+	glOrtho(0.0f,width,height,0.0f,-1.0f,1.0f);
+
+	glMatrixMode(GL_MODELVIEW);						
+	glLoadIdentity();							
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>初始化的代碼和前面的代碼相比沒有什麼改變</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+int InitGL(GLvoid)
+{
+	if (!LoadGLTextures())							
+	{
+		return FALSE;							
+	}
+
+	BuildFont();								
+
+	glShadeModel(GL_SMOOTH);						
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);					
+	glClearDepth(1.0f);							
+	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);					
+	glEnable(GL_BLEND);							
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	return TRUE;								
+}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面是我們的繪製代碼。
+      <p>首先我們清空緩存，接著綁定字體的紋理，繪製遊戲的提示字符串</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int DrawGLScene(GLvoid)								
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);			
+	glBindTexture(GL_TEXTURE_2D, texture[0]);				<font color=#ffffaa>// 選擇字符紋理</font>
+	glColor3f(1.0f,0.5f,1.0f);						
+	glPrint(207,24,0,"GRID CRAZY");						<font color=#ffffaa>// 繪製遊戲名稱&quot;GRID CRAZY&quot;</font>
+	glColor3f(1.0f,1.0f,0.0f);						
+	glPrint(20,20,1,"Level:%2i",level2);					<font color=#ffffaa>// 繪製當前的級別</font>
+	glPrint(20,40,1,"Stage:%2i",stage);					<font color=#ffffaa>// 繪製當前級別的關卡</font>
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>現在我們檢測遊戲是否結束，如果遊戲結束繪製&quot;Gmae over&quot;並提示玩家按空格鍵重新開始</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+	if (gameover)								<font color=#ffffaa>// 遊戲是否結束?</font>
+	{
+		glColor3ub(rand()%255,rand()%255,rand()%255);			<font color=#ffffaa>// 隨機選擇一種顏色</font>
+		glPrint(472,20,1,"GAME OVER");					<font color=#ffffaa>// 繪製 GAME OVER 字符串到屏幕</font>
+		glPrint(456,40,1,"PRESS SPACE");				<font color=#ffffaa>// 提示玩家按空格鍵重新開始</font>
+	}
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>在屏幕的右上角繪製玩家的剩餘生命</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	for (loop1=0; loop1&lt;lives-1; loop1++)					<font color=#ffffaa>//循環繪製玩家的剩餘生命</font>
+	{
+		glLoadIdentity();						
+		glTranslatef(490+(loop1*40.0f),40.0f,0.0f);			<font color=#ffffaa>// 移動到屏幕右上角</font>
+		glRotatef(-player.spin,0.0f,0.0f,1.0f);				<font color=#ffffaa>// 旋轉繪製的生命圖標</font>
+		glColor3f(0.0f,1.0f,0.0f);					<font color=#ffffaa>// 繪製玩家生命</font>
+		glBegin(GL_LINES);						<font color=#ffffaa>// 繪製玩家圖標</font>
+			glVertex2d(-5,-5);					
+			glVertex2d( 5, 5);					
+			glVertex2d( 5,-5);					
+			glVertex2d(-5, 5);					
+		glEnd();							
+		glRotatef(-player.spin*0.5f,0.0f,0.0f,1.0f);			
+		glColor3f(0.0f,0.75f,0.0f);					
+		glBegin(GL_LINES);						
+			glVertex2d(-7, 0);					
+			glVertex2d( 7, 0);					
+			glVertex2d( 0,-7);					
+			glVertex2d( 0, 7);					
+		glEnd();							
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面我們來繪製網格，我們設置變量filled為TRUE，這告訴程序填充網格。
+      <p>接著我們把線的寬度設置為2，並把線的顏色設置為藍色，接著我們檢測線斷是否被走過，如果走過我們設置顏色為白色。</p>
+      <p></p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	filled=TRUE;								<font color=#ffffaa>// 在測試前，把填充變量設置為TRUE</font>
+	glLineWidth(2.0f);							<font color=#ffffaa>// 設置線寬為2.0f</font>
+	glDisable(GL_LINE_SMOOTH);						<font color=#ffffaa>// 禁用反走樣</font>
+	glLoadIdentity();							
+	for (loop1=0; loop1&lt;11; loop1++)					<font color=#ffffaa>// 循環11根線</font>
+	{
+		for (loop2=0; loop2&lt;11; loop2++)				<font color=#ffffaa>// 循環每根線的線段</font>
+		{
+			glColor3f(0.0f,0.5f,1.0f);				<font color=#ffffaa>// 設置線為藍色</font>
+			if (hline[loop1][loop2])				<font color=#ffffaa>// 是否走過？</font>
+			{
+				glColor3f(1.0f,1.0f,1.0f);			<font color=#ffffaa>// 是，設線為白色</font>
+			}
+			if (loop1&lt;10)						<font color=#ffffaa>// 繪製水平線</font>
+			{
+				if (!hline[loop1][loop2])			<font color=#ffffaa>// 如果當前線段沒有走過，則不填充</font>
+				{
+					filled=FALSE;				
+				}
+				glBegin(GL_LINES);				<font color=#ffffaa>// 繪製當前的線段</font>
+					glVertex2d(20+(loop1*60),70+(loop2*40));	
+					glVertex2d(80+(loop1*60),70+(loop2*40));	
+				glEnd();					
+			}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 下面的代碼繪製垂直的線段</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+			glColor3f(0.0f,0.5f,1.0f);				<font color=#ffffaa>// <font color=#aaffaa size=3><font color=#ffffaa>設置線為藍色</font></font></font>
+			if (vline[loop1][loop2])				<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>是否走過</font></font>
+			{
+				glColor3f(1.0f,1.0f,1.0f);			<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>是，設線為白色</font></font>
+			}
+			if (loop2&lt;10)						<font color=#ffffaa>// 繪製垂直線</font>
+			{
+				if (!vline[loop1][loop2])			<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>如果當前線段沒有走過，則不填充</font></font>
+				{
+					filled=FALSE;				
+				}
+				glBegin(GL_LINES);				<font color=#ffffaa>// </font><font color=#aaffaa size=3><font color=#ffffaa>繪製當前的線段</font></font>
+					glVertex2d(20+(loop1*60),70+(loop2*40));	
+					glVertex2d(20+(loop1*60),110+(loop2*40));	
+				glEnd();					
+			}
+</pre>
+</font> 
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來我們檢測長方形的四個邊是否都被走過，如果被走過我們就繪製一個帶紋理的四邊形。 <p>我們用下圖來解釋這個檢測過程</p>
+      <br> <br> <center>
+        <img src="../Pic/lesson21-1.jpg"> 
+      </center>
+      <br>
+      如果對於垂直線vline的相鄰兩個邊都被走過，並且水平線hline的相鄰兩個邊也被走過，那麼我們就可以繪製這個四邊形了。我們可以使用循環檢測每一個四邊形，代碼如下：</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			glEnable(GL_TEXTURE_2D);				<font color=#ffffaa>// 使用紋理映射</font>
+			glColor3f(1.0f,1.0f,1.0f);				<font color=#ffffaa>// 設置為白色</font>
+			glBindTexture(GL_TEXTURE_2D, texture[1]);		<font color=#ffffaa>// 綁定紋理</font>
+			if ((loop1&lt;10) && (loop2&lt;10))				<font color=#ffffaa>// 繪製走過的四邊形</font>
+			{
+				<font color=#ffffaa>// 這個四邊形是否被走過?</font>
+				if (hline[loop1][loop2] && hline[loop1][loop2+1] && vline[loop1][loop2] && vline[loop1+1][loop2])
+				{
+					glBegin(GL_QUADS);			<font color=#ffffaa>// 是，則繪製它</font>
+						glTexCoord2f(float(loop1/10.0f)+0.1f,1.0f-(float(loop2/10.0f)));
+						glVertex2d(20+(loop1*60)+59,(70+loop2*40+1));	
+						glTexCoord2f(float(loop1/10.0f),1.0f-(float(loop2/10.0f)));
+						glVertex2d(20+(loop1*60)+1,(70+loop2*40+1));	
+						glTexCoord2f(float(loop1/10.0f),1.0f-(float(loop2/10.0f)+0.1f));
+						glVertex2d(20+(loop1*60)+1,(70+loop2*40)+39);	
+						glTexCoord2f(float(loop1/10.0f)+0.1f,1.0f-(float(loop2/10.0f)+0.1f));
+						glVertex2d(20+(loop1*60)+59,(70+loop2*40)+39);	
+					glEnd();				
+				}
+			}
+			glDisable(GL_TEXTURE_2D);				
+		}
+	}
+	glLineWidth(1.0f);							
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼用來設置是否啟用直線反走樣</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	if (anti)								<font color=#ffffaa>// 是否啟用反走樣?</font>
+	{
+		glEnable(GL_LINE_SMOOTH);					
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>為了使遊戲變得簡單些，我添加了一個時間停止器，當你吃掉它時，可以讓追擊的你的敵人停下來。
+      <p>下面的代碼用來繪製一個時間停止器。</p></td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	if (hourglass.fx==1)							
+	{
+		glLoadIdentity();						
+		glTranslatef(20.0f+(hourglass.x*60),70.0f+(hourglass.y*40),0.0f);	
+		glRotatef(hourglass.spin,0.0f,0.0f,1.0f);			
+		glColor3ub(rand()%255,rand()%255,rand()%255);			</pre>
+</font><font color=#aaffaa size=3>
+<pre>
+		glBegin(GL_LINES);
+			glVertex2d(-5,-5);					
+			glVertex2d( 5, 5);					
+			glVertex2d( 5,-5);					
+			glVertex2d(-5, 5);					
+			glVertex2d(-5, 5);					
+			glVertex2d( 5, 5);					
+			glVertex2d(-5,-5);					
+			glVertex2d( 5,-5);					
+		glEnd();							
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來繪製我們玩家</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glLoadIdentity();
+	glTranslatef(player.fx+20.0f,player.fy+70.0f,0.0f);			<font color=#ffffaa>// 設置玩家的位置</font>
+	glRotatef(player.spin,0.0f,0.0f,1.0f);					<font color=#ffffaa>// 旋轉動畫</font>
+	glColor3f(0.0f,1.0f,0.0f);						
+	glBegin(GL_LINES);							
+		glVertex2d(-5,-5);						
+		glVertex2d( 5, 5);						
+		glVertex2d( 5,-5);						
+		glVertex2d(-5, 5);						
+	glEnd();								</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 繪製玩家的顯示效果，讓它看起來更好看些（其實沒用）</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	glRotatef(player.spin*0.5f,0.0f,0.0f,1.0f);
+	glColor3f(0.0f,0.75f,0.0f);						
+	glBegin(GL_LINES);							
+		glVertex2d(-7, 0);						
+		glVertex2d( 7, 0);						
+		glVertex2d( 0,-7);						
+		glVertex2d( 0, 7);						
+	glEnd();							</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來繪製追擊玩家的敵人</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	for (loop1=0; loop1&lt;(stage*level); loop1++)
+	{
+		glLoadIdentity();						
+		glTranslatef(enemy[loop1].fx+20.0f,enemy[loop1].fy+70.0f,0.0f);
+		glColor3f(1.0f,0.5f,0.5f);					
+		glBegin(GL_LINES);						
+			glVertex2d( 0,-7);					
+			glVertex2d(-7, 0);					
+			glVertex2d(-7, 0);					
+			glVertex2d( 0, 7);					
+			glVertex2d( 0, 7);					
+			glVertex2d( 7, 0);					
+			glVertex2d( 7, 0);					
+			glVertex2d( 0,-7);					
+		glEnd();							</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 下面的代碼繪製敵人的顯示效果，讓其更好看。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+		glRotatef(enemy[loop1].spin,0.0f,0.0f,1.0f);			
+		glColor3f(1.0f,0.0f,0.0f);					
+		glBegin(GL_LINES);						
+			glVertex2d(-7,-7);					
+			glVertex2d( 7, 7);					
+			glVertex2d(-7, 7);					
+			glVertex2d( 7,-7);					
+		glEnd();							
+	}
+	return TRUE;								
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>KillGLWindow函數基本沒有變化，只在最後一行添加KillFont函數</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+GLvoid KillGLWindow(GLvoid)							
+{
+	if (fullscreen)							
+	{
+		ChangeDisplaySettings(NULL,0);					
+		ShowCursor(TRUE);						
+	}
+
+	if (hRC)								
+	{
+		if (!wglMakeCurrent(NULL,NULL))					
+		{
+			MessageBox(NULL,"Release Of DC And RC Failed.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
+		}
+
+		if (!wglDeleteContext(hRC))					
+		{
+			MessageBox(NULL,"Release Rendering Context Failed.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
+		}
+		hRC=NULL;							
+	}
+
+	if (hDC && !ReleaseDC(hWnd,hDC))					
+	{
+		MessageBox(NULL,"Release Device Context Failed.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
+		hDC=NULL;							
+	}
+
+	if (hWnd && !DestroyWindow(hWnd))					
+	{
+		MessageBox(NULL,"Could Not Release hWnd.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
+		hWnd=NULL;							
+	}
+
+	if (!UnregisterClass("OpenGL",hInstance))				
+	{
+		MessageBox(NULL,"Could Not Unregister Class.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
+		hInstance=NULL;							
+	}
+
+	KillFont();								<font color=#ffffaa>// 刪除創建的字體</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> <p>函數CreateGLWindow() and WndProc() 沒有變化。</p>
+      <p>遊戲控制在WinMain中完成的</p></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+int WINAPI WinMain(	HINSTANCE	hInstance,				
+			HINSTANCE	hPrevInstance,				
+			LPSTR		lpCmdLine,				
+			int		nCmdShow)				
+{
+	MSG	msg;								
+	BOOL	done=FALSE;							
+
+	
+	if (MessageBox(NULL,"Would You Like To Run In Fullscreen Mode?", "Start FullScreen?",MB_YESNO|MB_ICONQUESTION)==IDNO)
+	{
+		fullscreen=FALSE;						
+	}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 在創建完OpenGL窗口後，我們添加如下的代碼，它用來創建玩家和敵人，並初始化時間計時器</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+	if (!CreateGLWindow("NeHe's Line Tutorial",640,480,16,fullscreen))	
+	{
+		return 0;							
+	}
+
+	ResetObjects();								<font color=#ffffaa>// 重置玩家和敵人</font>
+	TimerInit();								<font color=#ffffaa>// 初始化時間計時器</font>
+
+	while(!done)								
+	{
+		if (PeekMessage(&msg,NULL,0,0,PM_REMOVE))			
+		{
+			if (msg.message==WM_QUIT)				
+			{
+				done=TRUE;					
+			}
+			else							
+			{
+				TranslateMessage(&msg);				
+				DispatchMessage(&msg);				
+			}
+		}
+		else								
+		{
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>接下來取得當前的時間，並在速度快的機器上讓其空循環，使得程序在所有的機器上都擁有同樣的幀率</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+			float start=TimerGetTime();				<font color=#ffffaa>// 返回當前的時間</font>
+
+			if ((active && !DrawGLScene()) || keys[VK_ESCAPE])	
+			{
+				done=TRUE;					
+			}
+			else							
+			{
+				SwapBuffers(hDC);				
+			}
+
+			while(TimerGetTime()&lt;start+float(steps[adjust]*2.0f)) {}<font color=#ffffaa>// 速度快的機器上讓其空循環</font>
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 下面的部分沒有改變，按F1執行窗口和全屏的切換</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3><pre>
+			if (keys[VK_F1])
+			{
+				keys[VK_F1]=FALSE;				
+				KillGLWindow();					
+				fullscreen=!fullscreen;				
+				if (!CreateGLWindow("NeHe's Line Tutorial",640,480,16,fullscreen))
+				{
+					return 0;				
+				}
+			}
+</pre></font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 按A鍵切換是否啟用反走樣</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			if (keys['A'] && !ap)					<font color=#ffffaa>// 如果'A' 鍵被按下，啟用反走樣</font>
+			{
+				ap=TRUE;					
+				anti=!anti;					
+			}
+			if (!keys['A'])						
+			{
+				ap=FALSE;					
+			}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 如果遊戲沒有結束，執行遊戲循環</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			if (!gameover && active)				<font color=#ffffaa>// 如果遊戲沒有結束，則進行遊戲循環</font>
+			{
+				for (loop1=0; loop1&lt;(stage*level); loop1++)	<font color=#ffffaa>// 循環不同的難度等級</font>
+				{
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>根據玩家的位置，讓敵人追擊玩家</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+					if ((enemy[loop1].x&lt;player.x) && (enemy[loop1].fy==enemy[loop1].y*40))
+					{
+						enemy[loop1].x++;		
+					}
+
+					if ((enemy[loop1].x&gt;player.x) && (enemy[loop1].fy==enemy[loop1].y*40))
+					{
+						enemy[loop1].x--;		
+					}
+
+					if ((enemy[loop1].y&lt;player.y) && (enemy[loop1].fx==enemy[loop1].x*60))
+					{
+						enemy[loop1].y++;		
+					}
+
+					if ((enemy[loop1].y&gt;player.y) && (enemy[loop1].fx==enemy[loop1].x*60))
+					{
+						enemy[loop1].y--;		
+					}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 如果時間停止器的顯示時間結束，而玩家又沒有吃到，那麼重置計時計算器。</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+<font color=#aaffaa size=3> 
+<pre>
+					if (delay&gt;(3-level) && (hourglass.fx!=2))		<font color=#ffffaa>// 如果沒有吃到時間停止器</font>
+					{
+						delay=0;					<font color=#ffffaa>// 重置時間停止器</font>
+						for (loop2=0; loop2&lt;(stage*level); loop2++)	<font color=#ffffaa>// 循環設置每個敵人的位置</font>
+						{
+</pre>
+</font>
+<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼調整每個敵人的位置，並繪製它們的顯示效果</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+							if (enemy[loop2].fx&lt;enemy[loop2].x*60)	
+							{
+								enemy[loop2].fx+=steps[adjust];	
+								enemy[loop2].spin+=steps[adjust];	
+							}
+							if (enemy[loop2].fx&gt;enemy[loop2].x*60)	
+							{
+								enemy[loop2].fx-=steps[adjust];	
+								enemy[loop2].spin-=steps[adjust];	
+							}
+							if (enemy[loop2].fy&lt;enemy[loop2].y*40)	
+							{
+								enemy[loop2].fy+=steps[adjust];	
+								enemy[loop2].spin+=steps[adjust];	
+							}
+							if (enemy[loop2].fy&gt;enemy[loop2].y*40)	
+							{
+								enemy[loop2].fy-=steps[adjust];	
+								enemy[loop2].spin-=steps[adjust];	
+							}
+						}
+					}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如果敵人的位置和玩家的位置相遇，這玩家死亡，開始新的一局</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+					<font color=#ffffaa>// 敵人的位置和玩家的位置相遇?</font>
+					if ((enemy[loop1].fx==player.fx) && (enemy[loop1].fy==player.fy))
+					{
+						lives--;			<font color=#ffffaa>// 如果是，生命值減1</font>
+
+						if (lives==0)			<font color=#ffffaa>// 如果生命值為0，則遊戲結束</font>
+						{
+							gameover=TRUE;		
+						}
+
+						ResetObjects();			<font color=#ffffaa>// 重置所有的遊戲變量</font>
+						PlaySound("Data/Die.wav", NULL, SND_SYNC);	<font color=#ffffaa>// 播放死亡的音樂</font>
+					}
+				}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>使用上，下，左，右控制玩家的位置</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+				if (keys[VK_RIGHT] && (player.x&lt;10) && (player.fx==player.x*60) && (player.fy==player.y*40))
+				{
+					hline[player.x][player.y]=TRUE;		
+					player.x++;				
+				}
+				if (keys[VK_LEFT] && (player.x&gt;0) && (player.fx==player.x*60) && (player.fy==player.y*40))
+				{
+					player.x--;				
+					hline[player.x][player.y]=TRUE;		
+				}
+				if (keys[VK_DOWN] && (player.y&lt;10) && (player.fx==player.x*60) && (player.fy==player.y*40))
+				{
+					vline[player.x][player.y]=TRUE;		
+					player.y++;				
+				}
+				if (keys[VK_UP] && (player.y&gt;0) && (player.fx==player.x*60) && (player.fy==player.y*40))
+				{
+					player.y--;				
+					vline[player.x][player.y]=TRUE;		
+				}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>調整玩家的位置，讓動畫看起來跟自然</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+				if (player.fx&lt;player.x*60)			
+				{
+					player.fx+=steps[adjust];		
+				}
+				if (player.fx&gt;player.x*60)			
+				{
+					player.fx-=steps[adjust];		
+				}
+				if (player.fy&lt;player.y*40)			
+				{
+					player.fy+=steps[adjust];		
+				}
+				if (player.fy&gt;player.y*40)			
+				{
+					player.fy-=steps[adjust];		
+				}
+			}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如果遊戲結束，按空格開始新的一局遊戲</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			else							<font color=#ffffaa>// 如果遊戲結束</font>
+			{
+				if (keys[' '])					<font color=#ffffaa>// 按下空格？</font>
+				{
+					gameover=FALSE;				<font color=#ffffaa>// 開始新的一局</font>
+					filled=TRUE;				<font color=#ffffaa>// 重置所有的變量</font>
+					level=1;				
+					level2=1;			
+					stage=0;				
+					lives=5;				
+				}
+			}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如果順利通過本關，播放通關音樂，並提高遊戲難度，開始新的一局</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			if (filled)						<font color=#ffffaa>// 所有網格是否填滿</font>
+			{
+				PlaySound("Data/Complete.wav", NULL, SND_SYNC);	<font color=#ffffaa>// 播放過關音樂</font>
+				stage++;					<font color=#ffffaa>// 增加遊戲難度</font>
+				if (stage&gt;3)					<font color=#ffffaa>// 如果當前的關卡大於3，則進入到下一個大的關卡?</font>
+				{
+					stage=1;				<font color=#ffffaa>// 重置當前的關卡</font>
+					level++;				<font color=#ffffaa>// 增加大關卡的值</font>
+					level2++;				
+					if (level&gt;3)				
+					{
+						level=3;			<font color=#ffffaa>// 如果大關卡大於3，則不再增加</font>
+						lives++;			<font color=#ffffaa>// 完成一局給玩家獎勵一條生命</font>
+						if (lives&gt;5)			<font color=#ffffaa>// 如果玩家有5條生命，則不再增加</font>
+						{
+							lives=5;		
+						}
+					}
+				}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 進入到下一關卡，重置所有的遊戲變量</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+				ResetObjects();					
+
+				for (loop1=0; loop1&lt;11; loop1++)
+				{
+					for (loop2=0; loop2&lt;11; loop2++)	
+					{
+						if (loop1&lt;10)			
+						{
+							hline[loop1][loop2]=FALSE;	
+						}
+						if (loop2&lt;10)			
+						{
+							vline[loop1][loop2]=FALSE;	
+						}
+					}
+				}
+			}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top> 如果玩家吃到時間停止器，記錄這一信息</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			if ((player.fx==hourglass.x*60) && (player.fy==hourglass.y*40) && (hourglass.fx==1))
+			{
+				<font color=#ffffaa>// 播放一段聲音</font>
+				PlaySound("Data/freeze.wav", NULL, SND_ASYNC | SND_LOOP);
+				hourglass.fx=2;					<font color=#ffffaa>// 設置fx為2，表示吃到時間停止器</font>
+				hourglass.fy=0;					<font color=#ffffaa>// 設置fy為0</font>
+			}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>顯示玩家的動畫效果</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			player.spin+=0.5f*steps[adjust];			<font color=#ffffaa>// 旋轉動畫</font>
+			if (player.spin&gt;360.0f)					
+			{
+				player.spin-=360;				
+			}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>顯示時間停止器的動畫</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			hourglass.spin-=0.25f*steps[adjust];			<font color=#ffffaa>// 旋轉動畫</font>
+			if (hourglass.spin&lt;0.0f)				
+			{
+				hourglass.spin+=360.0f;				
+			}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>下面的代碼計算何時出現一個時間停止計數器</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			hourglass.fy+=steps[adjust];				<font color=#ffffaa>// 增加fy的值，當他大於一定的時候，產生時間停止計數器</font>
+			if ((hourglass.fx==0) && (hourglass.fy&gt;6000/level))	
+			{							
+				PlaySound("Data/hourglass.wav", NULL, SND_ASYNC);	
+				hourglass.x=rand()%10+1;			
+				hourglass.y=rand()%11;				
+				hourglass.fx=1;					<font color=#ffffaa>//fx=1表示時間停止器出現</font>					
+				hourglass.fy=0;					
+			}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如果玩家沒有拾取時間停止器，則過一段時間後，它自動消失</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			if ((hourglass.fx==1) && (hourglass.fy&gt;6000/level))	
+			{				
+				hourglass.fx=0;					<font color=#ffffaa>// 消失後重置時間停止器</font>
+				hourglass.fy=0;					
+			}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top>如果玩家吃到時間停止器，在時間停止停止階段播放一段音樂，過一段時間停止播放音樂</td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			if ((hourglass.fx==2) && (hourglass.fy&gt;500+(500*level)))
+			{							
+				PlaySound(NULL, NULL, 0);			<font color=#ffffaa>// 停止播放音樂</font>
+				hourglass.fx=0;					<font color=#ffffaa>// 重置變量</font>
+				hourglass.fy=0;					
+			}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td><td width=100% valign=top><p>增加敵人的延遲計數器的值，這個值用來更新敵人的運動</p>
+      </td><td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table><font color=#aaffaa size=3>
+<pre>
+			delay++;						<font color=#ffffaa>// 增加敵人的延遲計數器的值</font>
+		}
+	}
+
+	<font color=#ffffaa>// 關閉</font>
+	KillGLWindow();								<font color=#ffffaa>// 刪除窗口</font>
+	return (msg.wParam);							<font color=#ffffaa>// 退出程序</font>
+}
+</pre>
+</font><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/tl.png" width=28 height=28></td><td width="100%"><img src="../Pic/tc.png" width=100% height=28></td><td><img src="../Pic/tr.png" width=28 height=28></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td background="../Pic/l.png"><img src="../Pic/l.png"></td>
+    <td width=100% valign=top><FONT face=Tahoma,Verdana,sans-serif>我花了很長時間寫這份教程，它開始於一個簡單的直線教程，結束與一個小型的遊戲。希望它能給你一些有用的信息，我知道你們中大部分喜歡那些基於「貼圖」的遊戲，但我覺得這些將教會你關於遊戲更多的東西。如果你不同意我的看法，請讓我知道，因為我想寫最好的OpenGL教程。</font> 
+      <p>請注意，這是一個很大的程序了。我盡量去註釋每一行代碼，我知道程序運行的一切細節，但把它表達出來又是另一回事。如果你有更好的表達能力，請告訴我如何更好的表達。我希望通過我們的努力，這份教程越來越好。謝謝</p>
+<table width="100%" border="1">
+  <tr>
+    <td width="27%"><img src="../images/logo%203.jpg" width="209" height="200" align="middle"></td>
+    <td width="73%">版權與使用聲明:<br>
+      我是個對學習和生活充滿激情的普通男孩,在網絡上我以DancingWind為暱稱，我的聯繫方式是zhouwei02@mails.tsinghua.edu.cn，如果你有任何問題，都可以聯繫我。
+      <p>引子<br>
+        網絡是一個共享的資源，但我在自己的學習生涯中浪費大量的時間去搜索可用的資料，在現實生活中花費了大量的金錢和時間在書店中尋找資料，於是我給自己起了個暱稱DancingWind，其意義是想風一樣從各個知識的站點中吸取成長的養料。在飄蕩了多年之後，我決定把自己收集的資料整理為一個統一的資源庫。</p>
+      <p>版權聲明<br>
+        所有DancingWind發表的內容，大多都來自共享的資源，所以我沒有資格把它們據為己有，或聲稱自己為這些資源作出了一點貢獻。故任何人都可以複製，修改，重新發表，甚至以自己的名義發表，我都不會追究，但你在做以上事情的時候必須保證內容的完整性，給後來的人一個完整的教程。最後，任何人不能以這些資料的任何部分，謀取任何形式的報酬。</p>
+      <p>發展計劃<br>
+        在國外，很多資料都是很多人花費幾年的時間慢慢積累起來的。如果任何人有興趣與別人共享你的知識，我很歡迎你與我聯繫，但你必須同意我上面的聲明。</p>
+            <p>感謝<br>
+              感謝我的母親一直以來對我的支持和在生活上的照顧。<br>
+              感謝我深愛的女友田芹，一直以來默默的在精神上和生活中對我的支持，她甚至把買衣服的錢都用來給我買書了，她真的是我見過的最好的女孩，希望我能帶給她幸福。</p>
+            <p>資源下載: <br>
+              文檔 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/mht/NeHe%20OpenGL%20Chinese%20Course%2021.mht">網頁格式</a> 
+              <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/pdf/OpenGL_Nehe_Course_Tutorial_21.pdf">PDF格式</a><br>
+              源碼 <a href="http://www.alucardma.com/dancingwind/OpenGL/Nehe/Res/Src/21_Lines.rar">RAR格式</a></p></td>
+  </tr>
+</table>
+      <FONT face=Tahoma,Verdana,sans-serif size=-1>
+      <table border="0" width="100%">
+        <td width="50%" align="left"><b><font size="-1"><a href="Tutorial_20.html">< 
+          <font face="Tahoma,Verdana,sans-serif">第</font>20<font face="Tahoma,Verdana,sans-serif">課</font></a></font></b></td>
+        <td width="50%" align="right"><b><font size="-1"><a href="Tutorial_22.html"><font face="Tahoma,Verdana,sans-serif">第</font>22<font face="Tahoma,Verdana,sans-serif">課</font> 
+          ></a></font></b></td>
+      </table>
+      </font></td>
+    <td background="../Pic/r.png"><img src="../Pic/r.png"></td></tr></table><table border=0 cellpadding=0 cellspacing=0 width="100%"><tr><td><img src="../Pic/bl.png" width=28 height=28></td><td width="100%"><img src="../Pic/bc.png" width=100% height=28></td><td><img src="../Pic/br.png" width=28 height=28></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.alucardma.com/dancingwind/OpenGL/Nehe/Course/Tutorial_21.htm by HTTrack Website Copier/3.x [XR&CO'2006], Sat, 25 Nov 2006 10:00:34 GMT -->
+</html>

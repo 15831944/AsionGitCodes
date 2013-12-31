@@ -1,0 +1,111 @@
+A:active {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:link {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:visited {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff; TEXT-DECORATION: none
+}
+A:hover {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #ffda6a; TEXT-DECORATION: none
+}
+BODY {
+	COLOR: #ffffff; BACKGROUND-COLOR: #000000
+}
+TD IMG {
+	DISPLAY: block
+}
+.back {
+	BACKGROUND: #000022; COLOR: #ffffff
+}
+.back2 {
+	BACKGROUND: #000000; COLOR: #ffffff
+}
+.back3 {
+	BACKGROUND: #000022; COLOR: #ffffff
+}
+.copy {
+	FONT-SIZE: 11px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.head {
+	FONT: bold 13px Tahoma, Verdana, sans-serif; TEXT-DECORATION: none
+}
+.link {
+	FONT-SIZE: 14px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.menu {
+	FONT: bold 17px Tahoma, Verdana, sans-serif; TEXT-DECORATION: none
+}
+.news {
+	BACKGROUND: #00008b; COLOR: #ffffff
+}
+.tab {
+	PADDING-LEFT: 35px
+}
+.text {
+	FONT-SIZE: 12px; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Tahoma, Verdana, sans-serif; FONT-VARIANT: normal; TEXT-DECORATION: none
+}
+.theme {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #bbccff
+}
+.dotted {
+	BORDER-RIGHT: #00008b 2px dotted; BORDER-TOP: #00008b 2px dotted; BORDER-LEFT: #00008b 2px dotted; BORDER-BOTTOM: #00008b 2px dotted
+}
+.solid {
+	BORDER-RIGHT: #ffffff 1px solid; BORDER-TOP: #ffffff 1px solid; BORDER-LEFT: #ffffff 1px solid; BORDER-BOTTOM: #ffffff 1px solid
+}
+.logo {
+	BACKGROUND-IMAGE: url(../../../graphics/rgb/logo.html)
+}
+.menubar {
+	BACKGROUND-IMAGE: url(../../../graphics/rgb/menubar.html)
+}
+.menubg {
+	BACKGROUND-IMAGE: url(../../../graphics/rgb/menubg.html)
+}
+.menuheading {
+	BACKGROUND-IMAGE: url(../../../graphics/rgb/menuheading.html)
+}
+.nehebutton {
+	BACKGROUND-IMAGE: url(../../../graphics/rgb/nehebutton.html)
+}
+.newslogo {
+	BACKGROUND-IMAGE: url(../../../graphics/rgb/newslogo.html)
+}
+.tinylogo {
+	BACKGROUND-IMAGE: url(../../../graphics/rgb/border/tinylogo.html)
+}
+.bc {
+	BACKGROUND-IMAGE:  url(Pic/bc.png)
+}
+.bl {
+	BACKGROUND-IMAGE:  url(Pic/bl.png)
+}
+.br {
+	BACKGROUND-IMAGE:  url(Pic/br.png)
+}
+.c {
+	BACKGROUND-IMAGE: url(c.html)
+}
+.l {
+	BACKGROUND-IMAGE:  url(Pic/l.png)
+}
+.lc {
+	BACKGROUND-IMAGE: url(lc.html)
+}
+.r {
+	BACKGROUND-IMAGE:  url(Pic/r.png)
+}
+.rc {
+	BACKGROUND-IMAGE: url(rc.html)
+}
+.tc {
+	BACKGROUND-IMAGE:  url(Pic/tc.png)
+}
+.tl {
+	BACKGROUND-IMAGE:  url(Pic/tl.png)
+}
+.tr {
+	BACKGROUND-IMAGE:  url(Pic/tr.png)
+}
