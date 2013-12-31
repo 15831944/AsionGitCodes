@@ -155,6 +155,8 @@ static CommandEntry cmdTable[] =
 	{ 0x65, 0x04, 2, 0x65, 0x81 },
 	//QueryEricssonIntervalCmd,
 	{ 0x7A, 0x04, 3, 0x7A, 0x04 },
+	//QQueryBinaryMeasurementDataOutCmd,
+	{ 0x1F, 0xFF, 1, 0x89, 0x00 },
 };
 
 enum SqBinaryCmd
@@ -209,6 +211,7 @@ enum SqBinaryCmd
 	QueryCustomerIDCmd,
 	Query1ppsFreqencyOutputCmd,
 	QueryEricssonIntervalCmd,
+	QueryBinaryMeasurementDataOutCmd,
 };
 
 bool CGPSDlg::SAVE_EPHEMRIS(U08* buff, U08 id)
@@ -4440,7 +4443,7 @@ void CGPSDlg::OnConfigRefTimeSyncToGpsTime()
 
 UINT AFX_CDECL ConfigQueryGnssNavSolThread(LPVOID param)
 {
-	CGPSDlg::gpsDlg->ExecuteConfigureCommand(CGPSDlg::gpsDlg->m_inputMsg, 12, "ConfigQueryGnssNavSol Successful");
+	CGPSDlg::gpsDlg->ExecuteConfigureCommand(CGPSDlg::gpsDlg->m_inputMsg, 12, "ConfigGnssNavSol Successful");
 	return 0;
 }
 
@@ -4471,6 +4474,41 @@ void CGPSDlg::OnConfigQueryGnssNavSol()
 	}
 }
 
+UINT AFX_CDECL ConfigBinaryMeasurementDataOutThread(LPVOID param)
+{
+	CGPSDlg::gpsDlg->ExecuteConfigureCommand(CGPSDlg::gpsDlg->m_inputMsg, 15, "ConfigBinaryMeasurementDataOut Successful...");
+	return 0;
+}
+
+void CGPSDlg::OnConfigBinaryMeasurementDataOut()
+{
+	if(!CheckConnect())
+	{
+		return;
+	}
+
+	m_inputMode = 0;
+	ConfigBinaryMeasurementDataOutDlg dlg;
+	if(dlg.DoModal() == IDOK) 
+	{
+		U08 msg[8] = {0};
+		msg[0] = 0x1E;
+		msg[1] = dlg.m_rate;
+		msg[2] = dlg.m_measTime;
+		msg[3] = dlg.m_rawMeas;
+		msg[4] = dlg.m_svChStatus;
+		msg[5] = dlg.m_rcvChStatus;
+		msg[6] = dlg.m_subFrame;
+		msg[7] = dlg.m_attribute;
+		int len = SetMessage(msg, sizeof(msg));
+        AfxBeginThread(ConfigBinaryMeasurementDataOutThread, 0);
+	}
+	else
+	{
+		SetMode();  
+		CreateGPSThread();
+	}
+}
 U08 CGPSDlg::QueryChanelFreq(int chanel,U16 *prn,double *freq)
 {
 	CmdErrorCode ack;
@@ -6639,6 +6677,87 @@ CGPSDlg::CmdErrorCode CGPSDlg::Query1ppsFreqencyOutput(CmdExeMode nMode, void* o
 		strMsg.Format("Freqency : %d",
 			MAKELONG(MAKEWORD(ackCmd[9], ackCmd[8]),MAKEWORD(ackCmd[7], ackCmd[6])));
 		add_msgtolist(strMsg);
+	}
+	return Timeout;
+}
+
+CGPSDlg::CmdErrorCode CGPSDlg::QueryBinaryMeasurementDataOut(CmdExeMode nMode, void* outputData)
+{	    
+	BinaryCommand cmd(cmdTable[QueryBinaryMeasurementDataOutCmd].cmdSize);
+	cmd.SetU08(1, cmdTable[QueryBinaryMeasurementDataOutCmd].cmdId);
+
+	BinaryData ackCmd;
+	if(!ExcuteBinaryCommand(QueryBinaryMeasurementDataOutCmd, &cmd, &ackCmd))
+	{
+		CString strMsg = "Query Binary Measurement Data Out Successful...";
+		add_msgtolist(strMsg);
+		if(ackCmd[5]==0)
+		{
+			strMsg.Format("Output Rate : 1Hz");	
+		}
+		else if(ackCmd[5]==1)
+		{
+			strMsg.Format("Output Rate : 2Hz");
+		}
+		else if(ackCmd[5]==2)
+		{
+			strMsg.Format("Output Rate : 4Hz");
+		}
+		else if(ackCmd[5]==3)
+		{
+			strMsg.Format("Output Rate : 5Hz");
+		}
+		else if(ackCmd[5]==4)
+		{
+			strMsg.Format("Output Rate : 10Hz");
+		}
+		else
+		{
+			strMsg.Format("Output Rate : 20Hz");
+		}
+		add_msgtolist(strMsg);
+
+		strMsg.Format("Meas Time : %s", (ackCmd[6]) ? "Enable" : "Disable");
+		add_msgtolist(strMsg);
+
+		strMsg.Format("Raw Meas : %s", (ackCmd[7]) ? "Enable" : "Disable");
+		add_msgtolist(strMsg);
+
+		strMsg.Format("SV CH Status : %s", (ackCmd[8]) ? "Enable" : "Disable");
+		add_msgtolist(strMsg);
+
+		strMsg.Format("RCV State : %s", (ackCmd[9]) ? "Enable" : "Disable");
+		add_msgtolist(strMsg);
+
+		CString strOutput;
+		if(ackCmd[10] & 0x01)
+		{
+			strOutput += "GPS + ";
+		}
+		if(ackCmd[10] & 0x02)
+		{
+			strOutput += "GLONASS + ";
+		}
+		if(ackCmd[10] & 0x04)
+		{
+			strOutput += "Galileo + ";
+		}
+		if(ackCmd[10] & 0x08)
+		{
+			strOutput += "Beidou + ";
+		}
+
+		if(ackCmd[10]==0)
+		{
+			add_msgtolist("None");
+		}
+		else
+		{
+			add_msgtolist("Subframe for different constellation :");
+			strOutput = strOutput.Left(strOutput.GetLength() - 2);
+			add_msgtolist(strOutput);
+		}
+
 	}
 	return Timeout;
 }

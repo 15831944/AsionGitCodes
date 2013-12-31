@@ -49,3 +49,32 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 };
+
+
+class ConfigBinaryMeasurementDataOutDlg : public CDialog
+{
+	DECLARE_DYNAMIC(ConfigBinaryMeasurementDataOutDlg)
+
+public:
+	ConfigBinaryMeasurementDataOutDlg(CWnd* pParent = NULL);   // 標準建構函式
+	virtual ~ConfigBinaryMeasurementDataOutDlg();
+
+// 對話方塊資料
+//	enum { IDD = IDD_REF_TIME_TO_GPS_TIME };
+	virtual BOOL OnInitDialog();
+
+	U08 m_rate;
+	U08 m_measTime;
+	U08 m_rawMeas;
+	U08 m_svChStatus;
+	U08 m_rcvChStatus;
+	U08 m_subFrame;
+	U08 m_attribute;
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支援
+	virtual void OnOK();
+
+	DECLARE_MESSAGE_MAP()
+};
+
+

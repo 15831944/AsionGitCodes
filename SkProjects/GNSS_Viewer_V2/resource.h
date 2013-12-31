@@ -205,7 +205,8 @@
 #define IDR_V8_AT_SREC                  460
 #define IDD_CONFIG_1PPS_FREQ_OUTPUT     461
 #define IDD_CONFIG_NMEA_INTERVAL2_V8    462
-#define IDD_CONFIG_ERICSSON_INTERVAL	463
+#define IDD_CONFIG_ERICSSON_INTERVAL    463
+#define IDD_CONFIG_BIN_MEA_DAT_OUT      464
 #define IDC_CONNECT                     1000
 #define IDC_CLOSE                       1001
 #define IDC_SETORIGIN                   1002
@@ -476,6 +477,7 @@
 #define IDC_STATIC_SET4                 1153
 #define IDC_BINARY_ATTRI                1154
 #define IDC_1PPS_CABLE                  1155
+#define IDC_OUTPUT_RATE                 1155
 #define IDC_1PPS_CABLE_ATTRI            1156
 #define IDC_RADIO_DOP_AUTO              1157
 #define IDC_RADIO_DOP_HDOP              1159
@@ -705,11 +707,16 @@
 #define IDC_STOP                        1304
 #define IDC_SLIDER3                     1305
 #define IDC_CONTINUE                    1305
+#define IDC_MEAS_TIME                   1305
 #define IDC_SLIDER4                     1306
 #define IDC_FILESIZE                    1306
+#define IDC_RAW_MEAS                    1306
 #define IDC_SLIDER5                     1307
+#define IDC_SV_CH                       1307
 #define IDC_SLIDER6                     1308
 #define IDC_NMEA_FILE                   1308
+#define IDC_RCV_STATUS                  1308
+#define IDC_RCV_STATE                   1308
 #define IDC_SLIDER7                     1309
 #define IDC_LINE_COUNT                  1309
 #define IDC_SLIDER8                     1310
@@ -996,8 +1003,10 @@
 #define ID_CONFIG_DOZE_MODE             33049
 #define ID_CONFIG_1PPS_FREQ_OUTPUT      33050
 #define ID_QUERY_1PPS_FREQ_OUTPUT       33051
-#define ID_CONFIG_ERICSSON_STC_ITV		33052
-#define ID_QUERY_ERICSSON_STC_ITV		33053
+#define ID_CONFIG_ERICSSON_STC_ITV      33052
+#define ID_QUERY_ERICSSON_STC_ITV       33053
+#define ID_CONFIG_BIN_MEA_DAT_OUT       33054
+#define ID_QUERY_BIN_MEA_DAT_OUT        33055
 
 // Next default values for new objects
 // 

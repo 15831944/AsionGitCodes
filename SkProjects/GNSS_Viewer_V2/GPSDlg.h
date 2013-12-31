@@ -426,6 +426,7 @@ protected:
 	afx_msg void On1ppstimingConfigurePulseWidth();
 	afx_msg void On1ppsTimingQuery1ppsPulseWidth();
 	afx_msg void OnConfigQueryGnssNavSol();
+	afx_msg void OnConfigBinaryMeasurementDataOut();
 
 	afx_msg void OnConfig1ppsFrequencyOutput();
 	afx_msg void On1ppstimingConfigureppspulseclksrc();
@@ -1000,6 +1001,7 @@ public:
 	CmdErrorCode QueryGnssNavSol(CmdExeMode nMode, void* outputData);
 	CmdErrorCode QueryCustomerID(CmdExeMode nMode, void* outputData);
 	CmdErrorCode Query1ppsFreqencyOutput(CmdExeMode nMode, void* outputData);
+	CmdErrorCode QueryBinaryMeasurementDataOut(CmdExeMode nMode, void* outputData);
 
 private:
 	afx_msg void OnQueryPositionRate()
@@ -1098,6 +1100,8 @@ private:
 	{ GenericQuery(&CGPSDlg::QueryCustomerID); }
 	afx_msg void OnQuery1ppsFreqencyOutput()
 	{ GenericQuery(&CGPSDlg::Query1ppsFreqencyOutput); }
+	afx_msg void OnQueryBinaryMeasurementDataOut()
+	{ GenericQuery(&CGPSDlg::QueryBinaryMeasurementDataOut); }
 
 	struct MenuItemEntry {
 		BOOL showOption;
